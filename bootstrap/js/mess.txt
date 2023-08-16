@@ -1,0 +1,76 @@
+private int calculateString(StringBuilder sb){
+        int result=0;
+        int m=0;
+        char operation='!';
+        for(int i=0;i<sb.length();i++){
+            if(sb.charAt(i)=='+'){
+                result=Integer.parseInt(sb.subSequence(0,i).toString());
+                m=i+1;
+                operation='+';
+                break;
+            }
+            if(sb.charAt(i)=='-'){
+                result=Integer.parseInt(sb.subSequence(0,i).toString());
+                m=i+1;
+                operation='-';
+                break;
+            }
+            if(sb.charAt(i)=='/'){
+                result=Integer.parseInt(sb.subSequence(0,i).toString());
+                m=i+1;
+                operation='/';
+                break;
+            }
+            if(sb.charAt(i)=='*'){
+                result=Integer.parseInt(sb.subSequence(0,i).toString());
+                m=i+1;
+                operation='*';
+                break;
+            }
+        }
+        for(int i=m+1;i<sb.length();i++){
+            if(sb.charAt(i)=='+'){
+                if(operation=='-'){result=result-Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='+'){result=result+Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='/'){result=result/Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='*'){result=result*Integer.parseInt(sb.subSequence(m,i).toString());}
+	            m=i+1;
+	            operation='+';
+            }
+            if(sb.charAt(i)=='-'){
+                if(operation=='-'){result=result-Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='+'){result=result+Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='/'){result=result/Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='*'){result=result*Integer.parseInt(sb.subSequence(m,i).toString());}
+                m=i+1;
+                operation='-';
+            }
+            if(sb.charAt(i)=='/'){
+                if(operation=='-'){result=result-Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='+'){result=result+Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='/'){result=result/Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='*'){result=result*Integer.parseInt(sb.subSequence(m,i).toString());}
+                m=i+1;
+                operation='/';
+            }
+            if(sb.charAt(i)=='*'){
+                if(operation=='-'){result=result-Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='+'){result=result+Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='/'){result=result/Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='*'){result=result*Integer.parseInt(sb.subSequence(m,i).toString());}
+                m=i+1;
+                operation='*';
+            }
+            /*if(sb.charAt(i)=='='){
+                if(operation=='-'){result=result-Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='+'){result=result+Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='/'){result=result/Integer.parseInt(sb.subSequence(m,i).toString());}
+                if(operation=='*'){result=result*Integer.parseInt(sb.subSequence(m,i).toString());}
+            }*/
+        }
+        if(operation=='-'){result=result-Integer.parseInt(sb.subSequence(m,sb.length()).toString());}
+        if(operation=='+'){result=result+Integer.parseInt(sb.subSequence(m,sb.length()).toString());}
+        if(operation=='/'){result=result/Integer.parseInt(sb.subSequence(m,sb.length()).toString());}
+        if(operation=='*'){result=result*Integer.parseInt(sb.subSequence(m,sb.length()).toString());}
+        return result;
+    }

@@ -1,0 +1,208 @@
+/* 
+ Theme Name:   Lalita-child
+ Theme URI:    http://localhost/wordpress/Lalita-child/
+ Description:  child theme
+ Author:       Krisi
+ Author URI:   http://localhost/wordpress
+ Template:     lalita
+ Version:      1.0
+ License:      GNU General Public License v2 or later
+ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+ Text Domain:  lalita-child
+
+ /* == Add your own styles below this line ==
+--------------------------------------------*/
+
+:root {
+    --colorComposite:#415A80;
+    --colorOpened:#F2F4F8;
+    --colorClosed:#D7E2E9;
+    --colorDescriptive:#A5D4DC;
+
+    --colorLightText:#F5F6F7;
+    --colorLightGrayText:#D9D9D9;
+    --colorMidGray:#A8ACB1;
+    --colorGrayText:#6B7A99;
+    --colorDarkText:#222222;
+
+    --colorShadow:##00000033;
+
+    --colorCorrect:#59ad00;
+    --colorWrong:#fe0000;
+    --colorNotFilled:#ffd931;
+    --colorToCheck:#6cbfff;
+}
+
+body, button, input, select, textarea {
+    font-family: 'Inter', sans-serif !important;
+  }
+  
+
+input[type=email], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url]{
+    font-size: 0.9em;
+    padding: 0px;
+    width: 100%;
+}
+
+input[type="number"] {
+    border-radius: 12px;
+    padding: 3px;
+    background-color: #ffffff90;
+    text-align: center;
+    border: none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+
+   opacity: 1;
+
+}
+
+body .grid-container{
+    max-width: 95%;
+}
+
+td, th{
+    text-align: start;
+}
+
+table{
+    margin: 0px;
+}
+
+.nopadding{
+    padding: 0px;
+}
+
+
+
+
+.testDivAttendee{background-color: var(--colorClosed);}
+.testDivCreator{background-color: var(--colorDescriptive);}
+.testDivEditor{background-color: var(--colorLightGrayText);}
+
+.testDiv{
+    display: flex;
+    position: relative;
+    padding: 16px;
+    flex-direction: column;
+    width: min-content;
+    height: 100px;
+    min-width: 180px;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.testTitle{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.testDate{
+    font-size: 12px;
+    font-weight: 100;
+    flex: 1;
+}
+
+.testRole{
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.gradientOverlay{
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.158));
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+}
+
+/* MENU */
+  .testMenu {
+    text-transform: uppercase;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0px 30px 0px;
+  }
+  .testMenu * {
+    box-sizing: border-box;
+    -webkit-transition: all 0.35s ease;
+    transition: all 0.35s ease;
+  }
+  .testMenu li {
+    display: inline-block;
+    list-style: outside none none;
+    position: relative;
+  }
+  .testMenu a {
+    padding: 0.3em 0;
+    color: #212121;
+    position: relative;
+    display: inline-block;
+    letter-spacing: 1px;
+    margin: 0;
+    text-decoration: none;
+  }
+  .testMenu a:after {
+    bottom: 100%;
+    display: block;
+    height: 3px;
+    width: 0%;
+    content: "";
+    background-color: var(--colorComposite);
+    
+    -webkit-transition: all 0.35s ease;
+    transition: all 0.35s ease;
+  }
+  .testMenu li:hover a:after{
+    width: 100%;
+  }
+  .current a:after{
+    width: 100%;
+  }
+
+  .notifCircle{
+    display: none;
+    position: absolute;
+    border-radius: 50%;
+    color: white;
+    top: 0px;
+    right: 0;
+    transform: translate(60%, -20%);
+    font-size: 14px;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    background-color: var(--colorComposite);
+    right: 0;
+  }
+
+  .ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+  }
+
+  .ui-menu-item {
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+    background-color: var(--colorOpened);
+    color: var(--colorComposite);
+  }
+
+  .ui-menu-item-wrapper{
+    padding: 8px;
+  }
+
+  .ui-state-active {
+    color: var(--colorDarkText);
+    background-color: var(--colorClosed);
+  }
+

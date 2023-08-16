@@ -1,0 +1,437 @@
+var $ = jQuery;
+function initBase(){
+    var ajaxRequest = false;
+    var tempPath;
+    tempPath = $('.showDescrButton').eq(0).attr('src');
+    tempPath = tempPath.substring(0,tempPath.lastIndexOf('/'));
+
+    refreshContentTable();
+    initFunctions();
+
+    function refreshContentTable(){
+        var allModulesDiv = $('#allModulesDiv');
+        allModulesDiv.empty();
+        var copyModule = $('#copyModule');
+        for(var moduleID = 0; moduleID < window.contentKrisi.length; moduleID++){
+            var table = '<div class="moduleDiv">' + copyModule.html() + '</div>';
+            table = table.replace(/KrIsI/g, moduleID);
+            table = table.replace(/KrISI/g, (moduleID+1));
+            allModulesDiv.append(table);
+            table = allModulesDiv.children('.moduleDiv').last();
+            var tbody = table.find('tbody').first();
+            var id = 1;
+            closedRow = tbody.find('.closedQuestion').first().clone();
+            openedRow = tbody.find('.openedQuestion').first().clone();
+            descriptiveRow = tbody.find('.descriptiveQuestion').first().clone();
+            compositeRow = tbody.find('.compositeQuestion').first().clone();
+            checkRow = tbody.find('.check').first().clone();
+            for(var questionID = 0; questionID < window.contentKrisi[moduleID]['subq'].length; questionID++){
+                switch(window.contentKrisi[moduleID]['subq'][questionID]['type']){
+                    case 'Closed':
+                        createClosedQuestion(moduleID + '_' + questionID + '_-1_-1',
+                            tbody, 
+                            id, 
+                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
+                        break;
+                    case 'Opened':
+                        createOpenedQuestion(moduleID + '_' + questionID + '_-1_-1',
+                            tbody, 
+                            id, 
+                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
+                        break;
+                    case 'Descriptive':
+                        createDescriptiveQuestion(moduleID + '_' + questionID + '_-1_-1',
+                            tbody, 
+                            id, 
+                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
+                        var descTBody = tbody.find('tbody').last();
+                        descTBody.empty();
+                        for(var checkID = 0; checkID < window.contentKrisi[moduleID]['subq'][questionID]['subq'].length; checkID++){
+                            createCheckQuestion(moduleID + '_' + questionID + '_-1_' + checkID,
+                                descTBody, 
+                                window.contentKrisi[moduleID]['subq'][questionID]['subq'][checkID]['answer'], 
+                                window.contentKrisi[moduleID]['subq'][questionID]['subq'][checkID]['points']);
+                        }
+                        break;
+                    case 'Composite':
+                        createCompositeQuestion(moduleID + '_' + questionID + '_-1_-1',
+                            tbody, 
+                            id, 
+                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
+                        var index = 'A';
+                        var compTBody = tbody.find('tbody').last();
+                        for(var subID = 0; subID < window.contentKrisi[moduleID]['subq'][questionID]['subq'].length; subID++){
+                            switch(window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['type']){
+                                case 'Closed':
+                                    createClosedQuestion(moduleID + '_' + questionID + '_' + subID + '_-1',
+                                        compTBody, 
+                                        index, 
+                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
+                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
+                                    break;
+                                case 'Opened':
+                                    createOpenedQuestion(moduleID + '_' + questionID + '_' + subID + '_-1',
+                                        compTBody, 
+                                        index, 
+                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
+                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
+                                    break;
+                                case 'Descriptive':
+                                    createDescriptiveQuestion(moduleID + '_' + questionID + '_' + subID + '_-1',
+                                        compTBody, 
+                                        index, 
+                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
+                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
+                                    var descTBody = tbody.find('tbody').last();
+                                    for(var checkID = 0; checkID < window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'].length; checkID++){
+                                        createCheckQuestion(moduleID + '_' + questionID + '_' + subID + '_' + checkID,
+                                            descTBody, 
+                                            window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'][checkID]['answer'], 
+                                            window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'][checkID]['points']);
+                                    }
+                                    break;
+                            }
+                            index = String.fromCharCode(index.charCodeAt(0) + 1);
+                        }
+                        break;
+                }
+                id++;
+            }
+            var lastTr = tbody.find('.lastTr').last().detach();
+            tbody.append(lastTr);
+        }
+    }
+
+    function createClosedQuestion(code,tbody,id,answer,points){
+        var copyRow = closedRow.clone();
+        copyRow.removeClass('invisible');
+        copyRow.attr("data-code",code);
+        if(isNaN(id)){
+            copyRow.addClass('subQ');
+            copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
+        }
+        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.radioA').removeClass('radioChecked');
+        copyRow.find('.radioB').removeClass('radioChecked');
+        copyRow.find('.radioC').removeClass('radioChecked');
+        copyRow.find('.radioD').removeClass('radioChecked');
+        copyRow.find('.radio' + answer).addClass('radioChecked');
+        copyRow.find('.points').first().val(points);
+        tbody.append(copyRow);
+    }
+
+    function createOpenedQuestion(code,tbody,id,answer,points){
+        var copyRow = openedRow.clone();
+        copyRow.removeClass('invisible');
+        copyRow.attr("data-code",code);
+        if(isNaN(id)){
+            copyRow.addClass('subQ');
+            copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
+        }
+        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.openedAnswer').first().val(answer);
+        copyRow.find('.points').first().val(points);
+        tbody.append(copyRow);
+    }
+
+    function createDescriptiveQuestion(code,tbody,id,answer,points){
+        var copyRow = descriptiveRow.clone();
+        copyRow.removeClass('invisible');
+        copyRow.attr("data-code",code);
+        if(isNaN(id)){
+            copyRow.addClass('subQ');
+            copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
+        }
+        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.descriptiveTable').find('tbody').html('');
+        copyRow.find('.points').first().val(points);
+        tbody.append(copyRow);
+    }
+
+    function createCheckQuestion(code,tbody,answer,points){
+        var copyRow = checkRow.clone();
+        copyRow.attr("data-code",code);
+        copyRow.find('.conditionCheck').first().val(answer);
+        copyRow.find('.points').first().val(points);
+        tbody.append(copyRow);
+    }
+
+    function createCompositeQuestion(code, tbody,id,answer,points){
+        var copyRow = compositeRow.clone();
+        copyRow.attr("data-code",code);
+        copyRow.removeClass('invisible');
+        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.answer').first().val(answer);
+        copyRow.find('.points').first().val(points);
+        //copyRow.find('tbody').children().eq(1).remove();
+        tbody.append(copyRow);
+    }
+
+    function initFunctions() {
+
+        $(document).on('click','#noYouSureButton', function(e){
+            $('#popupForm').hide();
+        });
+
+        $(document).on('click','#closeEmptyOButton', function(e){
+            $('#popupEmptyOpForm').hide();
+        });
+
+        $(document).on('click', '.addModule', function(e){
+            if(!ajaxRequest){
+                ajaxRequest = true;
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "createModule", 
+                    "postID" : $('#inputPostId').val()},
+                    success: function(data) {
+                        ajaxRequest = false;
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click','.deleteModule', function(e){
+            var $this = $(this);
+            var moduleID = $this.data('moduleid');
+            $('#popupForm').show();
+            $(document).on('click','#yesYouSureButton', function(e){
+                if(!ajaxRequest){
+                    ajaxRequest = true;
+                    $.ajax({
+                        url: '',
+                        type: 'post',
+                        data: { "callTestEditFunction": "deleteQuestion", 
+                        "moduleID": moduleID,
+                        "questionID": -1,
+                        "subID": -1,
+                        "checkID": -1,
+                        "postID" : $('#inputPostId').val()},
+                        success: function(data) {
+                            ajaxRequest = false;
+                            window.contentKrisi = JSON.parse(data['content']);
+                            window.responsesKrisi = JSON.parse(data['responses']);
+                            refreshContentTable();
+                        }
+                    });
+                    $('#popupForm').hide();
+                }
+            });
+        });
+
+        $(document).on('click','.addQuestionButton', function(e){
+            $this = $(this);
+            if(!ajaxRequest){
+                ajaxRequest = true;
+                var type = -1;
+                if($this.hasClass('addClosed')) type="Closed";
+                if($this.hasClass('addOpened')) type="Opened";
+                if($this.hasClass('addDesciptive')) type="Descriptive";
+                if($this.hasClass('addComposite')) type="Composite";
+                var table = $this.closest('.questionTable');
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "addQuestion", 
+                    "moduleID": table.data('moduleid'),
+                    "indArr": '[]',
+                    "questionType" : type,
+                    "postID" : $('#inputPostId').val()},
+                    success: function(data) {
+                        ajaxRequest = false;
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click','.addSubQButton', function(e){
+            if(!ajaxRequest){
+                ajaxRequest = true;
+                $this = $(this);
+                var type = -1;
+                if($this.hasClass('addClosed')) type="Closed";
+                if($this.hasClass('addOpened')) type="Opened";
+                if($this.hasClass('addDesciptive')) type="Descriptive";
+                if($this.hasClass('addComposite')) type="Composite";
+                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "addQuestion", 
+                    "moduleID": code[0],
+                    "indArr": JSON.stringify(code[1]),
+                    "questionType" : type,
+                    "postID" : $('#inputPostId').val()},
+                    success: function(data) {
+                        ajaxRequest = false;
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
+            }
+        });
+        
+        $(document).on('click','.addCheck', function(e){
+            $this = $(this);
+            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callTestEditFunction": "addQuestion", 
+                "moduleID": code[0],
+                "indArr": JSON.stringify(code[1]),
+                "questionType" : 'Check',
+                "postID" : $('#inputPostId').val()},
+                success: function(data) {
+                    window.contentKrisi = JSON.parse(data['content']);
+                    window.responsesKrisi = JSON.parse(data['responses']);
+                    refreshContentTable();
+                }
+            });
+        });
+        var deleteButtonCode;
+        $(document).on('click','.deleteButton', function(e){
+            $this = $(this);
+            deleteButtonCode = decodeIds($this.closest('.questionOrCheck').data('code'));
+            console.log(deleteButtonCode);
+            $('#popupForm').show();
+            $(document).on('click','#yesYouSureButton', function(e){
+                if(!ajaxRequest){
+                    ajaxRequest = true;
+                    $.ajax({
+                        url: '',
+                        type: 'post',
+                        data: { "callTestEditFunction": "deleteQuestion", 
+                        "moduleID": deleteButtonCode[0],
+                        "indArr": JSON.stringify(deleteButtonCode[1]),
+                        "postID" : $('#inputPostId').val()},
+                        success: function(data) {
+                            ajaxRequest = false;
+                            window.contentKrisi = JSON.parse(data['content']);
+                            window.responsesKrisi = JSON.parse(data['responses']);
+                            console.log(window.contentKrisi);
+                            console.log(window.responsesKrisi);
+                            refreshContentTable();
+                        }
+                    });
+                    $('#popupForm').hide();
+                }
+            });
+        });
+        $(document).on('mouseenter','.deleteButton', function(e){
+            $(this).attr('src',window.srcPath + '/img/close.png');
+        });
+        $(document).on('mouseleave','.deleteButton', function(e){
+            $(this).attr('src',window.srcPath + '/img/closeD.png');
+        });
+
+        $(document).on('click','.radio', function(e){
+            if(!ajaxRequest){
+                ajaxRequest = true;
+            var $this = $(this);
+            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "changeAnswer", 
+                    "moduleID": code[0],
+                    "indArr": JSON.stringify(code[1]),
+                    "answer": $this.data('answer'),
+                    "postID" : $('#inputPostId').val()},
+                    success: function(data) {
+                        ajaxRequest = false;
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
+            }
+        });
+        
+        $(document).on('blur', '.openedAnswer', function() {
+            if(!ajaxRequest){
+                ajaxRequest = true;
+            var $this = $(this);
+            if($this.val() == ''){
+                $('#popupEmptyOpForm').show();
+                $this.val('simple answer');
+            }
+            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "changeAnswer", 
+                    "moduleID": code[0],
+                    "indArr": JSON.stringify(code[1]),
+                    "answer": $(this).val(),
+                    "postID" : $('#inputPostId').val()},
+                    success: function(data) {
+                        ajaxRequest = false;
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
+            }
+        });
+        
+        $(document).on('blur', '.conditionCheck', function() {
+            if(!ajaxRequest){
+                ajaxRequest = true;
+                var $this = $(this);
+                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "changeAnswer", 
+                    "moduleID": code[0],
+                    "indArr": JSON.stringify(code[1]),
+                    "answer": $(this).val(),
+                    "postID" : $('#inputPostId').val()},
+                    success: function(data) {
+                        ajaxRequest = false;
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
+            }
+        });
+        
+        $(document).on('input','.points', function(e){
+            if(!ajaxRequest){
+                ajaxRequest = true;
+                var $this = $(this);
+                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "changePoints", 
+                    "moduleID": code[0],
+                    "indArr": JSON.stringify(code[1]),
+                    "points": $this.val(),
+                    "postID" : $('#inputPostId').val()},
+                    success: function(data) {
+                        ajaxRequest = false;
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
+            }
+        });
+        
+    }
+}  
