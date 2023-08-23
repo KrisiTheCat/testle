@@ -39,10 +39,12 @@ if (isset($_POST['callFormEditFunction'])) {
     $indArr = $_POST['indArr'];
     $value = $_POST['value'];
     $form = get_post_meta( $postID, 'form', true );
+
     if($form == '') $form = array();
     if(!isset($form[$moduleID]) || !$form[$moduleID] instanceof QuestionForm) $form[$moduleID] = new QuestionForm();
     $form[$moduleID]->setValue($value,$indArr);
     update_post_meta( $postID, 'form', $form );
+
     $response_array['form'] = json_encode($form);  
     header('Content-type: application/json');
     echo json_encode($response_array);

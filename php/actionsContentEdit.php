@@ -38,7 +38,7 @@ function createModule(){
   foreach($responses as &$resp){
     $resp[count($content)] = new QuestionResponse('Module');
   }
-  $content[count($content)] = new Question('Module');
+  $content[count($content)] = new QuestionContent('Module');
 
   update_post_meta( $postID, 'content', $content );
   update_post_meta( $postID, 'responses', $responses );
@@ -56,7 +56,7 @@ function addQuestion(){
   $type = $_POST['questionType'];
   $content = get_post_meta( $postID, 'content', true );
   $responses = get_post_meta( $postID, 'responses', true );
-  $question = new Question($type);
+  $question = new QuestionContent($type);
   if($indArr == null) $indArr = array();
   
   $content[$moduleID]->addSubQ($question, $indArr);

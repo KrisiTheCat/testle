@@ -239,23 +239,48 @@ function initForm(){
                 }
             } 
             else {
-                var code = selectedFormId[0] + '_' + encodeIds(selectedFormId[1]);
-                selectedFormId = undefined;
-                $(document).find('[data-code=' + code + ']').eq(0).removeClass('questionFormDivSelected');
-                $(document).find('[data-code=' + code + ']').eq(0).addClass('questionFormDivFenced');
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: { "callFormEditFunction": "getFormData", 
-                    "postID" : $('#inputPostId').val(),},
-                    success: function(data) {
-                        form = JSON.parse(data['form']);
-                        initQuestionTabs();
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        toastr.error("Unable to get form data");
-                    }
-                });
+                console.log(JSON.stringify(selectedFormId));
+                console.log(JSON.stringify(decodeIds($(this).data('code'))));
+                if(JSON.stringify(selectedFormId) == JSON.stringify(decodeIds($(this).data('code')))){
+                    $.ajax({
+                        url: '',
+                        type: 'post',
+                        data: { "callFormEditFunction": "updateFormQuestion", 
+                        "postID" : $('#inputPostId').val(),
+                        "moduleID" : selectedFormId[0],
+                        "indArr" : selectedFormId[1],
+                        "value" : null},
+                        success: function(data) {
+                            window.formKrisi = JSON.parse(data['form']);
+                            form = window.formKrisi;
+                            initQuestionTabs();
+                            initFormCircle();
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            toastr.error("Unable to update form");
+                        }
+                    });
+                    selectedFormId = undefined;
+                }
+                else {
+                    // var code = selectedFormId[0] + '_' + encodeIds(selectedFormId[1]);
+                    // selectedFormId = undefined;
+                    // $(document).find('[data-code=' + code + ']').eq(0).removeClass('questionFormDivSelected');
+                    // $(document).find('[data-code=' + code + ']').eq(0).addClass('questionFormDivFenced');
+                    // $.ajax({
+                    //     url: '',
+                    //     type: 'post',
+                    //     data: { "callFormEditFunction": "getFormData", 
+                    //     "postID" : $('#inputPostId').val(),},
+                    //     success: function(data) {
+                    //         form = JSON.parse(data['form']);
+                    //         initQuestionTabs();
+                    //     },
+                    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    //         toastr.error("Unable to get form data");
+                    //     }
+                    // });
+                }
             }
         }
     });
@@ -408,7 +433,10 @@ function initCanvasActions(){
                 "indArr" : selectedFormId[1],
                 "value" : getValueQuestionRectCoords(form[selectedFormId[0]], selectedFormId[1]),},
                 success: function(data) {
-                    form = JSON.parse(data['form']);
+                    window.formKrisi = JSON.parse(data['form']);
+                    form = window.formKrisi;
+                    initQuestionTabs();
+                    initFormCircle();
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     toastr.error("Unable to update form");

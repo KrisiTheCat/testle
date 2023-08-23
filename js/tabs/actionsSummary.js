@@ -8,12 +8,7 @@ function initNotifCircles(){
     }
     var pages = window.pageInfo.length;
 
-    var questions = countQuestions(window.contentKrisi);
-    var sectoredQuestions = countQuestions(window.formKrisi);
-    setDataInNotif($('#formLink').parent().find('.notifCircle'), questions - sectoredQuestions);
-
     var students = Object.keys(window.responsesKrisi).length-1;
-
     sortAttInGroups();
     setDataInNotif($('#attendeesLink').parent().find('.notifCircle'), Object.keys(attendeesByGroups[0]).length);
     setDataInNotif($('#handcheckLink').parent().find('.notifCircle'), students - Object.keys(attendeesByGroups[2]).length);
@@ -22,16 +17,30 @@ function initNotifCircles(){
         students: students,
         tasks: tasks,
         pages: pages,
-        questions: questions,
-        sectoredQuestions: sectoredQuestions
+        questions: 0,
+        sectoredQuestions: 0
     }
+    initFormCircle();
+}
+
+function initFormCircle(){
+
+    var questions = countQuestions(window.contentKrisi);
+    var sectoredQuestions = countQuestions(window.formKrisi);
+    setDataInNotif($('#formLink').parent().find('.notifCircle'), questions - sectoredQuestions);
+    sumInfo.questions = questions;
+    sumInfo.sectoredQuestions = sectoredQuestions;
+    
 }
 
 function setDataInNotif(notif, data){
     if(data > 100) data = '99+';
-    if(data != 0){
+    else if(data != 0){
         notif.html(data);
         notif.show();
+    }
+    else {
+        notif.hide();
     }
 }
 
@@ -48,7 +57,7 @@ function initSummary(){
     }
 
     $('#questionSectorsTask').find('.additionalData').html(`(${sumInfo.sectoredQuestions} | ${sumInfo.questions})`);
-    if(sumInfo.sectoredQuestions == sumInfo.questions && sumInfo.questions == 0){
+    if(sumInfo.sectoredQuestions == sumInfo.questions && sumInfo.questions != 0){
         $('#questionSectorsTask').addClass('completedTask');
     }
 

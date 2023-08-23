@@ -1,10 +1,57 @@
 <?php
 
 class Question{
+  public ?array $subq = null;
+
+  public function getQuestion($indexArr){
+    if(count($indexArr) == 0){
+      return $this;
+    }
+    return $this->subq[intval(array_shift($indexArr))]->getQuestion($indexArr);
+  }
+
+
+  public function addSubQ($sub, $indexArr){
+    if(count($indexArr) == 0){
+      if($this->subq == null) $this->subq = array();
+      array_push($this->subq, $sub);
+    } else {
+      $this->subq[intval(array_shift($indexArr))]->addSubQ($sub, $indexArr);
+    }
+  }
+
+  public function delete($indexArr){
+    if(count($indexArr) == 1){
+      if(count($this->subq) == 1) return true;
+      array_splice($this->subq, $indexArr[0], 1);
+      return false;
+    } else {
+      $id = intval(array_shift($indexArr));
+      $toDel = $this->subq[$id]->delete($indexArr);
+      if($toDel){
+        if(count($this->subq) == 1) return true;
+        array_splice($this->subq, $id, 1);
+      }
+      return false;
+    }
+  }
+
+  public function cloneSelf(){
+    $new = clone $this;
+    $new->subq = array();
+    for($subID = 0; isset($this->subq[$subID]); $subID++){
+      array_push($new->subq, $this->subq[$subID]->cloneSelf());
+    }
+    return $new;
+  }
+
+}
+
+
+class QuestionContent extends Question{
   public ?string $type;
   public ?float $points;
   public ?string $answer;
-  public ?array $subq = null;
 
   public function __construct($typeI){
     $this->type = $typeI;
@@ -49,12 +96,6 @@ class Question{
     }
     return $this->subq[intval(array_shift($indexArr))]->getType($indexArr);
   }
-  public function getQuestion($indexArr){
-    if(count($indexArr) == 0){
-      return $this;
-    }
-    return $this->subq[intval(array_shift($indexArr))]->getQuestion($indexArr);
-  }
 
   public function changePoints($diff, $indexArr){
     $this->points += $diff;
@@ -70,34 +111,10 @@ class Question{
     }
     $this->subq[intval(array_shift($indexArr))]->changeAnswer($answer, $indexArr);
   }
-
-  public function addSubQ($sub, $indexArr){
-    if(count($indexArr) == 0){
-      if($this->subq == null) $this->subq = array();
-      array_push($this->subq, $sub);
-    } else {
-      $this->subq[intval(array_shift($indexArr))]->addSubQ($sub, $indexArr);
-    }
-  }
-  public function delete($indexArr){
-    if(count($indexArr) == 1){
-      if(count($this->subq) == 1) return true;
-      array_splice($this->subq, $indexArr[0], 1);
-      return false;
-    } else {
-      $id = intval(array_shift($indexArr));
-      $toDel = $this->subq[$id]->delete($indexArr);
-      if($toDel){
-        if(count($this->subq) == 1) return true;
-        array_splice($this->subq, $id, 1);
-      }
-      return false;
-    }
-  }
   
 }
 
-class QuestionResponse{
+class QuestionResponse extends Question{
   public ?int $status;
   public ?string $answer;
   public ?array $subq = null;
@@ -125,40 +142,6 @@ class QuestionResponse{
       case 'Composite':
         $this->subq = array(new QuestionResponse('Closed'));
         break;
-    }
-  }
-
-  public function cloneSelf(){
-    $new = clone $this;
-    $new->subq = array();
-    for($subID = 0; isset($this->subq[$subID]); $subID++){
-      array_push($new->subq, $this->subq[$subID]->cloneSelf());
-    }
-    return $new;
-  }
-
-  public function addSubQ($sub, $indexArr){
-    if(count($indexArr) == 0){
-      if($this->subq == null) $this->subq = array();
-      array_push($this->subq, $sub);
-    } else {
-      $this->subq[intval(array_shift($indexArr))]->addSubQ($sub, $indexArr);
-    }
-  }
-
-  public function delete($indexArr){
-    if(count($indexArr) == 1){
-      if(count($this->subq) == 1) return true;
-      array_splice($this->subq, $indexArr[0], 1);
-      return false;
-    } else {
-      $id = intval(array_shift($indexArr));
-      $toDel = $this->subq[$id]->delete($indexArr);
-      if($toDel){
-        if(count($this->subq) == 1) return true;
-        array_splice($this->subq, $id, 1);
-      }
-      return false;
     }
   }
 
@@ -230,7 +213,7 @@ class QuestionResponse{
   }
 }
 
-class QuestionForm{
+class QuestionForm extends Question{
   public ?float $left;
   public ?float $top;
   public ?float $width;
@@ -241,6 +224,10 @@ class QuestionForm{
   }
   
   public function setValue($value, $indexArr){
+    if(count($indexArr) == 1 && empty($value)){
+      $this->subq[$indexArr[0]] = null;
+      return;
+    }
     if(count($indexArr) == 0){
       $this->left = $value['left'];
       $this->top = $value['top'];
@@ -256,29 +243,17 @@ class QuestionForm{
     }
   }
 
-  public function delete($indexArr){
-    if(count($indexArr) == 1){
-      if(isset($this->subq[$indexArr[0]])) array_splice($this->subq, $indexArr[0], 1);
-      $this->decreaseIndexes($indexArr[0]);
-      return false;
-    } else {
-      $id = intval(array_shift($indexArr));
-      if(isset($this->subq[$id])) $this->subq[$id]->delete($indexArr);
-      else $this->decreaseIndexes($id);
-    }
-  }
-
-  public function decreaseIndexes($index){
-    $newSub = array();
-    foreach($this->subq as $key=>$value){
-      if(intval($key) <= $index){
-        $newSub[$key] = $value;
-      } else {
-        $newSub[intval($key)-1] = $value;
-      }
-    }
-    $this->subq = $newSub;
-  }
+  // public function decreaseIndexes($index){
+  //   $newSub = array();
+  //   foreach($this->subq as $key=>$value){
+  //     if(intval($key) <= $index){
+  //       $newSub[$key] = $value;
+  //     } else {
+  //       $newSub[intval($key)-1] = $value;
+  //     }
+  //   }
+  //   $this->subq = $newSub;
+  // }
 
 }
 ?>
