@@ -1,14 +1,14 @@
 /* 
- Theme Name:   Lalita-child
+ Theme Name:   twentytwentythree-child
  Theme URI:    http://localhost/wordpress/Lalita-child/
  Description:  child theme
  Author:       Krisi
  Author URI:   http://localhost/wordpress
- Template:     lalita
+ Template:     twentytwentythree
  Version:      1.0
  License:      GNU General Public License v2 or later
  License URI:  http://www.gnu.org/licenses/gpl-2.0.html
- Text Domain:  lalita-child
+ Text Domain:  twentytwentythree-child
 
  /* == Add your own styles below this line ==
 --------------------------------------------*/
@@ -73,6 +73,42 @@ table{
 
 .nopadding{
     padding: 0px;
+}
+
+
+button, html input[type="button"], input[type="reset"], input[type="submit"], a.button, a.button:visited, header .main-navigation .main-nav ul li a.wpkoi-nav-btn {
+  color: var(--colorOpened);
+  background-color: var(--colorComposite);
+}
+button:hover, html input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover, a.button:hover, button:focus, html input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus, a.button:focus, header .main-navigation .main-nav ul li a.wpkoi-nav-btn:hover {
+  color: var(--colorComposite);
+  background-color: var(--colorClosed);
+}
+
+.footer{
+  width: 100%;
+  background: linear-gradient(45deg, var(--colorComposite), var(--colorDarkText));
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  padding: 21px 0px;
+}
+
+.footer div div{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 55px;
+  text-transform: lowercase;
+  font-size: 20px;
+}
+.footer p{
+  color: var(--colorClosed);
+  text-align: right;
+  font-size: 12px;
+}
+.footer a{
+  color: var(--colorClosed);
 }
 
 

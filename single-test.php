@@ -62,7 +62,11 @@ $current_fp = get_query_var('fpage'); ?>
 					$form = get_post_meta( get_the_ID(), 'form', true );
 					$user_meta = get_userdata(get_current_user_id());
 					$user_roles = $user_meta->roles;
-					if(in_array("administrator", $user_roles) || in_array("teacher", $user_roles)){
+					$roles = get_post_meta(get_the_ID(), 'roles',true);
+
+					$canSee = array_search(get_current_user_id(), array_column($roles, "id"));
+
+					if(in_array("administrator", $user_roles) || $canSee){
 						$users = get_users();
 						$usersInfo = array();
 						foreach ($users as $user) { 
@@ -107,7 +111,7 @@ $current_fp = get_query_var('fpage'); ?>
 						}
 					} 
 					else {
-
+						get_template_part( 'single', 'test-notallowed' );
 					}
 				}
 
