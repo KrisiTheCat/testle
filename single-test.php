@@ -60,13 +60,18 @@ $current_fp = get_query_var('fpage'); ?>
 					$content = get_post_meta( get_the_ID(), 'content', true );
 					$responses = get_post_meta( get_the_ID(), 'responses', true );
 					$form = get_post_meta( get_the_ID(), 'form', true );
-					$user_meta = get_userdata(get_current_user_id());
-					$user_roles = $user_meta->roles;
-					$roles = get_post_meta(get_the_ID(), 'roles',true);
+					$editors = get_post_meta(get_the_ID(), 'editors',true);
 
-					$canSee = array_search(get_current_user_id(), array_column($roles, "id"));
+					$canSee = array_search(get_current_user_id(), array_column($editors, "id"));
 
-					if(in_array("administrator", $user_roles) || $canSee){
+					switch(canSeeTest(get_current_user_id(), get_the_ID())){
+					case 0:
+						get_template_part( 'single', 'test-notallowed' );
+						break;
+					case 1:
+						//TODO results
+						break;
+					case 2:
 						$users = get_users();
 						$usersInfo = array();
 						foreach ($users as $user) { 
@@ -109,9 +114,7 @@ $current_fp = get_query_var('fpage'); ?>
 						} else if ($current_fp == 'form') {
 							get_template_part( 'single', 'test-form' );
 						}
-					} 
-					else {
-						get_template_part( 'single', 'test-notallowed' );
+					break;
 					}
 				}
 

@@ -2,9 +2,22 @@
 
 if (isset($_POST['callUsersFunction'])) {
   switch($_POST['callUsersFunction']){
+    case 'createPost':
+      $userID = intval($_POST['userID']);
+      $title = $_POST['title'];
+      createPost($userID, $title);
+      die();
+      break;
     case 'listUserTests':
       $userID = intval($_POST['userID']);
-      listUserTests($userID);
+      $response_array = listUserTests($userID);
+      header('Content-type: application/json');
+      echo json_encode($response_array);
+      die();
+      break;
+    case 'canCreateTests':
+      $userID = intval($_POST['userID']);
+      canCreateTests($userID);
       die();
       break;
     case 'getUserGroups':
@@ -35,41 +48,79 @@ if (isset($_POST['callUsersFunction'])) {
   }
 }
 
+function createPost($userID, $title){
+  $wordpress_post = array(
+    'post_title' => $title,
+    'post_content' => '',
+    'post_status' => 'publish',
+    'post_author' => $userID,
+    'post_type' => 'test'
+  );
+  $response_array = listUserTests($userID);
+  $postID = wp_insert_post( $wordpress_post );
+  $response_array['id'] = $postID;
+  
+  update_post_meta( $postID, 'responses', array(array()));
+  update_post_meta( $postID, 'content', array());
+  update_post_meta( $postID, 'form', array());
+  update_post_meta( $postID, 'pageInfo', array());
+  update_post_meta( $postID, 'editors', array());
+  $response_array['roles'] = json_decode($response_array['roles']);
+  array_push($response_array['roles'], array(
+                                        'postID' =>  $postID, 
+                                        'postName' =>  $title,
+                                        'date' =>  'TBA',
+                                        'role' =>  'creator',  
+                                        'link'=>get_page_link($postID)));
+  $response_array['roles'] = json_encode($response_array['roles']);
+
+  header('Content-type: application/json');
+  echo json_encode($response_array);
+}
+
+function canCreateTests($userID){
+  $user_meta = get_userdata($userID);
+  $user_roles = $user_meta->roles;
+  if(in_array('administrator',$user_roles) || in_array('teacher',$user_roles)){
+    echo 1;
+  }
+  else{
+    echo 0;
+  }
+}
+
 function getEditors($postID){
-  $roles = get_post_meta($postID, 'roles',true);
-  $response_array['roles'] = json_encode($roles);  
+  $editors = get_post_meta($postID, 'editors',true);
+  array_push($editors, (object)array("id"=> get_post_field( 'post_author', $postID ),  "role"=>"creator"));
+  $response_array['editors'] = json_encode($editors);  
   header('Content-type: application/json');
   echo json_encode($response_array);
 }
 function addEditor($postID, $editor){
-  $roles = get_post_meta($postID, 'roles',true);
-  $key = array_search($editor, array_column($roles, "id"));
+  $editors = get_post_meta($postID, 'editors',true);
+  $key = array_search($editor, array_column($editors, "id"));
   if ($key !== false) {
     //error TODO
     return;
   }
   else {
-    array_push($roles, (object)array("id"=>$editor, "role"=>"editor"));
+    array_push($editors, (object)array("id"=>$editor, "role"=>"editor"));
   }
-  update_post_meta($postID,'roles',$roles);
-  $response_array['roles'] = json_encode($roles);  
-  header('Content-type: application/json');
-  echo json_encode($response_array);
+  update_post_meta($postID,'editors',$editors);
+  getEditors($postID);
 }
 function removeEditor($postID, $editor){
-  $roles = get_post_meta($postID, 'roles',true);
-  $key = array_search($editor, array_column($roles, "id"));
-  if ($key !== false && $roles[$key]->role != 'creator') {
-    array_splice($roles, $key, 1); 
+  $editors = get_post_meta($postID, 'editors',true);
+  $key = array_search($editor, array_column($editors, "id"));
+  if ($key !== false && $editors[$key]->role != 'creator') {
+    array_splice($editors, $key, 1); 
   }
   else {
     //error TODO
     return;
   }
-  update_post_meta($postID,'roles',$roles);
-  $response_array['roles'] = json_encode($roles);  
-  header('Content-type: application/json');
-  echo json_encode($response_array);
+  update_post_meta($postID,'editors',$editors);
+  getEditors($postID);
 }
 
 function getAllUsers(){
@@ -95,14 +146,14 @@ function listUserTests($userID){
 
   foreach ($query->posts as $post) { 
     $postID = $post->ID;
-    $roles = get_post_meta($postID, 'roles',true);
+    $roles = get_post_meta($postID, 'editors',true);
     foreach($roles as $role){
       if($role->id == $userID){
         array_push($ans, array(
           'postID' =>  $post->ID, 
           'postName' =>  $post->post_title,
           'date' =>  'TBA',
-          'role' =>  $role->role,  
+          'role' =>  'editor',  
           'link'=>get_page_link($post->ID)));
       }
     }
@@ -114,11 +165,30 @@ function listUserTests($userID){
         'role' =>  'attendee',  
         'link'=>get_page_link($post->ID)));
     }
+    if(intval($post->post_author) == $userID){
+      array_push($ans, array(
+        'postID' =>  $post->ID, 
+        'postName' =>  $post->post_title,
+        'date' =>  'TBA',
+        'role' =>  'creator',  
+        'link'=>get_page_link($post->ID)));
+    }
   }
   
   $response_array['roles'] = json_encode($ans);  
-  header('Content-type: application/json');
-  echo json_encode($response_array);
+  return $response_array;
+}
+
+function canSeeTest($userID, $postID){  // 0-no 1-attendee 2-full vision
+  $user_meta = get_userdata(get_current_user_id());
+  $user_roles = $user_meta->roles;
+  if(in_array("administrator", $user_roles)  || get_post_field( 'post_author', get_the_ID() ) == get_current_user_id()){
+    return 2;
+  }
+  if(array_key_exists($userID, get_post_meta($postID, 'responses',true))){
+    return 1;
+  }
+  return 0;
 }
 
 ?>

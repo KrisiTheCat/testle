@@ -66,12 +66,12 @@ function initSummary(){
         $('#listStudentsTask').find('.additionalData').html(`(${sumInfo.students} listed)`);
     }
 
-    if(Object.keys(attendeesByGroups[0]).length == 0){
+    if(Object.keys(attendeesByGroups[0]).length == 0 && sumInfo.students != 0){
         $('#noPhotoTask').addClass('completedTask');
     }
     $('#noPhotoTask').find('.additionalData').html(`(${sumInfo.students - Object.keys(attendeesByGroups[0]).length} | ${sumInfo.students})`);
 
-    if(Object.keys(attendeesByGroups[2]).length == sumInfo.students){
+    if(Object.keys(attendeesByGroups[2]).length == sumInfo.students && sumInfo.students != 0){
         $('#handCheckTask').addClass('completedTask');
     }
     $('#handCheckTask').find('.additionalData').html(`(${Object.keys(attendeesByGroups[2]).length} | ${sumInfo.students})`);
@@ -82,8 +82,8 @@ function initSummary(){
         data: { "callUsersFunction": "getEditors", 
         "postID" : window.postID},
         success: function(data) {
-            var roles = JSON.parse(data['roles']);
-            displayEditors(roles);
+            var editors = JSON.parse(data['editors']);
+            displayEditors(editors);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             toastr.error("Unable to retrieve editors");
@@ -92,10 +92,10 @@ function initSummary(){
     
 }
 
-function displayEditors(roles){
-    var rolesId = [];
+function displayEditors(editors){
+    var editorsId = [];
     var text = '';
-    for(editor of roles){
+    for(editor of editors){
         switch(editor.role){
         case 'editor':
             text += `<li class="editorLi" data-id="${editor.id}">${window.usersKrisi[editor.id].name} (editor)</li>`;
@@ -103,11 +103,8 @@ function displayEditors(roles){
         case 'creator':
             text = `<li class="creatorLi" data-id="${editor.id}">${window.usersKrisi[editor.id].name} (creator)</li>` + text;
             break;
-        case 'creator':
-            text += `<li data-id="${editor.id}">${window.usersKrisi[editor.id].name} (${editor.role})</li>`;
-            break;
         }
-        rolesId.push(editor.id);
+        editorsId.push(editor.id);
     }
     $('#editorsList').html(text);
     $('#editorsList').find(`[data-id='${window.userID}']`).addClass('meLi');
@@ -116,13 +113,14 @@ function displayEditors(roles){
         $('#editorsList').html($('#editorsList').html() + '<li><input type="text" id="newEditorInput" placeholder="Add editor"/></li>');
         var lis = $('#editorsList').find('li');
         for(li of lis){
-            if(!$(li).hasClass('meLi') && !$(li).hasClass('creatorLi')){
+            console.log($(li).attr('id'));
+            if(!$(li).hasClass('meLi') && $(li).hasClass('editorLi')){
                 $(li).addClass('removableLi');
             }
         }
         const names = [];
         Object.values(window.usersKrisi).forEach((user) => {
-            if(!rolesId.includes(user.id) && !user.roles.includes('student')){
+            if(!editorsId.includes(user.id) && !user.roles.includes('student')){
                 names.push(user.name);
             }
         });
@@ -150,9 +148,9 @@ function displayEditors(roles){
                         "postID" : window.postID,
                         "editor" : id},
                         success: function(data) {
-                            var roles = JSON.parse(data['roles']);
-                            console.log(roles);
-                            displayEditors(roles);
+                            var editors = JSON.parse(data['editors']);
+                            console.log(editors);
+                            displayEditors(editors);
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
                             toastr.error("Unable to add editor");
@@ -177,8 +175,8 @@ function displayEditors(roles){
                     "postID" : window.postID,
                     "editor" : id},
                     success: function(data) {
-                        var roles = JSON.parse(data['roles']);
-                        displayEditors(roles);
+                        var editors = JSON.parse(data['editors']);
+                        displayEditors(editors);
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         toastr.error("Unable to remove editor");

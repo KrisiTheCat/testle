@@ -107,7 +107,6 @@ function initForm(){
             thePDF = pdf;
             numPages = pdf.numPages;
             currPage = 1;
-            console.log(numPages);
             $('#canvasDiv').html('');
             pdf.getPage( 1 ).then( handlePages );
         }).catch(function(error) {

@@ -17,6 +17,13 @@ get_header(); ?>
             do_action( 'lalita_before_main_content' );
             while ( have_posts() ) : the_post();
                 get_template_part( 'content', 'single' );
+				
+  $query = new WP_Query( array('post_type' =>  'test'));
+  $ans = array();
+
+  foreach ($query->posts as $post) { 
+				//var_dump($post);
+  }
     		
                 if(!is_user_logged_in()){
 					?><script>

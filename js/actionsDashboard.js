@@ -14,7 +14,7 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
 });
 
 function displayTests(tests){
-    text = '';
+    text = ``;
     for(test of tests){
         var addclass = ''
         switch(test.role[0]){
@@ -29,7 +29,22 @@ function displayTests(tests){
                     <p class="testRole">Role: ${test.role}</p>
                 </div>`;
     }
-    $('#myTests').html(text);
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callUsersFunction": "canCreateTests", 
+        "userID" : window.attID},
+        success: function(data) {
+            //console.log(data);
+            if(data == 1){
+                text += `<div class="testDiv" id="createTest">
+                            <div class="gradientOverlay"></div>
+                            <p>+</p>
+                        </div>`;
+            }
+            $('#myTests').html(text);
+        }
+    });
 }
 function displayGroups(groups){
     text = '';
@@ -49,3 +64,26 @@ function displayGroups(groups){
     }
     $('#myTests').html(text);
 }
+
+$(document).on('click', '#createTest', ()=>{
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callUsersFunction": "createPost", 
+        "userID" : window.attID,
+        "title" : 'Krisi'},
+        success: function(data) {
+            //console.log(data);
+            if(data['id'] == 0){
+                toastr.error("Unable to create test");
+            }
+            else {
+                displayTests(JSON.parse(data['roles']));
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            toastr.error("Unable to create test");
+        }
+    });
+
+});
