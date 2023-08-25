@@ -1,5 +1,6 @@
 
 var tempPath;
+toastr.options = {"icon": false,"closeButton": true, "newestOnTop": true, "progressBar": true, "positionClass": "toast-bottom-right"};
 
 jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
     $(document).ready(function(){

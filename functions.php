@@ -130,11 +130,12 @@ function example_enqueue_styles() {
   //wp_enqueue_style('parent-theme', get_template_directory_uri() .'/style.css', array('lalita-style-css'));
 
   wp_enqueue_script('jquery');
+  wp_enqueue_style('toaster_css', get_template_directory_uri() . '-child/css/toaster.css');
+  wp_enqueue_script('toaster', get_template_directory_uri() . '-child/js/toaster.js', array('jquery'));
 
   if( is_single() && get_post_type()=='test' ){
-    wp_enqueue_style('toaster_css', get_template_directory_uri() . '-child/css/toaster.css');
-
-
+    
+    
     // Enqueue jQuery UI from a CDN or local file
     wp_enqueue_script('jquery-ui', 'https://code.jquery.com/ui/1.13.0/jquery-ui.min.js', array('jquery'), '1.13.0', true);
     wp_enqueue_script('excelFunctions', 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', array('jquery'), '1.13.0', true);
@@ -152,14 +153,13 @@ function example_enqueue_styles() {
     
     wp_enqueue_script('canvasOperations', get_template_directory_uri() . '-child/js/canvasOperations.js', array('jquery'));
     wp_enqueue_script('opencv', get_template_directory_uri() . '-child/js/opencv.js', array('jquery'));
-    wp_enqueue_script('toaster', get_template_directory_uri() . '-child/js/toaster.js', array('jquery'));
     wp_enqueue_script('pixelmatch', get_template_directory_uri() . '-child/js/pixelmatch.js', array('jquery'));
     wp_enqueue_script('imageAnalysis', get_template_directory_uri() . '-child/js/imageAnalysis.js', array('jquery','opencv','pixelmatch'));
     wp_enqueue_script('pdf_script', get_template_directory_uri() . '-child/js/pdf.js', array('jquery'));
     wp_enqueue_script('pdf_worker_script', get_template_directory_uri() . '-child/js/pdf.worker.js', array('jquery'));
     wp_enqueue_script( 'jquery-ui-tabs' );
   }
-
+  
   if(get_post_field( 'post_name' )=='dashboard' ){
     wp_enqueue_script('actionsDashboard', get_template_directory_uri() . '-child/js/actionsDashboard.js', array('jquery'));
   }

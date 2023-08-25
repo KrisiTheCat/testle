@@ -10,8 +10,10 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
                 displayTests(JSON.parse(data['roles']));
             }
         });
+        
     });
 });
+toastr.options = {"icon": false,"closeButton": true, "newestOnTop": true, "progressBar": true, "positionClass": "toast-bottom-right"};
 
 function displayTests(tests){
     text = ``;
@@ -22,11 +24,15 @@ function displayTests(tests){
             case 'e': addclass = 'testDivEditor'; break;
             case 'a': addclass = 'testDivAttendee'; break;
         }
-        text += `<div class="testDiv ${addclass}" onclick="window.location.href = '${test.link}'">
-                    <div class="gradientOverlay"></div>
-                    <p class="testTitle">${test.postName}</p>
-                    <p class="testDate">${test.date}</p>
+        text += `<div class="testDiv ${addclass}" data-link="${test.link}" data-id="${test.postID}">
+                    <textarea  class="testTitle" maxlength="20" data-original="${test.postName}" readonly>${test.postName}</textarea >
                     <p class="testRole">Role: ${test.role}</p>
+                    <img class="editTestName" src="${window.tempPath + '/edit.png'}"/>
+                    <div>
+                        <button class="createTestCr">Save</button>
+                        <button class="createTestCa">Cancel</button>
+                    </div>
+                    <div class="gradientOverlay"></div>
                 </div>`;
     }
     $.ajax({
@@ -37,53 +43,99 @@ function displayTests(tests){
         success: function(data) {
             //console.log(data);
             if(data == 1){
-                text += `<div class="testDiv" id="createTest">
-                            <div class="gradientOverlay"></div>
+                text += `<div class="testDiv createTest">
                             <p>+</p>
+                            <textarea type="text" placeholder="Test title" maxlength="20"></textarea>
+                            <div>
+                                <button class="createTestCr">Create</button>
+                                <button class="createTestCa">Cancel</button>
+                            </div>
+                            <div class="gradientOverlay"></div>
                         </div>`;
             }
             $('#myTests').html(text);
         }
     });
 }
-function displayGroups(groups){
-    text = '';
-    for(group of groups){
-        var addclass = ''
-        switch(group.role[0]){
-            case 'c': addclass = 'testDivCreator'; break;
-            case 'e': addclass = 'testDivEditor'; break;
-            case 'a': addclass = 'testDivAttendee'; break;
-        }
-        text += `<div class="testDiv ${addclass}" onclick="window.location.href = '${group.link}'">
-                    <div class="gradientOverlay"></div>
-                    <p class="testTitle">${group.postName}</p>
-                    <p class="testDate">${group.date}</p>
-                    <p class="testRole">Role: ${group.role}</p>
-                </div>`;
-    }
-    $('#myTests').html(text);
-}
 
-$(document).on('click', '#createTest', ()=>{
-    $.ajax({
-        url: '',
-        type: 'post',
-        data: { "callUsersFunction": "createPost", 
-        "userID" : window.attID,
-        "title" : 'Krisi'},
-        success: function(data) {
-            //console.log(data);
-            if(data['id'] == 0){
-                toastr.error("Unable to create test");
-            }
-            else {
-                displayTests(JSON.parse(data['roles']));
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            toastr.error("Unable to create test");
-        }
-    });
-
+$(document).on('click', '.editTestName', function (e){
+    e.stopPropagation();
+    this.parentElement.getElementsByTagName('textarea')[0].removeAttribute("readonly");
+    $(this).parent().addClass('activeCreate');
 });
+$(document).on('click', '.testTitle', (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+});
+$(document).on('click', '.testDiv', function (){
+    if($(this).hasClass('createTest')) return;
+    window.location.href = $(this).data('link');
+});
+$(document).on('click', '.createTest', function (e){
+    e.stopPropagation();
+    $('.createTest').addClass('activeCreate');
+});
+
+$(document).on('click','.createTestCa',function(e){
+    e.stopPropagation();
+    $(this).parent().parent().removeClass('activeCreate');
+    if(!$(this).parent().parent().hasClass('createTest')){
+        var tarea = this.parentElement.parentElement.getElementsByTagName('textarea')[0];
+        tarea.setAttribute("readonly", "true");
+        $(tarea).val($(tarea).data('original'));
+    }
+});
+$(document).on('click','.createTestCr',function(e){
+    e.stopPropagation();
+    var title = $(this).parent().parent().find('textarea').first().val();
+    if(title.length < 5){
+        toastr.error("Title too short");
+    } 
+    else if(title.length > 20){
+        toastr.error("Title too long");
+    }
+    else {
+        if($(this).parent().parent().hasClass('createTest')){
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callUsersFunction": "createPost", 
+                "userID" : window.attID,
+                "title" : title},
+                success: function(data) {
+                    //console.log(data);
+                    if(data['id'] == 0){
+                        toastr.error("Unable to create test");
+                    }
+                    else {
+                        displayTests(JSON.parse(data['roles']));
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error("Unable to create test");
+                }
+            });
+        }
+        else {
+            var postID = parseInt($(this).parent().parent().data('id'));
+            var parent = $(this).parent().parent();
+            var tarea = this.parentElement.parentElement.getElementsByTagName('textarea')[0];
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callUsersFunction": "changeTitle", 
+                "postID" : postID,
+                "title" : title},
+                success: function(data) {
+                    tarea.setAttribute("readonly", "true");
+                    parent.removeClass('activeCreate');
+                    $(tarea).attr('data-original',title);
+                    $(tarea).val(title);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error("Unable to change name");
+                }
+            });
+        }
+    }
+    });

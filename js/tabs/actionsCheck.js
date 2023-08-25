@@ -5,8 +5,6 @@ var answerTemplateCanvases = Array(4);
 var blackanswerTemplateBlacks = Array(3);
 var divStatus;
 
-toastr.options = {"icon": false,"closeButton": true, "newestOnTop": true, "progressBar": true, "positionClass": "toast-bottom-right"};
-
 function initCheck(){
 
     //getID

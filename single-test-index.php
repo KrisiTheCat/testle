@@ -8,10 +8,6 @@
 	window.openedTab = 'summary';
 </script>
 <div id="summary">
-	<div style="display: flex">
-		<label id="attendeeNameLbl" for="attendeeName">Test name </label>
-		<input type="text" id="testName" value="<?php the_title(); ?>"/>
-	</div>
 	<h4>Editors:</h4>
 	<ul id="editorsList">
 		<li><input type="text" id="newEditorInput"/></li>
