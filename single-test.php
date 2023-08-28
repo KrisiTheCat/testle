@@ -17,32 +17,6 @@ $current_fp = get_query_var('fpage'); ?>
 			<header class="entry-header">
 				<h1 class="entry-title"><?php the_title(); ?></h1>
 			</header><!-- .entry-header -->
-			<ul id="menu-book-nav" class="testMenu">
-				<li class="menu-item">
-					<a id="summaryLink"   href="<?php echo get_permalink(); ?>"     		data-hover="Dashboard">Dashboard</a>
-					<div class="notifCircle">0</div>
-				</li>
-				<li class="menu-item">
-					<a id="attendeesLink" href="<?php echo get_permalink() ?>attendees/" 	data-hover="Attendees">Attendees</a>
-					<div class="notifCircle">0</div>
-				</li>
-				<li class="menu-item">
-					<a id="baseLink"      href="<?php echo get_permalink() ?>base/"		data-hover="Base">Base</a>
-					<div class="notifCircle">0</div>
-				</li>
-				<li class="menu-item">
-					<a id="checkLink"     href="<?php echo get_permalink() ?>check/"		data-hover="Check">Check</a>
-					<div class="notifCircle">0</div>
-				</li>
-				<li class="menu-item">
-					<a id="handcheckLink" href="<?php echo get_permalink() ?>handcheck/"	data-hover="Hand check">Hand Check</a>
-					<div class="notifCircle">0</div>
-				</li>
-				<li class="menu-item">
-					<a id="formLink"      href="<?php echo get_permalink() ?>form/"		data-hover="Form">Form</a>
-					<div class="notifCircle">0</div>
-				</li>
-			</ul>
 			<canvas id="imageCanvas" width="1000" class="invisible"></canvas>
 			<input type="text" id="inputPostId" class="invisible" name="postID" value='<?php echo get_the_ID();?>' readonly/>
 			<button type="button" id="nullBtn" class="invisible">Nullify</button>
@@ -69,7 +43,12 @@ $current_fp = get_query_var('fpage'); ?>
 						get_template_part( 'single', 'test-notallowed' );
 						break;
 					case 1:
-						//TODO results
+						?><script>
+							window.userRole = 'attendee';
+							window.contentKrisi = '<?php echo json_encode($content);?>';
+							window.responsesKrisi = '<?php echo json_encode($responses);?>';
+						</script><?php
+						get_template_part( 'single', 'test-results' );
 						break;
 					case 2:
 						$users = get_users();
@@ -89,6 +68,32 @@ $current_fp = get_query_var('fpage'); ?>
 							$pageInfo[$i]['url'] = wp_get_attachment_url($pageInfo[$i]['attID']);
 						}
 						?>	
+						<ul id="menu-book-nav" class="testMenu">
+							<li class="menu-item">
+								<a id="summaryLink"   href="<?php echo get_permalink(); ?>"     		data-hover="Dashboard">Dashboard</a>
+								<div class="notifCircle">0</div>
+							</li>
+							<li class="menu-item">
+								<a id="attendeesLink" href="<?php echo get_permalink() ?>attendees/" 	data-hover="Attendees">Attendees</a>
+								<div class="notifCircle">0</div>
+							</li>
+							<li class="menu-item">
+								<a id="baseLink"      href="<?php echo get_permalink() ?>base/"		data-hover="Base">Base</a>
+								<div class="notifCircle">0</div>
+							</li>
+							<li class="menu-item">
+								<a id="checkLink"     href="<?php echo get_permalink() ?>check/"		data-hover="Check">Check</a>
+								<div class="notifCircle">0</div>
+							</li>
+							<li class="menu-item">
+								<a id="handcheckLink" href="<?php echo get_permalink() ?>handcheck/"	data-hover="Hand check">Hand Check</a>
+								<div class="notifCircle">0</div>
+							</li>
+							<li class="menu-item">
+								<a id="formLink"      href="<?php echo get_permalink() ?>form/"		data-hover="Form">Form</a>
+								<div class="notifCircle">0</div>
+							</li>
+						</ul>
 						<script>
 							window.userID = '<?php echo get_current_user_id(); ?>';
 							window.userRole = 'editor';

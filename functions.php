@@ -140,7 +140,7 @@ function example_enqueue_styles() {
     wp_enqueue_script('jquery-ui', 'https://code.jquery.com/ui/1.13.0/jquery-ui.min.js', array('jquery'), '1.13.0', true);
     wp_enqueue_script('excelFunctions', 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', array('jquery'), '1.13.0', true);
     wp_enqueue_script('globalFunctions', get_template_directory_uri() . '-child/js/globalFunctions.js', array('jquery'));
-    wp_enqueue_script('actionsAttendeeResult', get_template_directory_uri() . '-child/js/tabs/actionsAttendeeResult.js', array('jquery'));
+    wp_enqueue_script('actionsResults', get_template_directory_uri() . '-child/js/tabs/actionsResults.js', array('jquery'));
     wp_enqueue_script('actionsSummary', get_template_directory_uri() . '-child/js/tabs/actionsSummary.js', array('jquery'));
     wp_enqueue_script('actionsAttendees', get_template_directory_uri() . '-child/js/tabs/actionsAttendees.js', array('jquery'));
     wp_enqueue_script('actionsBase', get_template_directory_uri() . '-child/js/tabs/actionsBase.js', array('jquery'));
@@ -149,7 +149,7 @@ function example_enqueue_styles() {
     wp_enqueue_script('actionsForm', get_template_directory_uri() . '-child/js/tabs/actionsForm.js', array('jquery'));
     
     wp_enqueue_script('meta_data_script', get_template_directory_uri() . '-child/js/meta_data_input.js', 
-    array('jquery', 'actionsAttendees', 'actionsAttendeeResult', 'actionsBase', 'actionsCheck', 'actionsHandCheck', 'actionsForm'));
+    array('jquery', 'actionsAttendees', 'actionsResults', 'actionsBase', 'actionsCheck', 'actionsHandCheck', 'actionsForm'));
     
     wp_enqueue_script('canvasOperations', get_template_directory_uri() . '-child/js/canvasOperations.js', array('jquery'));
     wp_enqueue_script('opencv', get_template_directory_uri() . '-child/js/opencv.js', array('jquery'));

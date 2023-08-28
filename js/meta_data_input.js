@@ -32,12 +32,12 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
             initNotifCircles();
 
             switch(window.openedTab){
-                case 'summary':   {initSummary();   break;}
-                case 'attendees': {initAttendees(); break;}
-                case 'base':      {initBase();      break;}
-                case 'check':     {initCheck();     break;}
-                case 'handcheck': {initHandCheck(); break;}
-                case 'form':      {initForm();      break;}
+                case 'summary':   {initSummary();       break;}
+                case 'attendees': {initAttendees();     break;}
+                case 'base':      {initBase();          break;}
+                case 'check':     {initCheck();         break;}
+                case 'handcheck': {initHandCheck();     break;}
+                case 'form':      {initForm();          break;}
             }
             $('#'+window.openedTab+'Link').parent().addClass('current');
             if(window.openedTab!='check') $('#checkLink').parent().hide();

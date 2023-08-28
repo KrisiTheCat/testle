@@ -62,5 +62,20 @@
 			<p class="additionalData"></p>
 			<a class="taskLink" href="handcheck">fix here</a>
 		</div>
+		<div class="taskDiv" id="sendResultsTask">
+			<div>
+				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus1.png" class=""></img>
+			</div>
+			<p>Allow students to see their results</p>
+			<div class="toggle-button-cover">
+				<div class="button-cover">
+					<div class="button r" id="button-5">
+					<input type="checkbox" class="checkbox" />
+					<div class="knobs"><span></span></div>
+					<div class="layer"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

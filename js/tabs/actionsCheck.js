@@ -26,6 +26,7 @@ function initCheck(){
     tempPath = tempPath.substring(0,tempPath.lastIndexOf('/'));
 
     var text = $('#summaryDiv').html();
+    console.log( window.contentKrisi.length);
     for(let i = 0; i < window.contentKrisi.length; i++){
         text += `<div class="moduleSummery">
         <label><b>Module</b> #${i+1}</label>
@@ -42,6 +43,7 @@ function initCheck(){
         </div>
     </div>`;
     }
+    $('#summaryDiv').html(text);
 
     refreshResponseTable();
     initAnswerUploadWays();
@@ -162,10 +164,12 @@ function refreshResponseTable(){
         content[moduleID]['stats'][3] = 0;
         for(var questionID = 0; questionID < window.contentKrisi[moduleID]['subq'].length; questionID++){
             var questionInfo = handleQuestion(
+                attendeeID,
                 (questionID+1),
                 window.responsesKrisi[attendeeID][moduleID]['subq'][questionID],
                 window.contentKrisi[moduleID]['subq'][questionID],
-                moduleID+'_'+questionID);
+                moduleID+'_'+questionID,
+                true);
             table.append(questionInfo.text);
             modulePoints += questionInfo.points;
             content[moduleID]['stats'] = addStatusArrays(content[moduleID]['stats'], questionInfo.status);
@@ -174,117 +178,10 @@ function refreshResponseTable(){
         maxModulePoints = parseInt(window.contentKrisi[moduleID]['points']);
         contentMaxPoints += maxModulePoints;
         $('.pointsField' + moduleID + '_-1_-1_-1').eq(0).html(modulePoints + ' | ' + maxModulePoints);
-        refreshModuleStats(moduleID);
+        refreshModuleStats(content, moduleID);
     }
     $('.pointsField-1_-1_-1_-1').eq(0).html(
         window.responsesKrisi[attendeeID]['pointsAll'] + ' | ' + contentMaxPoints);
-
-    function handleQuestion(id, questionResp, questionCont, code){
-        const alphabet = "abcdefghijklmnopqrstuvwxyz";
-        var text = '', points = 0, status = Array(STATUS_COUNT).fill(0);
-        switch(questionCont['type']){
-        case 'Descriptive':
-        case 'Composite':
-            for(var i = 0; i < questionCont['subq'].length; i++){
-                var info = handleQuestion(id + alphabet.charAt(i%26), questionResp['subq'][i],questionCont['subq'][i], code+'_'+i);
-                points += info.points;
-                status = addStatusArrays(status, info.status);
-                text += info.text;
-            }
-            if(questionCont['type'][0] == 'D'){
-                text = generateDQuestionRow(code, points, questionCont['points']) + text;
-            } else {
-                text = generateCQuestionRow(code, points, questionCont['points']) + text;
-            }
-            break;
-        case 'Check':
-            if(questionResp['status'] == 1){
-                points = questionCont['points'];
-            }
-            if(id.charAt(id.length-1) == 'a') id=id.slice(0,-1);
-            else id = '';
-            
-            status[questionResp['status']]+=questionCont['points'];
-            text = generateChQuestionRow(
-                id,
-                code,
-                questionCont['answer'],
-                points,
-                questionCont['points'],
-                questionResp['status']);
-            break;
-        case 'Opened':
-            if(questionCont['answer'] == questionResp['answer']){
-                points = questionCont['points'];
-            }
-            status[questionResp['status']]+=questionCont['points'];
-            text = generateOQuestionRow(
-                id,
-                code,
-                questionResp['answer'],
-                questionCont['answer'],
-                points,
-                questionCont['points'],
-                questionResp['status']);
-            break;
-        case 'Closed':
-            if(questionCont['answer'] == questionResp['answer']){
-                points = questionCont['points'];
-            }
-            status[questionResp['status']]+=questionCont['points'];
-            text = generateClQuestionRow(
-                id,
-                code,
-                questionResp['answer'],
-                questionCont['answer'],
-                points,
-                questionCont['points'],
-                questionResp['status'],
-                responsesKrisi[attendeeID]['images'] && responsesKrisi[attendeeID]['images'][getQuestionPage(window.formKrisi, code)]);
-            break;
-        }
-        return {text: text, points: points, status: status};
-    }
-
-    function addStatusArrays(array, adding){
-        for(var i = 0; i < STATUS_COUNT; i++){
-            array[i] += adding[i];
-        }
-        return array;
-    }
-
-    function refreshGeneralScoreStats(){
-        var sum = content['stats'][0] + content['stats'][1] + content['stats'][2] + content['stats'][3];
-        var right = 100*content['stats'][1]/sum;
-        $('.correctAnswers').eq(0).width(right+"%");
-        $('.correctAnswers').eq(0).attr('title', (content['stats'][1] + ' points from correct answers'));
-        var wrong = 100*content['stats'][0]/sum;
-        $('.wrongAnswers').eq(0).width(wrong+"%");
-        $('.wrongAnswers').eq(0).attr('title', (content['stats'][0] + ' points from wrong answers'));
-        var notfill = 100*content['stats'][2]/sum;
-        $('.notfilledAnswers').eq(0).width(notfill+"%");
-        $('.notfilledAnswers').eq(0).attr('title', (content['stats'][2] + ' points from not filled questions'));
-        var tobe = 100 - right - wrong - notfill;
-        $('.toCheckAnswers').eq(0).width(tobe+"%");
-        $('.toCheckAnswers').eq(0).attr('title', (content['stats'][3] + ' points from to-be-checked questions'));
-    }
-
-    function refreshModuleStats(moduleID){
-        var sum = content[moduleID]['stats'][0] + content[moduleID]['stats'][1] + content[moduleID]['stats'][2] + content[moduleID]['stats'][3];
-        var right = 100*content[moduleID]['stats'][1]/sum;
-        $('.correctAnswers').eq(moduleID+1).width(right+"%");
-        $('.correctAnswers').eq(moduleID+1).attr('title', (content['stats'][1] + ' points from correct answers'));
-        var wrong = 100*content[moduleID]['stats'][0]/sum;
-        $('.wrongAnswers').eq(moduleID+1).width(wrong+"%");
-        $('.wrongAnswers').eq(moduleID+1).attr('title', (content['stats'][0] + ' points from wrong answers'));
-        var notfill = 100*content[moduleID]['stats'][2]/sum;
-        $('.notfilledAnswers').eq(moduleID+1).width(notfill+"%");
-        $('.notfilledAnswers').eq(moduleID+1).attr('title', (content['stats'][2] + ' points from not filled questions'));
-        var tobe = 100 - right - wrong - notfill;
-        $('.toCheckAnswers').eq(moduleID+1).width(tobe+"%");
-        $('.toCheckAnswers').eq(moduleID+1).attr('title', (content['stats'][3] + ' points from to-be-checked questions'));
-        refreshGeneralScoreStats();
-    }
 
     var openedNotes = false;
 
@@ -300,6 +197,123 @@ function refreshResponseTable(){
             openedNotes = true;
         }
     });
+}
+
+
+
+function refreshGeneralScoreStats(content){
+    var sum = content['stats'][0] + content['stats'][1] + content['stats'][2] + content['stats'][3];
+    var right = 100*content['stats'][1]/sum;
+    $('.correctAnswers').eq(0).width(right+"%");
+    $('.correctAnswers').eq(0).attr('title', (content['stats'][1] + ' points from correct answers'));
+    var wrong = 100*content['stats'][0]/sum;
+    $('.wrongAnswers').eq(0).width(wrong+"%");
+    $('.wrongAnswers').eq(0).attr('title', (content['stats'][0] + ' points from wrong answers'));
+    var notfill = 100*content['stats'][2]/sum;
+    $('.notfilledAnswers').eq(0).width(notfill+"%");
+    $('.notfilledAnswers').eq(0).attr('title', (content['stats'][2] + ' points from not filled questions'));
+    var tobe = 100 - right - wrong - notfill;
+    $('.toCheckAnswers').eq(0).width(tobe+"%");
+    $('.toCheckAnswers').eq(0).attr('title', (content['stats'][3] + ' points from to-be-checked questions'));
+}
+
+function refreshModuleStats(content, moduleID){
+    var sum = content[moduleID]['stats'][0] + content[moduleID]['stats'][1] + content[moduleID]['stats'][2] + content[moduleID]['stats'][3];
+    var right = 100*content[moduleID]['stats'][1]/sum;
+    $('.correctAnswers').eq(moduleID+1).width(right+"%");
+    $('.correctAnswers').eq(moduleID+1).attr('title', (content['stats'][1] + ' points from correct answers'));
+    var wrong = 100*content[moduleID]['stats'][0]/sum;
+    $('.wrongAnswers').eq(moduleID+1).width(wrong+"%");
+    $('.wrongAnswers').eq(moduleID+1).attr('title', (content['stats'][0] + ' points from wrong answers'));
+    var notfill = 100*content[moduleID]['stats'][2]/sum;
+    $('.notfilledAnswers').eq(moduleID+1).width(notfill+"%");
+    $('.notfilledAnswers').eq(moduleID+1).attr('title', (content['stats'][2] + ' points from not filled questions'));
+    var tobe = 100 - right - wrong - notfill;
+    $('.toCheckAnswers').eq(moduleID+1).width(tobe+"%");
+    $('.toCheckAnswers').eq(moduleID+1).attr('title', (content['stats'][3] + ' points from to-be-checked questions'));
+    refreshGeneralScoreStats(content);
+}
+
+function addStatusArrays(array, adding){
+    for(var i = 0; i < STATUS_COUNT; i++){
+        array[i] += adding[i];
+    }
+    return array;
+}
+
+function handleQuestion(attendeeID, id, questionResp, questionCont, code, generate){
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    var text = '', points = 0, status = Array(STATUS_COUNT).fill(0);
+    switch(questionCont['type']){
+    case 'Descriptive':
+    case 'Composite':
+        for(var i = 0; i < questionCont['subq'].length; i++){
+            var info = handleQuestion(attendeeID, id + alphabet.charAt(i%26), questionResp['subq'][i],questionCont['subq'][i], code+'_'+i, generate);
+            points += info.points;
+            status = addStatusArrays(status, info.status);
+            text += info.text;
+        }
+        if(generate){
+            if(questionCont['type'][0] == 'D'){
+                text = generateDQuestionRow(code, points, questionCont['points']) + text;
+            } else {
+                text = generateCQuestionRow(code, points, questionCont['points']) + text;
+            }
+        }
+        break;
+    case 'Check':
+        if(questionResp['status'] == 1){
+            points = questionCont['points'];
+        }
+        if(id.charAt(id.length-1) == 'a') id=id.slice(0,-1);
+        else id = '';
+        
+        status[questionResp['status']]+=questionCont['points'];
+        if(generate){
+            text = generateChQuestionRow(
+                id,
+                code,
+                questionCont['answer'],
+                points,
+                questionCont['points'],
+                questionResp['status']);
+        }
+        break;
+    case 'Opened':
+        if(questionCont['answer'] == questionResp['answer']){
+            points = questionCont['points'];
+        }
+        status[questionResp['status']]+=questionCont['points'];
+        if(generate){
+            text = generateOQuestionRow(
+                id,
+                code,
+                questionResp['answer'],
+                questionCont['answer'],
+                points,
+                questionCont['points'],
+                questionResp['status']);
+        }
+        break;
+    case 'Closed':
+        if(questionCont['answer'] == questionResp['answer']){
+            points = questionCont['points'];
+        }
+        status[questionResp['status']]+=questionCont['points'];
+        if(generate){
+            text = generateClQuestionRow(
+                id,
+                code,
+                questionResp['answer'],
+                questionCont['answer'],
+                points,
+                questionCont['points'],
+                questionResp['status'],
+                responsesKrisi[attendeeID]['images'] && responsesKrisi[attendeeID]['images'][getQuestionPage(window.formKrisi, code)]);
+        }
+       break;
+    }
+    return {text: text, points: points, status: status};
 }
 
 function changeImage(stIcons, status){
