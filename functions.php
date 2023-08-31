@@ -176,10 +176,6 @@ if(isset($_POST['nullifyTest'])){
   exit();
 }
 
-if(isset($_POST['testKrisi'])){
-  meta_box_save_test(intval($_POST['postID']));
-}
-
 if(isset($_POST['getImageURL'])){
   echo json_encode(array('url'=> wp_get_attachment_url($_POST['getImageURL']), 'pageId'=> $_POST['pageId']));
   exit();

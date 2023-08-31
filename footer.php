@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 </div><!-- #page -->
 
 <?php
+
+
 /**
  * lalita_before_footer hook.
  *
@@ -26,8 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<a href="/dashboard">Dashboard</a>
 			<a href="/my-profile">My Profile</a>
 		</div>
-		<p style="    padding-bottom: 8px;">Kristina Stoaynova 2023 All rights reserved</p>
-		<p>Powered by Wordpress</p>
+		<p>Powered by Wordpress and Kristina Stoyanova</p>
+		<p style="    padding-bottom: 8px;"><?php echo date('Y'); ?> All rights reserved</p>
 	</div>
 	<img style="height:50px" src="<?php echo get_stylesheet_directory_uri(); ?>/img/logo.png"/>
 </div><!-- .site-footer -->

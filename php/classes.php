@@ -9,6 +9,26 @@ class Question{
     }
     return $this->subq[intval(array_shift($indexArr))]->getQuestion($indexArr);
   }
+  
+
+  public function getPoints($indexArr){
+    if(count($indexArr) == 0){
+      return $this->points;
+    }
+    return $this->subq[intval(array_shift($indexArr))]->getPoints($indexArr);
+  }
+  public function getAnswer($indexArr){
+    if(count($indexArr) == 0){
+      return $this->answer;
+    }
+    return $this->subq[intval(array_shift($indexArr))]->getAnswer($indexArr);
+  }
+  public function getType($indexArr){
+    if(count($indexArr) == 0){
+      return $this->type;
+    }
+    return $this->subq[intval(array_shift($indexArr))]->getType($indexArr);
+  }
 
 
   public function addSubQ($sub, $indexArr){
@@ -76,25 +96,6 @@ class QuestionContent extends Question{
         $this->subq = array(new Question('Closed'));
         break;
     }
-  }
-
-  public function getPoints($indexArr){
-    if(count($indexArr) == 0){
-      return $this->points;
-    }
-    return $this->subq[intval(array_shift($indexArr))]->getPoints($indexArr);
-  }
-  public function getAnswer($indexArr){
-    if(count($indexArr) == 0){
-      return $this->answer;
-    }
-    return $this->subq[intval(array_shift($indexArr))]->getAnswer($indexArr);
-  }
-  public function getType($indexArr){
-    if(count($indexArr) == 0){
-      return $this->type;
-    }
-    return $this->subq[intval(array_shift($indexArr))]->getType($indexArr);
   }
 
   public function changePoints($diff, $indexArr){

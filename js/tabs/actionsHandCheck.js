@@ -82,6 +82,7 @@ function startDescrCheckForAttendee(){
         currChecking.checkPoints[i] = 0;
         currChecking.checkStatus[i] = 0;
         $('#handCheckDescrCheck' + i).prop('checked', false);
+        $('#handCheckDescrCheck' + i).parent().removeClass('completedTask');
     }
     $.ajax({
         url: '',
@@ -122,7 +123,6 @@ function startOpenCheckForAttendee(){
     $('.handCheckAttP').html('Response of <b>' + window.usersKrisi[attendeeID]['name'] + '</b>');
     currChecking.attendeeID = attendeeID;
     var pageId = currChecking.questionF['page'];
-    $('.draggable-div').css("opacity",0);
     $.ajax({
         url: '',
         type: 'post',
@@ -145,7 +145,6 @@ function startOpenCheckForAttendee(){
                 questionCanvasCxt.drawImage(image, 
                     krisi.left*width, krisi.top*height, krisi.width*width, krisi.height*height,
                     0,0, krisi.width*width, krisi.height*height);
-                    $('.draggable-div').css("opacity",1);
                 }, 10);
             }
         },
@@ -192,6 +191,9 @@ $(document).on('click','.handCheckQuestionDiv', function(e){
         currChecking.checkStatus = [];
         for(var i = 0; i < currChecking.questionC['subq'].length; i++){
             $(` <div>
+                    <div>
+                        <img src="${window.srcPath}/img/iconStatus1.png">
+                    </div>
                     <input id="handCheckDescrCheck` + i + `" data-checkid="` + i + `" class="handCheckDescrCheck check_box" type="checkbox">
                     <label for="handCheckDescrCheck` + i + `">` + currChecking.questionC['subq'][i]['answer'] + `</label>
                 </div>`).appendTo('#handCheckDescrChecks');
@@ -206,10 +208,12 @@ $(document).on('click','.handCheckQuestionDiv', function(e){
 $(document).on('change', '.handCheckDescrCheck', function(){
     var checkID = parseInt($(this).data('checkid'));
     if($(this).is(":checked")){
+        $(this).parent().addClass('completedTask');
         currChecking.checkPoints[checkID] = parseInt(currChecking.questionC['subq'][checkID]['points']);
         currChecking.checkStatus[checkID] = 1;
     }
     else {
+        $(this).parent().removeClass('completedTask');
         currChecking.checkPoints[checkID] = 0;
         currChecking.checkStatus[checkID] = 0;
     }
@@ -294,7 +298,6 @@ function initBasketActions(){
     });
 
     $('.basketAnswerType').on('drop', function(e) {
-        $('.draggable-div').fadeOut("fast");
         e.preventDefault();
         const draggedData = e.originalEvent.dataTransfer.getData('text/plain');
         if (draggedData === 'dragging') {
@@ -302,41 +305,42 @@ function initBasketActions(){
             handleBasketDrop(basketId);
         }
     });
+}
 
-    function handleBasketDrop(basketId) {
-        if(currChecking.attendeeID && currChecking.indArr && currChecking.moduleID){
-            $('#' + basketId).effect("bounce");
-            var newStatus = 3;
-            switch (basketId) {
-                case 'basket0':
-                    newStatus = 0;
-                break;
-                case 'basket1':
-                    newStatus = 1;
-                break;
-                case 'basket2':
-                    newStatus = 2;
-                break;
-            }
-            $.ajax({
-                url: '',
-                type: 'post',
-                data: { "callResponseEditFunction": "changeStatus", 
-                "postID" : $('#inputPostId').val(),
-                "attendeeID" : currChecking.attendeeID,
-                "moduleID" : currChecking.moduleID,
-                "indArr" : currChecking.indArr,
-                "newStatus" : newStatus,},
-                success: function(data) {
-                    window.responsesKrisi = JSON.parse(data['responses']);
-                    currChecking.seshResults[newStatus]++;
-                    removeCurrCheckingAtt();
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    toastr.error("Unable to upload answer");
-                }
-            });
+function handleBasketDrop(basketId) {
+    if(currChecking.attendeeID && currChecking.indArr && currChecking.moduleID){
+        $('#' + basketId).effect("bounce");
+        var newStatus = 3;
+        switch (basketId) {
+            case 'basket0':
+                newStatus = 0;
+            break;
+            case 'basket1':
+                newStatus = 1;
+            break;
+            case 'basket2':
+                newStatus = 2;
+            break;
         }
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: { "callResponseEditFunction": "changeStatus", 
+            "postID" : $('#inputPostId').val(),
+            "attendeeID" : currChecking.attendeeID,
+            "moduleID" : currChecking.moduleID,
+            "indArr" : currChecking.indArr,
+            "newStatus" : newStatus,},
+            success: function(data) {
+                window.responsesKrisi = JSON.parse(data['responses']);
+                currChecking.seshResults[newStatus]++;
+                console.log(`${window.usersKrisi[attendeeID]['name']}'s answer to ${currChecking.moduleID}.${encodeIds(currChecking.indArr)} is ` + Object.keys(STATUS).find(key => STATUS[key] === newStatus));
+                removeCurrCheckingAtt();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                toastr.error("Unable to upload answer");
+            }
+        });
     }
 }
 
@@ -368,6 +372,7 @@ function endCheckSeshion(){
 
     }
     currChecking = {
+        type: undefined,
         attInArrId: undefined,
         attendeeID: undefined,
         moduleID: undefined,
@@ -412,3 +417,26 @@ function addToCheckForAttendee(all, arr, attID){
         }
     }
 }
+
+$(document).on('keydown',function(e) {
+    if(currChecking.type == 'Opened'){
+        console.log(e.which);
+        if(e.which == 87) { // btn W
+            handleBasketDrop('basket0');
+        }
+        if(e.which == 67) { // btn C
+            handleBasketDrop('basket1');
+        }
+        if(e.which == 69) { // btn E
+            handleBasketDrop('basket2');
+        }
+    }
+    if(currChecking.type == 'Opened' || currChecking.type == 'Descriptive'){
+        if(e.which == 37) { // <-
+            $('.handCheckArrow').first().click();
+        }
+        if(e.which == 39) { // ->
+            $('.handCheckArrow').last().click();
+        }
+    }
+});

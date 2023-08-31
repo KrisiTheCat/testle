@@ -34,18 +34,25 @@
 			<div class="modal-body" style="padding-top: 0px !important;">
 				<img id="handCheckAttendeePage" style="display:none"/>
 				<div class="handCheckOpened">
-					<div class="draggable-div" draggable="true">
-						<canvas id="handCheckOpenAttCanvas" height="0"></canvas>
+					<div>
+						<img width="20px" src="<?php echo get_stylesheet_directory_uri(); ?>/img/dragDrop.png"/>
+						<small>Drag and drop in container</small>
+						<div class="draggable-div" draggable="true">
+							<canvas id="handCheckOpenAttCanvas" height="0"></canvas>
+						</div>
 					</div>
 					<div class="basketsDiv">
 						<div class="basketAnswerType" id="basket0">
 							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/bucket0.png"/>
+							<small>Hotkey: <p>W</p></small>
 						</div>
 						<div class="basketAnswerType" id="basket1">
 							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/bucket1.png"/>
+							<small>Hotkey: <p>C</p></small>
 						</div>
 						<div class="basketAnswerType" id="basket2">
 							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/bucket2.png"/>
+							<small>Hotkey: <p>E</p></small>
 						</div>
 					</div>
 				</div>
@@ -55,16 +62,15 @@
 							<canvas id="handCheckDescrAttCanvas" height="0"></canvas>
 						</div>
 						<div id="handCheckDescrPointsDiv">
-							<p id="handCheckDescrPText">Points:</p>
-							<p id="handCheckDescrPoints">0</p>
 						</div>
 						<div id="handCheckDescrChecks">
-
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
+				<p id="handCheckDescrPText">Points:</p>
+				<p id="handCheckDescrPoints">0</p>
 				<button id="handCheckDescrNotFilled">Skip</button>
 				<button id="handCheckDescrReady">Ready</button>
 			</div>

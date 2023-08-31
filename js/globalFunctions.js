@@ -104,3 +104,10 @@ function codeToString(code){
     }
     return ans;
 }
+
+const STATUS = {
+    WRONG: 0,
+    CORRECT: 1,
+    NOTFILLED: 2,
+    TOBECHECKED: 3
+}

@@ -125,10 +125,11 @@ function pushAttendeesInTable(attendees, div){
     }
     if(count == 0) {
         table.addClass('invisible');
-        table.find('.noSuchText').removeClass('invisible');
+        div.find('.noSuchText').removeClass('invisible');
     } else {
         table.removeClass('invisible');
-        table.find('.noSuchText').addClass('invisible');
+        div.find('.noSuchText').addClass('invisible');
+        console.log(div.find('.noSuchText'));
     }
     table.html(text);
 }
