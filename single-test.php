@@ -45,6 +45,7 @@ $current_fp = get_query_var('fpage'); ?>
 					case 1:
 						?><script>
 							window.userRole = 'attendee';
+							window.postID = '<?php echo get_the_ID(); ?>';
 							window.contentKrisi = '<?php echo json_encode($content);?>';
 							window.responsesKrisi = '<?php echo json_encode($responses);?>';
 						</script><?php

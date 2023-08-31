@@ -68,131 +68,50 @@ p, h4{
   text-decoration: line-through;
 }
 
-.button-cover:before {
-  counter-increment: button-counter;
-  content: counter(button-counter);
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  color: #d7e3e3;
-  font-size: 12px;
-  line-height: 1;
-  padding: 5px;
+.toggleResp{
+  flex: 1;
+}
+.toggleResp input{
+  height: 0;
+  width: 0;
+  visibility: hidden;
 }
 
-.button-cover,
-.knobs,
-.layer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.button {
-  position: relative;
-  top: 50%;
-  width: 74px;
-  height: 36px;
-  margin: -20px auto 0 auto;
-  overflow: hidden;
-}
-
-.button.r,
-.button.r .layer {
-  border-radius: 100px;
-}
-
-
-.button.b2 {
-  border-radius: 2px;
-}
-
-#button-5 {
-  perspective: 60px;
-  overflow: visible;
-}
-
-#button-5 .knobs:before,
-#button-5 .knobs span {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 20px;
-  height: 10px;
-  color: #fff;
-  font-size: 10px;
-  font-weight: bold;
-  text-align: center;
-  line-height: 1;
-  padding: 9px 4px;
-  border-radius: 50%;
-  transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
-}
-
-#button-5 .knobs:before {
-  background-color: #03a9f4;
-}
-
-#button-5 .knobs span:before {
-  content: "YES";
-}
-
-#button-5 .knobs:before,
-#button-5 .layer {
-  transform: rotateY(0);
-  transform-origin: center;
-}
-
-#button-5 .checkbox:checked + .knobs:before,
-#button-5 .checkbox:checked + .knobs span {
-  left: 42px;
-}
-
-#button-5 .checkbox:checked + .knobs:before {
-  transform: rotateY(180deg);
-  background-color: #f44336;
-}
-
-#button-5 .checkbox:checked + .knobs span:before {
-  content: "NO";
-  left: 42px;
-}
-
-#button-5 .checkbox:checked ~ .layer {
-  background-color: #fcebeb;
-  transform: rotateY(-180deg);
-}
-
-#button-5 .knobs,
-#button-5 .knobs:before,
-#button-5 .layer {
-  transition: 0.3s ease all;
-}
-
-
-.checkbox {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  opacity: 0;
+.toggleResp label {
   cursor: pointer;
-  z-index: 3;
+  text-indent: -9999px;
+  width: 40px;
+  height: 20px;
+  background: grey;
+  display: block;
+  border-radius: 20px;
+  position: relative;
+  float: right;
 }
 
-.knobs {
-  z-index: 2;
+.toggleResp label:after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 16px;
+  transition: 0.3s;
 }
 
-.layer {
-  width: 100%;
-  background-color: #ebf7fc;
-  transition: 0.3s ease all;
-  z-index: 1;
+.toggleResp input:checked + label {
+  background: #bada55;
+}
+
+.toggleResp input:checked + label:after {
+  left: calc(100% - 4px);
+  transform: translateX(-100%);
+}
+
+.toggleResp label:active:after {
+  width: 38px;
 }
 
 
@@ -223,7 +142,7 @@ p, h4{
   text-decoration: underline;
 }
 
-.completedTask>div{
+.completedTask>div:first-child{
   background-color: var(--colorCorrect);
 }
 .completedTask p{
@@ -231,6 +150,15 @@ p, h4{
 }
 .completedTask img{
   opacity: 1;
+}
+
+.impossibleTask{
+  opacity: 0.3;
+}
+
+#results>div{
+  display: none;
+  margin-top: 12px;
 }
 
 
@@ -902,7 +830,7 @@ input[type=text].type{
     width: 100%;
     display: flex;
     position: relative;
-    margin-top: 22%;
+    margin-top: 33%;
   }
 
   .basketAnswerType img{

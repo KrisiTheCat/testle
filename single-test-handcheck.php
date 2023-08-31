@@ -11,7 +11,7 @@
 </script>
 <div id="handcheck">
 	<div id="toBeCheckedPopup" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog  modal-lg" role="document" style="margin: 3rem auto;">
+		<div class="modal-dialog " role="document" style="margin: 3rem auto;">
 			<div class="modal-content">
 			<div class="modal-header border-0" style="flex-direction: column">
 				<div style="display: flex; width:100%">
@@ -39,13 +39,13 @@
 					</div>
 					<div class="basketsDiv">
 						<div class="basketAnswerType" id="basket0">
-							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/box0.png"/>
+							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/bucket0.png"/>
 						</div>
 						<div class="basketAnswerType" id="basket1">
-							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/box1.png"/>
+							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/bucket1.png"/>
 						</div>
 						<div class="basketAnswerType" id="basket2">
-							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/box2.png"/>
+							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/bucket2.png"/>
 						</div>
 					</div>
 				</div>

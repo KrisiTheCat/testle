@@ -73,9 +73,11 @@ function initSummary(){
 
     if(Object.keys(attendeesByGroups[2]).length == sumInfo.students && sumInfo.students != 0){
         $('#handCheckTask').addClass('completedTask');
+        $('#sendResultsTask').removeClass('impossibleTask');
+        $('#sendResultsTask').find("input").prop('disabled', false);
+        $('#sendResultsTask').attr('title', '');
     }
     $('#handCheckTask').find('.additionalData').html(`(${Object.keys(attendeesByGroups[2]).length} | ${sumInfo.students})`);
-
     $.ajax({
         url: '',
         type: 'post',
@@ -84,6 +86,22 @@ function initSummary(){
         success: function(data) {
             var editors = JSON.parse(data['editors']);
             displayEditors(editors);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            toastr.error("Unable to retrieve editors");
+        }
+    });
+
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callUsersFunction": "getShowResultsStatus", 
+        "postID" : window.postID},
+        success: function(data) {
+            if(data['showResults'] == true){
+                $('#sendResultsTask').addClass('completedTask');
+                $('#sendResultsTask').find('input').prop('checked', true);
+            }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             toastr.error("Unable to retrieve editors");
@@ -187,6 +205,28 @@ function displayEditors(editors){
     }
 }
 
+
+$(document).on('change','#sendResultsSwitch', function(){
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callUsersFunction": "changeShowResultsStatus", 
+        "postID" : window.postID},
+        success: function(data) {
+            if(data['showResults'] == true){
+                $('#sendResultsTask').addClass('completedTask');
+                $('#sendResultsTask').find('input').prop('checked', true);
+            } else {
+                $('#sendResultsTask').removeClass('completedTask');
+                $('#sendResultsTask').find('input').prop('checked', false);
+
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            toastr.error("Unable to retrieve editors");
+        }
+    });
+})
 
 $('.taskLink').on('click', function(){
     console.log(this.getAttribute('href'));

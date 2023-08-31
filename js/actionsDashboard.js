@@ -26,9 +26,10 @@ function displayTests(tests){
         }
         text += `<div class="testDiv ${addclass}" data-link="${test.link}" data-id="${test.postID}">
                     <textarea  class="testTitle" maxlength="20" data-original="${test.postName}" readonly>${test.postName}</textarea >
-                    <p class="testRole">Role: ${test.role}</p>
-                    <img class="editTestName" src="${window.tempPath + '/edit.png'}"/>
-                    <div>
+                    <p class="testRole">Role: ${test.role}</p>`
+        if(test.role[0] == 'c' || test.role[0] == 'e')
+        text +=     `<img class="editTestName" src="${window.tempPath + '/edit.png'}"/>`
+        text +=     `<div>
                         <button class="createTestCr">Save</button>
                         <button class="createTestCa">Cancel</button>
                     </div>
@@ -130,7 +131,7 @@ $(document).on('click','.createTestCr',function(e){
                     tarea.setAttribute("readonly", "true");
                     parent.removeClass('activeCreate');
                     $(tarea).attr('data-original',title);
-                    $(tarea).val(title);
+                    $(tarea).val(data['title']);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     toastr.error("Unable to change name");

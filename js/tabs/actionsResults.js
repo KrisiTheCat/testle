@@ -2,6 +2,31 @@ var $ = jQuery;
 var attendeeID;
 
 function initAttendeeResult(){
+
+    
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callUsersFunction": "getShowResultsStatus", 
+        "postID" : window.postID},
+        success: function(data) {
+            if(data['showResults'] == true){
+                $('#pleaseWait').hide();
+                $('#actualResults').show();
+                displayResult()
+            }
+            else {
+                $('#pleaseWait').show();
+                $('#actualResults').hide();
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            toastr.error("Unable to retrieve editors");
+        }
+    });
+}
+
+function displayResult(){
     text = $('#summaryDiv').html();
     for(var moduleID = 0; moduleID < window.contentKrisi.length; moduleID++){
         text +=     `<div class="moduleSummery">

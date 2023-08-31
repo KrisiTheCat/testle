@@ -2,6 +2,16 @@
 
 if (isset($_POST['callUsersFunction'])) {
   switch($_POST['callUsersFunction']){
+    case 'getShowResultsStatus':
+      $postID = intval($_POST['postID']);
+      getShowResultsStatus($postID);
+      die();
+      break;
+    case 'changeShowResultsStatus':
+      $postID = intval($_POST['postID']);
+      changeShowResultsStatus($postID);
+      die();
+      break;
     case 'changeTitle':
       $postID = intval($_POST['postID']);
       $title = $_POST['title'];
@@ -53,10 +63,27 @@ if (isset($_POST['callUsersFunction'])) {
       break;
   }
 }
+function getShowResultsStatus($postID){
+  $response_array['showResults'] = get_post_meta($postID, 'showResults', true);
+  header('Content-type: application/json');
+  echo json_encode($response_array);
+}
+
+function changeShowResultsStatus($postID){
+  $old = get_post_meta($postID, 'showResults', true);
+  update_post_meta($postID, 'showResults', !$old);
+  $response_array['showResults'] = !$old;
+  header('Content-type: application/json');
+  echo json_encode($response_array);
+}
 
 function changeTitle($postID, $new_title){
   $new_title = mb_convert_case( $new_title, MB_CASE_TITLE, "UTF-8" );
   $new_slug = strtolower(mb_convert_case( $new_title, MB_CASE_TITLE, "UTF-8" ));
+  
+  $response_array['title'] = $new_title;
+  header('Content-type: application/json');
+  echo json_encode($response_array);
 
   if ( get_post_field( 'post_title', $postID ) === $new_title ) {
       return;
