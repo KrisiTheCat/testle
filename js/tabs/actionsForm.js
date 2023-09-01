@@ -290,7 +290,51 @@ function initForm(){
 
     initQuestionFormHover();
     initCanvasActions();
+    answerTemplateInit();
 }
+
+function recheckQuestion(formQ, contentQ, code){
+    if(contentQ.type == 'Closed'){
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: { "callTestEditFunction": 'getImageURLs',
+                    "postID": $('#inputPostId').val(),
+                    "attArr": Object.keys(window.responsesKrisi),
+                    "pageID": formQ.page},
+            success: function(data) { 
+                checkQuestionRecursive(data, 0, formQ, contentQ, code, []);
+            }
+        });
+    }
+}
+
+function checkQuestionRecursive(resps, ind, formQ, contentQ, code, ans){
+    if(ind >= resps.length){
+        code = decodeIds(code);
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: { "callResponseEditFunction": 'changeAnswerChDiff',
+                    "postID": $('#inputPostId').val(),
+                    "reqArr": ans,
+                    "moduleID": code[0],
+                    "indArr": code[1]},
+            success: function(data) { 
+                console.log(data);
+            }
+        });
+        return;
+    }
+    var image = document.getElementById('imageImg');
+    image.onload = function() {
+        var currAns = checkQuestion(formQ.page, formQ, contentQ, image, code);
+        ans.push({attID: resps[ind].attID, ans: currAns[0].answer});
+        checkQuestionRecursive(resps, ind+1, formQ, contentQ, code, ans);
+    }
+    image.src = resps[ind].url;
+}
+
     
 function drawQuestion(form, canvas, visiblePageId){
     if(form == null) return;
@@ -434,6 +478,14 @@ function initCanvasActions(){
                 success: function(data) {
                     window.formKrisi = JSON.parse(data['form']);
                     form = window.formKrisi;
+                    var code = selectedFormId[0] + '_' + encodeIds(selectedFormId[1]);
+                    console.log(code);
+                    formQ = getQuestion(form, code);
+                    recheckQuestion(getQuestion(form, code), getQuestion(window.contentKrisi, code), code);
+                    $(document).find('[data-code=' + code + ']').eq(0).removeClass('questionFormDivSelected');
+                    $(document).find('[data-code=' + code + ']').eq(0).addClass('questionFormDivFenced');
+                    selectedFormId = undefined;
+                    sPosX = -1; sPosY = -1;
                     initQuestionTabs();
                     initFormCircle();
                 },
@@ -441,11 +493,6 @@ function initCanvasActions(){
                     toastr.error("Unable to update form");
                 }
             });
-            var code = selectedFormId[0] + '_' + encodeIds(selectedFormId[1]);
-            $(document).find('[data-code=' + code + ']').eq(0).removeClass('questionFormDivSelected');
-            $(document).find('[data-code=' + code + ']').eq(0).addClass('questionFormDivFenced');
-            selectedFormId = undefined;
-            sPosX = -1; sPosY = -1;
         }
         draggingQuestion = false;
     });

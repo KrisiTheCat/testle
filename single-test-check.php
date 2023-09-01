@@ -8,13 +8,6 @@
 	window.openedTab = 'check';
 </script>
  <div id="check">
-	<div class="invisible">
-		<canvas id="canvasCutQuest0"></canvas>
-		<canvas id="canvasCutQuest1"></canvas>
-		<canvas id="canvasCutQuest2"></canvas>
-		<canvas id="canvasCutQuest3"></canvas>
-		<canvas class="answerCanvas" id="diffrencesCanvas"></canvas>
-	</div>
 	<div id="hoverPopupDiff">
 		<p style="font-size: small;">This sign shows that there is a diffrence the answer, saved for this question, and what was extracted from the photo</p>
 		<p style="display: inline-block;">Saved answer:</p>

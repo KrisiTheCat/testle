@@ -413,7 +413,7 @@ function answerTemplateInit(){
     for(var i =0 ; i < 3; i++){
         jQuery(`<img width=40 class="answerTemplImage invisible" data-id="` + i + `" src="` + window.srcPath + `/img/answers3/answer` + i + `.jpg"/>
         <canvas class="answerCanvas invisible" id="answerTemplCanvas` + i + `"></canvas>`)
-        .appendTo('#summaryDiv');
+        .appendTo('#usedForChecking');
     }
     $( ".answerTemplImage" ).on( "load", function() {
         var id = parseInt($(this).data('id'));

@@ -17,7 +17,10 @@ $current_fp = get_query_var('fpage'); ?>
 			<header class="entry-header">
 				<h1 class="entry-title"><?php the_title(); ?></h1>
 			</header><!-- .entry-header -->
-			<canvas id="imageCanvas" width="1000" class="invisible"></canvas>
+			<div id="usedForChecking">
+				<canvas id="imageCanvas" width="1000" class="invisible"></canvas>
+				<img id="imageImg" width="1000" class="invisible"/>
+			</div>
 			<input type="text" id="inputPostId" class="invisible" name="postID" value='<?php echo get_the_ID();?>' readonly/>
 			<button type="button" id="nullBtn" class="invisible">Nullify</button>
 			<?php
@@ -132,6 +135,13 @@ $current_fp = get_query_var('fpage'); ?>
 			 */
 			do_action( 'lalita_after_main_content' );
 			?>
+			<div class="invisible">
+				<canvas id="canvasCutQuest0"></canvas>
+				<canvas id="canvasCutQuest1"></canvas>
+				<canvas id="canvasCutQuest2"></canvas>
+				<canvas id="canvasCutQuest3"></canvas>
+				<canvas class="answerCanvas" id="diffrencesCanvas"></canvas>
+			</div>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 

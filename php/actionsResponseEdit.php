@@ -10,7 +10,25 @@ if (isset($_POST['callResponseEditFunction'])) {
         die();
         break;
       case 'changeAnswerCh':
-        changeAnswerCh();
+        $postID = $_POST['postID'];
+        $attendeeID = intval($_POST['attendeeID']);
+        $moduleID = $_POST['moduleID'];
+        $indArr = $_POST['indArr'];
+        $answer = $_POST['answer'];
+        $response_array = changeAnswerCh($postID,$attendeeID,$moduleID,$indArr,$answer);
+        header('Content-type: application/json');
+        echo json_encode($response_array);
+        die();
+        break;
+      case 'changeAnswerChDiff':
+        $postID = $_POST['postID'];
+        $reqArr = $_POST['reqArr'];
+        $moduleID = $_POST['moduleID'];
+        $indArr = $_POST['indArr'];
+        $response_array = changeAnswerChDiff($postID,$reqArr,$moduleID,$indArr);
+        header('Content-type: application/json');
+        // var_dump($response_array);
+        echo json_encode($response_array);
         die();
         break;
       case 'changeAnswerChArr':
@@ -133,12 +151,15 @@ if (isset($_POST['callResponseEditFunction'])) {
     echo json_encode($response_array);
   }
 
-  function changeAnswerCh(){
-    $postID = $_POST['postID'];
-    $attendeeID = intval($_POST['attendeeID']);
-    $moduleID = $_POST['moduleID'];
-    $indArr = $_POST['indArr'];
-    $answer = $_POST['answer'];
+  function changeAnswerChDiff($postID,$reqArr,$moduleID,$indArr){
+    for($i = 0; $i < count($reqArr); $i++){
+      $resp = changeAnswerCh($postID,$reqArr[$i]['attID'],$moduleID,$indArr,$reqArr[$i]['ans']);
+    }
+    return $resp;
+  }
+
+  function changeAnswerCh($postID,$attendeeID,$moduleID,$indArr,$answer){
+    
     $content = get_post_meta( $postID, 'content', true );
     $responses = get_post_meta( $postID, 'responses', true );
     $contentQ = $content[$moduleID]->getQuestion($indArr);
@@ -154,8 +175,7 @@ if (isset($_POST['callResponseEditFunction'])) {
     
     update_post_meta( $postID, 'responses', $responses );
     $response_array['responses'] = json_encode($responses);  
-    header('Content-type: application/json');
-    echo json_encode($response_array);
+    return $response_array;
   }
   
   function changeStatusDescriptive(){

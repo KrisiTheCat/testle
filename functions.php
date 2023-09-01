@@ -123,6 +123,7 @@ include_once( get_template_directory() . '-child/php/actionsFormEdit.php');
 include_once( get_template_directory() . '-child/php/actionsContentEdit.php');
 include_once( get_template_directory() . '-child/php/actionsResponseEdit.php');
 include_once( get_template_directory() . '-child/php/actionsUsers.php');
+include_once( get_template_directory() . '-child/php/actionsTest.php');
 
 function example_enqueue_styles() {
   wp_enqueue_style('parent-theme', get_template_directory_uri() .'/style.css');
@@ -176,10 +177,13 @@ if(isset($_POST['nullifyTest'])){
   exit();
 }
 
+
 if(isset($_POST['getImageURL'])){
   echo json_encode(array('url'=> wp_get_attachment_url($_POST['getImageURL']), 'pageId'=> $_POST['pageId']));
   exit();
 }
+
+
 
 if(isset($_POST['submitUserAttendees'])){
   add_attendee(intval($_POST['postID']));
