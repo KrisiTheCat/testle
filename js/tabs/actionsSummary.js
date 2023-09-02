@@ -47,37 +47,37 @@ function setDataInNotif(notif, data){
 function initSummary(){
     
     if(sumInfo.tasks > 0){
-        $('#describeTasks').addClass('completedTask');
-        $('#describeTasks').find('.additionalData').html(`(${sumInfo.tasks} total)`);
+        $('#describeTasks').find('.additionalData').html(`${sumInfo.tasks} total`);
     }
 
     if(sumInfo.pages > 0){
-        $('#uploadTask').addClass('completedTask');
-        $('#uploadTask').find('.additionalData').html(`(${sumInfo.pages} pages)`);
+        $('#uploadTask').find('.additionalData').html(`${sumInfo.pages} pages`);
     }
 
-    $('#questionSectorsTask').find('.additionalData').html(`(${sumInfo.sectoredQuestions} | ${sumInfo.questions})`);
-    if(sumInfo.sectoredQuestions == sumInfo.questions && sumInfo.questions != 0){
-        $('#questionSectorsTask').addClass('completedTask');
-    }
+    $('#questionSectorsTask').find('.additionalData').html(`${sumInfo.sectoredQuestions} | ${sumInfo.questions}`);
+    if(sumInfo.sectoredQuestions < sumInfo.questions && sumInfo.questions != 0){
+        $('#questionSectorsTask').find('.progress-bar').css('width', Math.round((sumInfo.sectoredQuestions/sumInfo.questions)*100) + '%');
+    }else{$('#questionSectorsTask').find('.progress').hide();}
 
     if(sumInfo.students > 0){
-        $('#listStudentsTask').addClass('completedTask');
-        $('#listStudentsTask').find('.additionalData').html(`(${sumInfo.students} listed)`);
+        $('#listStudentsTask').find('.additionalData').html(`${sumInfo.students} listed`);
     }
 
-    if(Object.keys(attendeesByGroups[0]).length == 0 && sumInfo.students != 0){
-        $('#noPhotoTask').addClass('completedTask');
-    }
-    $('#noPhotoTask').find('.additionalData').html(`(${sumInfo.students - Object.keys(attendeesByGroups[0]).length} | ${sumInfo.students})`);
+    $('#noPhotoTask').find('.additionalData').html(`${sumInfo.students - Object.keys(attendeesByGroups[0]).length} | ${sumInfo.students}`);
+    if(Object.keys(attendeesByGroups[0]).length != 0 || sumInfo.students != 0){
+        $('#noPhotoTask').find('.progress-bar').css('width', Math.round(((sumInfo.students - Object.keys(attendeesByGroups[0]).length)/sumInfo.students)*100) + '%');
+    }else{$('#noPhotoTask').find('.progress').hide();}
 
-    if(Object.keys(attendeesByGroups[2]).length == sumInfo.students && sumInfo.students != 0){
-        $('#handCheckTask').addClass('completedTask');
+    $('#handCheckTask').find('.additionalData').html(`(${Object.keys(attendeesByGroups[2]).length} | ${sumInfo.students})`);
+    if(Object.keys(attendeesByGroups[2]).length != sumInfo.students || sumInfo.students != 0){
+        $('#handCheckTask').find('.progress-bar').css('width', Math.round((Object.keys(attendeesByGroups[2]).length/sumInfo.students)*100) + '%');
+    }
+    else{
+        $('#handCheckTask').find('.progress').hide();
         $('#sendResultsTask').removeClass('impossibleTask');
         $('#sendResultsTask').find("input").prop('disabled', false);
         $('#sendResultsTask').attr('title', '');
     }
-    $('#handCheckTask').find('.additionalData').html(`(${Object.keys(attendeesByGroups[2]).length} | ${sumInfo.students})`);
     $.ajax({
         url: '',
         type: 'post',
@@ -131,7 +131,6 @@ function displayEditors(editors){
         $('#editorsList').html($('#editorsList').html() + '<li><input type="text" id="newEditorInput" placeholder="Add editor"/></li>');
         var lis = $('#editorsList').find('li');
         for(li of lis){
-            console.log($(li).attr('id'));
             if(!$(li).hasClass('meLi') && $(li).hasClass('editorLi')){
                 $(li).addClass('removableLi');
             }
@@ -167,7 +166,6 @@ function displayEditors(editors){
                         "editor" : id},
                         success: function(data) {
                             var editors = JSON.parse(data['editors']);
-                            console.log(editors);
                             displayEditors(editors);
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -229,7 +227,6 @@ $(document).on('change','#sendResultsSwitch', function(){
 })
 
 $('.taskLink').on('click', function(){
-    console.log(this.getAttribute('href'));
     history.pushState({}, "", this.getAttribute('href'));
     location.reload();
 });

@@ -53,8 +53,18 @@ p, h4{
 /*-------------------------------------------------Summary----------------------------------------------------------------*/
 #allTasks{
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+#newEditorInput{
+  padding: 2px;
+}
+
+#summary h4{
+  font-size: medium;
+  color: var(--colorComposite);
 }
 
 #editorsList li{
@@ -68,9 +78,6 @@ p, h4{
   text-decoration: line-through;
 }
 
-.toggleResp{
-  flex: 1;
-}
 .toggleResp input{
   height: 0;
   width: 0;
@@ -116,13 +123,65 @@ p, h4{
 
 
 .taskDiv{
+  font-size: small;
+  flex: 1;
+  min-width: 360px;
+  padding: 16px;
+  background-color: var(--colorOpened);
+  border-radius: 10px;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 500;
+  gap: 16px;
 }
 
 .taskDiv>div:first-child{
+  width: 100px;
+  text-align: center;
+}
+.taskDiv>div:last-of-type{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.taskDiv>img{
+  width: 100px;
+}
+
+.taskDiv>div>p{flex: 1;}
+.taskDiv>div>div{display: flex; gap: 10px;}
+.additionalData{flex: 1;}
+.taskDiv .progress{height: 3px; }
+.taskDiv .progress-bar{background-color: var(--colorComposite);}
+
+.taskLink{
+  background-color: var(--colorMidGray);
+  border-radius: 3px;
+  padding: 3px 8px;
+  color: white;
+  font-size: 13px !important;
+  font-weight: 300;
+}
+
+#sendResultsTask p{
+  flex: 100;
+}
+
+.toggleResp{
+  align-items: center;
+  gap: 3px;
+  flex-direction: row !important;
+}
+/*.taskDiv a{
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+.taskDiv p{
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+}*/
+
+/*.taskDiv>div:first-child{
   height: 24px;
   width: 24px;
   background-color: var(--colorMidGray);
@@ -140,7 +199,7 @@ p, h4{
   flex: 1;
   text-align: end;
   text-decoration: underline;
-}
+}*/
 
 .completedTask>div:first-child{
   background-color: var(--colorCorrect) !important;
@@ -666,14 +725,6 @@ input[type=text].type{
     -o-transition: opacity .2s ease-out;
   }
 
-  
-.taskDiv{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 500;
-}
-
 #handCheckDescrChecks>div>div:first-child{
   height: 24px;
   width: 24px;
@@ -1122,6 +1173,7 @@ input[type=text].type{
   border-radius: 5px;
   width: 150px;
 }
+
 
 #summaryDiv{
   margin-top: 50px;
