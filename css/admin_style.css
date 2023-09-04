@@ -122,15 +122,18 @@ p, h4{
 }
 
 
-.taskDiv{
-  font-size: small;
-  flex: 1;
-  min-width: 360px;
+.lightBox{
   padding: 16px;
   background-color: var(--colorOpened);
   border-radius: 10px;
   display: flex;
   gap: 16px;
+}
+
+.taskDiv{
+  font-size: small;
+  flex: 1;
+  min-width: 360px;
 }
 
 .taskDiv>div:first-child{
@@ -220,6 +223,123 @@ p, h4{
   margin-top: 12px;
 }
 
+
+/*-------------------------------------------------Stats----------------------------------------------------------------*/
+
+#stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 16px;
+}
+#stats div{
+  width: fit-content;
+}
+#stats select{
+  font-size: smaller;
+  padding: 4px;
+}
+.statsBox{
+  flex-wrap: wrap;
+  padding-top: 55px;
+  position: relative;
+}
+.lightBox .lightBox{
+  background-color: white;
+}
+.statsBox>p{
+  width: 100%;
+  font-size: large;
+  font-weight: 200;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+.hotizontalFlex{
+  display: flex;
+  gap: 16px;
+}
+.statsGeneralBox{
+  flex-direction: column;
+  display: flex;
+  gap: 0px;
+  justify-content: space-between;
+}
+.statsGeneralBox>p{
+  width: 100%;
+  font-size: inherit;
+  font-weight: 700;
+}
+.statsGeneralBox>small{    
+  display: block;
+  font-size: small;
+  flex: 1;
+  font-weight: 200;
+}
+.specialQuestions{
+  width: 100% !important;
+}
+.specialQuestions .lightBox{
+  padding-top: 29px;
+  height: 150px;
+  flex: 1;
+  min-width: 410px;
+  align-content: space-evenly;
+}
+.specialQuestions .lightBox p{
+  font-size: smaller;
+  font-weight: 600;
+}
+.specialQuestions .lightBox canvas{
+  font-size: smaller;
+  font-weight: 600;
+}
+.specialQuestions .lightBox h3{
+  font-size: 71px;
+  font-weight: 900;
+  color: var(--colorCorrect);
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-6%, -28%);
+  opacity: 0.2;
+}
+.specialQuestions div div{
+  background-color: white;
+  flex-direction: column;
+  display: flex;
+  box-shadow: 0px 0px 6px #00000061;
+  padding: 7px;
+  text-align: center;
+  min-width: 100px;
+}
+.specialQuestions div:nth-child(2) div p:first-of-type{color: var(--colorCorrect);font-weight: 700;}
+.specialQuestions div:nth-child(3) div p:first-of-type{color: var(--colorWrong);font-weight: 700;}
+.specialQuestions div:nth-child(4) div p:first-of-type{color: var(--colorNotFilled);font-weight: 700;}
+
+.specialQuestions div div p:last-of-type{
+  font-weight: 300;
+  font-size: x-small;
+}
+.specialQuestions>div{
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+.questionGeneral{
+  padding-top: 29px;
+  flex: 1;
+  justify-content: center;
+}
+
+#topLeftStats{
+  height: 182px;
+  width: 100% !important;
+}
+#topLeftStats>div:first-child{
+  flex: 3;
+  width: 100% !important;
+  min-width: 490px;
+}
 
 /*-------------------------------------------------Attendees----------------------------------------------------------------*/
 

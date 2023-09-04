@@ -68,7 +68,7 @@ function initSummary(){
         $('#noPhotoTask').find('.progress-bar').css('width', Math.round(((sumInfo.students - Object.keys(attendeesByGroups[0]).length)/sumInfo.students)*100) + '%');
     }else{$('#noPhotoTask').find('.progress').hide();}
 
-    $('#handCheckTask').find('.additionalData').html(`(${Object.keys(attendeesByGroups[2]).length} | ${sumInfo.students})`);
+    $('#handCheckTask').find('.additionalData').html(`${Object.keys(attendeesByGroups[2]).length} | ${sumInfo.students}`);
     if(Object.keys(attendeesByGroups[2]).length != sumInfo.students || sumInfo.students != 0){
         $('#handCheckTask').find('.progress-bar').css('width', Math.round((Object.keys(attendeesByGroups[2]).length/sumInfo.students)*100) + '%');
     }

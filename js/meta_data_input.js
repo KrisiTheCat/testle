@@ -33,6 +33,7 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
 
             switch(window.openedTab){
                 case 'summary':   {initSummary();       break;}
+                case 'stats':     {initStats();         break;}
                 case 'attendees': {initAttendees();     break;}
                 case 'base':      {initBase();          break;}
                 case 'check':     {initCheck();         break;}
@@ -77,7 +78,7 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
         
     });
 
-    $(document).on('click','#nullBtn1',function(){
+    $(document).on('click','#nullBtn',function(){
         $.ajax({
             url: '',
             type: 'post',

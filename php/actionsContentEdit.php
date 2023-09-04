@@ -10,10 +10,6 @@ if (isset($_POST['callTestEditFunction'])) {
       addQuestion();
       die();
       break;
-    case 'addCheck':
-      addCheck();
-      die();
-      break;
     case 'deleteQuestion':
       deleteQuestion();
       die();
@@ -39,10 +35,11 @@ function createModule(){
     $resp[count($content)] = new QuestionResponse('Module');
   }
   $content[count($content)] = new QuestionContent('Module');
+  $form[count($form)] = new QuestionForm('Module');
 
   update_post_meta( $postID, 'content', $content );
   update_post_meta( $postID, 'responses', $responses );
-  update_post_meta( $postID, 'form', $responses );
+  update_post_meta( $postID, 'form', $form );
   $response_array['content'] = json_encode($content);  
   $response_array['responses'] = json_encode($responses);  
   header('Content-type: application/json');
@@ -54,24 +51,32 @@ function addQuestion(){
   $moduleID = intval($_POST['moduleID']);
   $indArr = json_decode(stripslashes($_POST['indArr']));
   $type = $_POST['questionType'];
-  $content = get_post_meta( $postID, 'content', true );
-  $responses = get_post_meta( $postID, 'responses', true );
-  $question = new QuestionContent($type);
   if($indArr == null) $indArr = array();
-  
+
+  $content = get_post_meta( $postID, 'content', true );
+  $question = new QuestionContent($type);
   $content[$moduleID]->addSubQ($question, $indArr);
+  $content[$moduleID]->changePoints($question->points, $indArr);
+  update_post_meta( $postID, 'content', $content ); 
+  
+  $responses = get_post_meta( $postID, 'responses', true );
   foreach($responses as &$resp){
     $respquestion = new QuestionResponse($type);
     $resp[$moduleID]->addSubQ($respquestion,$indArr);
   }
-  // var_dump($content[0]->subq[6]);
-  // var_dump($responses[0][0]->subq[6]);
-  // var_dump($responses[2][0]->subq[6]);
-  // die();
-  $content[$moduleID]->changePoints($question->points, $indArr);
-  // var_dump($content[0]);
-  // die();
-  calcResponses($responses, $content, $postID);
+  update_post_meta( $postID, 'responses', $responses );
+
+  if($type != 'Check'){
+    $form = get_post_meta( $postID, 'form', true );
+    $questionF = new QuestionForm($type);
+    $form[$moduleID]->addSubQ($questionF, $indArr);
+    update_post_meta( $postID, 'form', $form );
+  }
+  
+  $response_array['content'] = json_encode($content);  
+  $response_array['responses'] = json_encode($responses);  
+  header('Content-type: application/json');
+  echo json_encode($response_array);
 }
 
 
@@ -152,12 +157,15 @@ function changePoints(){
 }
 
 function calcResponses($responses, $content, $postID){
-  foreach($responses as &$resp){
-    $resp['pointsAll'] = 0;
-    for($moduleID = 0; isset($resp[$moduleID]); $moduleID++){
-      $resp['pointsAll'] += $resp[$moduleID]->calcPoints($content[$moduleID]);
-    }
-  }
+  // foreach($responses as &$resp){
+  //   $resp['pointsAll'] = 0;
+  //   var_dump($resp);
+  //   for($moduleID = 0; isset($resp[$moduleID]); $moduleID++){
+  //      var_dump($moduleID);
+  //     //   var_dump($content[$moduleID]);
+  //     $resp['pointsAll'] += $resp[$moduleID]->calcPoints($content[$moduleID]);
+  //   }
+  // }
   //  var_dump($responses);
   update_post_meta( $postID, 'responses', $responses );
   update_post_meta( $postID, 'content', $content );

@@ -54,6 +54,7 @@ function cptui_register_my_cpts_test() {
 
 $my_fake_pages = array(
     'attendees' => 'Attendees',
+    'stats' => 'Stats',
     'base' => 'Base',
     'check' => 'Check',
     'handcheck' => 'Hand Check',
@@ -143,6 +144,7 @@ function example_enqueue_styles() {
     wp_enqueue_script('globalFunctions', get_template_directory_uri() . '-child/js/globalFunctions.js', array('jquery'));
     wp_enqueue_script('actionsResults', get_template_directory_uri() . '-child/js/tabs/actionsResults.js', array('jquery'));
     wp_enqueue_script('actionsSummary', get_template_directory_uri() . '-child/js/tabs/actionsSummary.js', array('jquery'));
+    wp_enqueue_script('actionsStats', get_template_directory_uri() . '-child/js/tabs/actionsStats.js', array('jquery'));
     wp_enqueue_script('actionsAttendees', get_template_directory_uri() . '-child/js/tabs/actionsAttendees.js', array('jquery'));
     wp_enqueue_script('actionsBase', get_template_directory_uri() . '-child/js/tabs/actionsBase.js', array('jquery'));
     wp_enqueue_script('actionsCheck', get_template_directory_uri() . '-child/js/tabs/actionsCheck.js', array('jquery', 'toaster'));
@@ -150,7 +152,7 @@ function example_enqueue_styles() {
     wp_enqueue_script('actionsForm', get_template_directory_uri() . '-child/js/tabs/actionsForm.js', array('jquery'));
     
     wp_enqueue_script('meta_data_script', get_template_directory_uri() . '-child/js/meta_data_input.js', 
-    array('jquery', 'actionsAttendees', 'actionsResults', 'actionsBase', 'actionsCheck', 'actionsHandCheck', 'actionsForm'));
+    array('jquery', 'actionsStats', 'actionsAttendees', 'actionsResults', 'actionsBase', 'actionsCheck', 'actionsHandCheck', 'actionsForm'));
     
     wp_enqueue_script('canvasOperations', get_template_directory_uri() . '-child/js/canvasOperations.js', array('jquery'));
     wp_enqueue_script('opencv', get_template_directory_uri() . '-child/js/opencv.js', array('jquery'));
@@ -170,10 +172,10 @@ add_action('wp_enqueue_scripts', 'example_enqueue_styles');
 
 if(isset($_POST['nullifyTest'])){
   $postID = intval($_POST['postID']);
-  update_post_meta( $postID, 'responses', array(array("pointsAll"=>0)));
+  update_post_meta( $postID, 'responses', array(array()));
   update_post_meta( $postID, 'content', array());
   update_post_meta( $postID, 'form', array());
-  update_post_meta( $postID, 'pageInfo', array());
+  // update_post_meta( $postID, 'pageInfo', array());
   exit();
 }
 
@@ -201,7 +203,7 @@ function add_attendee( $postID ){
   foreach($newAttendees as $attendee){
     $attendee = intval($attendee);
     if(!array_key_exists($attendee, $responses)){
-      $responsesNew[$attendee] = array('pointsAll'=>0);
+      $responsesNew[$attendee] = array();
       for($moduleID = 0; isset($responses[0][$moduleID]); $moduleID++) {
         $responsesNew[$attendee][$moduleID] = $responses[0][$moduleID]->cloneSelf();
       }

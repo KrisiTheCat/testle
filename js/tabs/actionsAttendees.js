@@ -92,7 +92,8 @@ function sortAttInGroups(){
     attendeesByGroups = [[],[],[]];
     $.each(window.responsesKrisi, function(key, value){
         if(key!=0){
-            attendeesByGroups[whichGroup(window.responsesKrisi[key])].push({user:window.usersKrisi[key],pts:value["pointsAll"]});
+            // TODO
+            attendeesByGroups[whichGroup(window.responsesKrisi[key])].push({user:window.usersKrisi[key],pts:0});
         }
     });
 }

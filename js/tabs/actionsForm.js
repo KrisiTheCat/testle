@@ -329,6 +329,7 @@ function checkQuestionRecursive(resps, ind, formQ, contentQ, code, ans){
     var image = document.getElementById('imageImg');
     image.onload = function() {
         var currAns = checkQuestion(formQ.page, formQ, contentQ, image, code);
+        console.log(resps[ind].attID);
         ans.push({attID: resps[ind].attID, ans: currAns[0].answer});
         checkQuestionRecursive(resps, ind+1, formQ, contentQ, code, ans);
     }

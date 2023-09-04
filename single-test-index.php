@@ -14,7 +14,7 @@
 	</ul>
 	<h4>Tasks:</h4>
 	<div id="allTasks">
-		<div class="taskDiv" id="describeTasks">
+		<div class="taskDiv lightBox" id="describeTasks">
 			<div>
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/describe.png"/>
 			</div>
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="taskDiv" id="uploadTask">
+		<div class="taskDiv lightBox" id="uploadTask">
 			<div>
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/uploadPdf.png"/>
 			</div>
@@ -38,7 +38,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="taskDiv" id="questionSectorsTask">
+		<div class="taskDiv lightBox" id="questionSectorsTask">
 			<div>
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/magnifier.png"/>
 			</div>
@@ -55,7 +55,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="taskDiv" id="listStudentsTask">
+		<div class="taskDiv lightBox" id="listStudentsTask">
 			<div>
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/student.png"/>
 			</div>
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="taskDiv" id="noPhotoTask">
+		<div class="taskDiv lightBox" id="noPhotoTask">
 			<div>
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/uploadPhoto.png"/>
 			</div>
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="taskDiv" id="handCheckTask">
+		<div class="taskDiv lightBox" id="handCheckTask">
 			<div>
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/handcheck.png"/>
 			</div>
@@ -101,7 +101,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="taskDiv impossibleTask" id="sendResultsTask" title="Please check all entries first">
+		<div class="taskDiv lightBox impossibleTask" id="sendResultsTask" title="Please check all entries first">
 			<p>Allow students to see their results</p>
 			<div class="toggleResp">
 				<p>OFF</p>

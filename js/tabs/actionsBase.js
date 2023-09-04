@@ -199,34 +199,6 @@ function initBase(){
             }
         });
 
-        $(document).on('click','.deleteModule', function(e){
-            var $this = $(this);
-            var moduleID = $this.data('moduleid');
-            $('#popupForm').show();
-            $(document).on('click','#yesYouSureButton', function(e){
-                if(!ajaxRequest){
-                    ajaxRequest = true;
-                    $.ajax({
-                        url: '',
-                        type: 'post',
-                        data: { "callTestEditFunction": "deleteQuestion", 
-                        "moduleID": moduleID,
-                        "questionID": -1,
-                        "subID": -1,
-                        "checkID": -1,
-                        "postID" : $('#inputPostId').val()},
-                        success: function(data) {
-                            ajaxRequest = false;
-                            window.contentKrisi = JSON.parse(data['content']);
-                            window.responsesKrisi = JSON.parse(data['responses']);
-                            refreshContentTable();
-                        }
-                    });
-                    $('#popupForm').hide();
-                }
-            });
-        });
-
         $(document).on('click','.addQuestionButton', function(e){
             $this = $(this);
             if(!ajaxRequest){
@@ -303,32 +275,57 @@ function initBase(){
         });
         var deleteButtonCode;
         $(document).on('click','.deleteButton', function(e){
-            $this = $(this);
-            deleteButtonCode = decodeIds($this.closest('.questionOrCheck').data('code'));
-            console.log(deleteButtonCode);
-            $('#popupForm').show();
-            $(document).on('click','#yesYouSureButton', function(e){
-                if(!ajaxRequest){
-                    ajaxRequest = true;
-                    $.ajax({
-                        url: '',
-                        type: 'post',
-                        data: { "callTestEditFunction": "deleteQuestion", 
-                        "moduleID": deleteButtonCode[0],
-                        "indArr": JSON.stringify(deleteButtonCode[1]),
-                        "postID" : $('#inputPostId').val()},
-                        success: function(data) {
-                            ajaxRequest = false;
-                            window.contentKrisi = JSON.parse(data['content']);
-                            window.responsesKrisi = JSON.parse(data['responses']);
-                            console.log(window.contentKrisi);
-                            console.log(window.responsesKrisi);
-                            refreshContentTable();
-                        }
-                    });
-                    $('#popupForm').hide();
-                }
-            });
+            var $this = $(this);
+            if($this.hasClass('deleteModule')){
+                var moduleID = $this.data('moduleid');
+                $('#popupForm').show();
+                $(document).on('click','#yesYouSureButton', function(e){
+                    if(!ajaxRequest){
+                        ajaxRequest = true;
+                        $.ajax({
+                            url: '',
+                            type: 'post',
+                            data: { "callTestEditFunction": "deleteQuestion", 
+                            "moduleID": moduleID,
+                            "indArr": '[]',
+                            "postID" : $('#inputPostId').val()},
+                            success: function(data) {
+                                ajaxRequest = false;
+                                window.contentKrisi = JSON.parse(data['content']);
+                                window.responsesKrisi = JSON.parse(data['responses']);
+                                refreshContentTable();
+                            }
+                        });
+                        $('#popupForm').hide();
+                    }
+                });
+            }
+            else {
+                deleteButtonCode = decodeIds($this.closest('.questionOrCheck').data('code'));
+                $('#popupForm').show();
+                $(document).on('click','#yesYouSureButton', function(e){
+                    if(!ajaxRequest){
+                        ajaxRequest = true;
+                        $.ajax({
+                            url: '',
+                            type: 'post',
+                            data: { "callTestEditFunction": "deleteQuestion", 
+                            "moduleID": deleteButtonCode[0],
+                            "indArr": JSON.stringify(deleteButtonCode[1]),
+                            "postID" : $('#inputPostId').val()},
+                            success: function(data) {
+                                ajaxRequest = false;
+                                window.contentKrisi = JSON.parse(data['content']);
+                                window.responsesKrisi = JSON.parse(data['responses']);
+                                console.log(window.contentKrisi);
+                                console.log(window.responsesKrisi);
+                                refreshContentTable();
+                            }
+                        });
+                        $('#popupForm').hide();
+                    }
+                });
+            }
         });
         $(document).on('mouseenter','.deleteButton', function(e){
             $(this).attr('src',window.srcPath + '/img/close.png');

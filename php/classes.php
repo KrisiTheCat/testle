@@ -78,7 +78,7 @@ class QuestionContent extends Question{
     $this->points = 1;
     switch($typeI){
       case 'Module':
-        $this->subq = array(new Question('Closed'));
+        $this->subq = array(new QuestionContent('Closed'));
         break;
       case 'Closed':
         $this->answer = 'A';
@@ -90,10 +90,10 @@ class QuestionContent extends Question{
         $this->answer = 'Condition';
         break;
       case 'Descriptive':
-        $this->subq = array(new Question('Check'));
+        $this->subq = array(new QuestionContent('Check'));
         break;
       case 'Composite':
-        $this->subq = array(new Question('Closed'));
+        $this->subq = array(new QuestionContent('Closed'));
         break;
     }
   }
@@ -194,7 +194,8 @@ class QuestionResponse extends Question{
   public function calcPoints($content){
     $points = 0;
     if($content->type == 'Module' || $content->type == 'Composite' || $content->type == 'Descriptive'){
-      // var_dump($this);
+       var_dump($this);
+       var_dump($content);
       for($i = 0; $i < count($this->subq);$i++){
         $points += $this->subq[$i]->calcPoints($content->subq[$i]);
       }
@@ -221,7 +222,24 @@ class QuestionForm extends Question{
   public ?float $height;
   public ?float $page;
   public ?array $subq;
-  public function __construct(){
+  public function __construct($type){
+    switch($type){
+    case 'Module':
+      $this->subq = array(new QuestionForm('Closed'));
+      break;
+    case 'Closed':
+      $page = null;
+      break;
+    case 'Opened':
+      $page = null;
+      break;
+    case 'Descriptive':
+      $page = null;
+      break;
+    case 'Composite':
+      $this->subq = array(new QuestionForm('Closed'));
+      break;
+    }
   }
   
   public function setValue($value, $indexArr){

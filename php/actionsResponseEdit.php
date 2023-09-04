@@ -127,9 +127,7 @@ if (isset($_POST['callResponseEditFunction'])) {
       } else {
         $answer = null;
         if($contentQ->type == 'Descriptive'){
-          $responses[$attendeeID]['pointsAll'] -= $responses[$attendeeID][$moduleID]->getQuestion($indArr)->calcPoints($contentQ);
           $responses[$attendeeID][$moduleID]->setStatus($indArr,$newStatus);
-          $responses[$attendeeID]['pointsAll'] += $responses[$attendeeID][$moduleID]->getQuestion($indArr)->calcPoints($contentQ);
           $ansStatus[$newStatus]++;
           continue;
         }
@@ -139,8 +137,6 @@ if (isset($_POST['callResponseEditFunction'])) {
       $responses[$attendeeID][$moduleID]->changeAnswer($answer,$indArr,$correctAnswer);
       $newStatus = $responses[$attendeeID][$moduleID]->getStatus($indArr);
       $points = $contentQ->points;
-      if($oldStatus!=$newStatus && $newStatus==1) $responses[$attendeeID]['pointsAll'] += $points;
-      if($oldStatus!=$newStatus && $oldStatus==1) $responses[$attendeeID]['pointsAll'] -= $points;
       $ansStatus[$newStatus]++;
     }
   
@@ -170,8 +166,6 @@ if (isset($_POST['callResponseEditFunction'])) {
     $responses[$attendeeID][$moduleID]->changeAnswer($answer,$indArr,$correctAnswer);
     $newStatus = $responses[$attendeeID][$moduleID]->getStatus($indArr);
     $points = $contentQ->points;
-    if($oldStatus!=$newStatus && $newStatus==1) $responses[$attendeeID]['pointsAll'] += $points;
-    if($oldStatus!=$newStatus && $oldStatus==1) $responses[$attendeeID]['pointsAll'] -= $points;
     
     update_post_meta( $postID, 'responses', $responses );
     $response_array['responses'] = json_encode($responses);  
@@ -196,8 +190,6 @@ if (isset($_POST['callResponseEditFunction'])) {
       $ind++;
     }
     $pointsNew = $questionR->calcPoints($questionC);
-    $responses[$attendeeID]['pointsAll'] -= $pointsOld;
-    $responses[$attendeeID]['pointsAll'] += $pointsNew;
 
     update_post_meta( $postID, 'responses', $responses );
     $response_array['responses'] = json_encode($responses);  
@@ -222,8 +214,6 @@ if (isset($_POST['callResponseEditFunction'])) {
         $check->status = $newStatus;
       }
       $pointsNew = $questionR->calcPoints($questionC);
-      $responses[$attendeeID]['pointsAll'] -= $pointsOld;
-      $responses[$attendeeID]['pointsAll'] += $pointsNew;
     } else {
       if($questionC->type=='Check'){
         if($newStatus != 3){
@@ -241,7 +231,6 @@ if (isset($_POST['callResponseEditFunction'])) {
           $responseQ = $responses[$attendeeID][$moduleID]->getQuestion($indArr);
           for($i = 0; $i < count($contentQD->subq); $i++){
             if($responseQ->subq[$i]->status == 1){
-              $responses[$attendeeID]['pointsAll'] -= $contentQD->subq[$i]->points;
             }
             $responseQ->subq[$i]->status = 3;
           }
@@ -259,8 +248,6 @@ if (isset($_POST['callResponseEditFunction'])) {
       $responses[$attendeeID][$moduleID]->changeAnswer($answer,$indArr,$correctAnswer);
       $points = $content[$moduleID]->getPoints($indArr);
       
-      if($oldStatus!=$newStatus && $newStatus==1) $responses[$attendeeID]['pointsAll'] += $points;
-      if($oldStatus!=$newStatus && $oldStatus==1) $responses[$attendeeID]['pointsAll'] -= $points;
     }
     
     update_post_meta( $postID, 'responses', $responses );

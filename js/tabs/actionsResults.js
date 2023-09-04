@@ -54,6 +54,7 @@ function displayResult(){
     content['stats'][2] = 0;
     content['stats'][3] = 0;
     var contentMaxPoints = 0;
+    var pointsAll = 0;
     for(var moduleID = 0; moduleID < window.contentKrisi.length; moduleID++){
         var modulePoints = 0, maxModulePoints = 0;
         content[moduleID] = [];
@@ -75,10 +76,10 @@ function displayResult(){
         }
         maxModulePoints = parseInt(window.contentKrisi[moduleID]['points']);
         contentMaxPoints += maxModulePoints;
+        pointsAll += modulePoints;
         $('.pointsField' + moduleID + '_-1_-1_-1').eq(0).html(modulePoints + ' | ' + maxModulePoints);
         refreshModuleStats(content, moduleID);
     }
     
-    $('.pointsField-1_-1_-1_-1').eq(0).html(
-        window.responsesKrisi[attendeeID]['pointsAll'] + ' | ' + contentMaxPoints);
+    $('.pointsField-1_-1_-1_-1').eq(0).html( pointsAll + ' | ' + contentMaxPoints);
 }

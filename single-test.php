@@ -22,7 +22,7 @@ $current_fp = get_query_var('fpage'); ?>
 				<img id="imageImg" width="1000" class="invisible"/>
 			</div>
 			<input type="text" id="inputPostId" class="invisible" name="postID" value='<?php echo get_the_ID();?>' readonly/>
-			<button type="button" id="nullBtn" class="invisible">Nullify</button>
+			<button type="button" id="nullBtn">Nullify</button>
 			<?php
 			do_action( 'lalita_before_main_content' );
 			while ( have_posts() ) : the_post();
@@ -78,6 +78,10 @@ $current_fp = get_query_var('fpage'); ?>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
+								<a id="statsLink"   href="<?php echo get_permalink(); ?>stats/"     		data-hover="Statistics">Statistics</a>
+								<div class="notifCircle">0</div>
+							</li>
+							<li class="menu-item">
 								<a id="attendeesLink" href="<?php echo get_permalink() ?>attendees/" 	data-hover="Attendees">Attendees</a>
 								<div class="notifCircle">0</div>
 							</li>
@@ -114,6 +118,8 @@ $current_fp = get_query_var('fpage'); ?>
 							get_template_part( 'single', 'test-index' );
 						} else if ($current_fp == 'attendees') {
 							get_template_part( 'single', 'test-attendees' );
+						} else if ($current_fp == 'stats') {
+							get_template_part( 'single', 'test-stats' );
 						} else if ($current_fp == 'base') {
 							get_template_part( 'single', 'test-base' );
 						} else if ($current_fp == 'check') {
