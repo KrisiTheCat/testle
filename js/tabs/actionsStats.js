@@ -5,7 +5,9 @@ function initStats(){
 
   var modules = [0];
   var pointsArr = {};
-  var data = getDataForTargetGroup([2,4],modules);
+  var atts = Object.keys(window.responsesKrisi);
+  atts.shift();
+  var data = getDataForTargetGroup(atts,modules);
   
   var statusC = Array(STATUS_COUNT). fill(0);
   var statusT = [{times:Array(STATUS_COUNT). fill(0),code:''},{times:Array(STATUS_COUNT). fill(0),code:''},{times:Array(STATUS_COUNT). fill(0),code:''},{times:Array(STATUS_COUNT). fill(0),code:''}];

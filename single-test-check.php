@@ -79,7 +79,7 @@
 							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/edge.png" class="edgePoint" data-id="3"></img>
 						</div>
 						<img id="uploadImageImg" height="300px"></img>
-						<p class="cutPage elegantBtn">></p>
+						<p id="cutPage" class="elegantBtn">></p>
 					</div>
 				</div>
 			</div>

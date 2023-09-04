@@ -5,6 +5,8 @@ var answerTemplateCanvases = Array(4);
 var blackanswerTemplateBlacks = Array(3);
 var divStatus;
 
+var changingPageId = -1;
+
 function initCheck(){
 
     //getID
@@ -47,7 +49,7 @@ function initCheck(){
 
     refreshResponseTable();
     initAnswerUploadWays();
-    displayAllPages();
+    displayAllPages(-1);
     answerTemplateInit();
 }
 
@@ -430,7 +432,7 @@ function answerTemplateInit(){
     });
 }
 
-function displayAllPages(){
+function displayAllPages(justChanged){
     var photosDiv = $('#photosDiv');
     photosDiv.html('');
     for(var pageId in window.pageInfo){
@@ -460,6 +462,12 @@ function displayAllPages(){
                     data = JSON.parse(data);
                     $('#attendeePageDiv' + data.pageId).find('.attendeeUploadBtn').hide();
                     $('#attendeePageDiv' + data.pageId).find('img').first().attr('src',data.url);
+                    if(justChanged == data.pageId){
+                        $('#attendeePageDiv' + data.pageId).find('img').first().load(function(){
+                            extractFromPage(justChanged);
+                        });
+                    }
+                    
                 }
             });
         } else {
@@ -472,7 +480,7 @@ function displayAllPages(){
 }
 $(document).on('click', '.attendeeUploadBtn', function(){
     var pageId = $(this).parent().parent().data('id');
-    $('.cutPage').attr('data-id', pageId);
+    changingPageId = pageId;
     $('#imageUploadPopupDiv').modal('show');
 
     $('#photoUploadStage1').hide();
@@ -491,8 +499,8 @@ $(document).on('click', '.attendeeChangeBtn', function(){
                 "pageID" : pageId},
         success: function(data) {
             window.responsesKrisi = JSON.parse(data['responses']);
-            displayAllPages();
-            $('.cutPage').attr('data-id', pageId);
+            displayAllPages(-1);
+            changingPageId = pageId;
             $('#imageUploadPopupDiv').modal('show');
             
             $('#photoUploadStage1').hide();
@@ -505,6 +513,10 @@ $(document).on('click', '.attendeeChangeBtn', function(){
 
 $(document).on('click', '.attendeeReextractBtn', function(){
     var pageId = $(this).parent().parent().data('id');
+    extractFromPage(pageId);
+});
+
+function extractFromPage(pageId){
     var image = document.getElementById('attendeePageImg' + pageId);
     var queries = [];
     for (var m in window.formKrisi) {
@@ -516,7 +528,6 @@ $(document).on('click', '.attendeeReextractBtn', function(){
             m);
         queries = queries.concat(arr);
     }
-    console.log(queries);
     $.ajax({
         url: '',
         type: 'post',
@@ -536,7 +547,7 @@ $(document).on('click', '.attendeeReextractBtn', function(){
             console.log(errorThrown);
         }
     });
-});
+}
 
 function checkQuestion(formPageID, form, content, image, code){
     var answerArr = [];
@@ -626,10 +637,10 @@ function checkQuestion(formPageID, form, content, image, code){
     return answerArr;
 }
 
-function saveImageToMedia(canvas, formPageID, edges){
+function saveImageToMedia(canvas, edges){
     var imgURL = {imgURL:canvas.toDataURL("image/png"),
     edges: edges};
-    console.log(attendeeID);
+    //console.log(attendeeID);
     $.ajax({
         url: '',
         type: 'post',
@@ -637,10 +648,11 @@ function saveImageToMedia(canvas, formPageID, edges){
                 "postID" : $('#inputPostId').val(),
                 "attendeeID" : attendeeID,
                 "imgBase64": imgURL,
-                "imageID": formPageID},
+                "imageID": changingPageId},
         success: function(data) { 
             responsesKrisi = JSON.parse(data['responses']);
-            displayAllPages();
+            displayAllPages(changingPageId);
+            changingPageId = -1;
         }
     });
 }
@@ -850,13 +862,12 @@ function initStage2(){
         }
     });
 
-    $(document).on('click', '.cutPage', function(){
+    $(document).on('click', '#cutPage', function(){
         var $this = $(this);
         var steps = $('.progressStepsHeader').find('.step');
         steps.eq(0).attr("class","step finishedStep");
         steps.eq(1).attr("class","step finishedStep");
         steps.eq(2).attr("class","step currentStep");
-        pageID = parseInt($this.data('id')); 
         let src = cv.imread('uploadImageImg');
         let dst = new cv.Mat();
         let dsize = new cv.Size(src.cols, src.rows);
@@ -872,7 +883,7 @@ function initStage2(){
         clearCanvas(canvas);
         cv.imshow('imageCanvas', dst);
         src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
-        saveImageToMedia(canvas, pageID, edges);
+        saveImageToMedia(canvas, edges);
         $('#imageUploadPopupDiv').modal('hide');
     });
 

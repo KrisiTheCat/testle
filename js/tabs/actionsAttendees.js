@@ -89,13 +89,15 @@ function refreshAttendees(){
 }
 
 function sortAttInGroups(){
+    
     attendeesByGroups = [[],[],[]];
-    $.each(window.responsesKrisi, function(key, value){
-        if(key!=0){
-            // TODO
-            attendeesByGroups[whichGroup(window.responsesKrisi[key])].push({user:window.usersKrisi[key],pts:0});
+    for(attID in window.responsesKrisi){
+        if(attID!=0){
+            attendeesByGroups[whichGroup(window.responsesKrisi[attID])].push({
+                user:window.usersKrisi[attID],
+                pts:calcPoints(window.responsesKrisi[attID], window.contentKrisi)});
         }
-    });
+    }
 }
 
 function whichGroup(response){

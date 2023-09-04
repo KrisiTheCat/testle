@@ -1707,7 +1707,7 @@ input[type=text].type{
   right: 30px;
   bottom: 30px;
 }
-.cutPage{
+#cutPage{
   position: absolute;
   font-size: 28px !important;
   text-align: center;
