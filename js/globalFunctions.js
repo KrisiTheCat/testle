@@ -36,6 +36,21 @@ function calcPoints(response, content){
     return calcPoints(response['subq'], content['subq']);
 }
 
+function maxPoints(content){
+    if(!content) return 0;
+    if('points' in content){
+        return content['points'];
+    }
+    if(!('subq' in content)){
+        var ans = 0;
+        for(var module in content){
+            ans += maxPoints(content[module]);
+        }
+        return ans;
+    }
+    return calcPoints(content['subq']);
+}
+
 function countQuestions(content){
     if(!content) return 0;
     if('answer' in content || 'page' in content || ('type' in content && content.type == 'Descriptive')){

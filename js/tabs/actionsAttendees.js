@@ -21,7 +21,6 @@ function initAllAttPopup(){
             for(var i = 0; i < user['groups'].length; i++){
                 user['groups'][i] = user['groups'][i].trim();
                 if(!groups.includes(user['groups'][i])){
-                    console.log(groups, user['groups'][i]);
                     groups.push(user['groups'][i]);
                 }
             }
@@ -36,7 +35,6 @@ function initAllAttPopup(){
     var filterGroup = -1, filterText = "";
     filterAttendees();
     text = "";
-    console.log(groups.length);
     for(var i = 0; i < groups.length; i++){
         text += "<option value=\"" + i + "\">" + groups[i] + "</option>";
     }

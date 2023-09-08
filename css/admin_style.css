@@ -226,18 +226,93 @@ p, h4{
 
 /*-------------------------------------------------Stats----------------------------------------------------------------*/
 
+#page:has(#stats){
+  background-color: var(--colorLightBlue);
+}
 #stats{
   display:flex;
   flex-wrap:wrap;
   gap: 16px;
+  flex-direction: column;
 }
-#stats div{
-  width: fit-content;
+#sourcePanel label{
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
 }
-#stats select{
-  font-size: smaller;
-  padding: 4px;
+#sourcePanel .field{
+  display: inline-block;
 }
+#sourcePanel select{
+  font-size: 15px;
+  font-weight: 300;
+  width: 155px;
+  padding: 5px;
+  background-color: var(--colorClosed);
+  color: var(--colorComposite);
+}
+#statsSummary{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-right: 16px;
+  width: 258px;
+}
+
+#percentPassed p{
+  font-size: 14px;
+  width: 93px;
+  text-align: center;
+  font-weight: 300;
+}
+#percentPassed{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1px;
+  padding: 13px;
+  border-radius: 7px;
+  background-color: var(--colorClosed);
+  color: var(--colorComposite);
+  width: 100%;
+  height: auto;
+}
+.statsSummaryBox:nth-child(1){background-color: var(--colorComposite);}
+.statsSummaryBox:nth-child(2){background-color: var(--colorDarkText);}
+.statsSummaryBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  width: 113px;
+  height: 150px;
+  padding: 13px;
+  border-radius: 7px;
+}
+.statsSummaryBox img{
+  width: 25px;
+}
+.statsSummaryBox p:nth-child(2){
+  font-size: 24px;
+  font-weight: 500;
+  color: white;
+}
+.statsSummaryBox p:nth-child(3){
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--colorLightBlue);
+}
+.statsSummaryBox p:nth-child(4){
+  font-size: 12px;
+  font-weight: 200;
+  color: white;
+}
+#percentPassed h4{
+  font-size: 36px;
+}
+
+
 .statsBox{
   flex-wrap: wrap;
   padding-top: 55px;
@@ -246,9 +321,9 @@ p, h4{
 .lightBox .lightBox{
   background-color: white;
 }
-.statsBox>p{
-  width: 100%;
+.statsBox>p:first-of-type{
   font-size: large;
+  height: fit-content;
   font-weight: 200;
   position: absolute;
   top: 16px;
@@ -269,6 +344,12 @@ p, h4{
   font-size: inherit;
   font-weight: 700;
 }
+.statsBox>p{
+  position: absolute;
+  bottom: 0px;
+  font-weight: 200;
+  font-size: small;
+}
 .statsGeneralBox>small{    
   display: block;
   font-size: small;
@@ -277,21 +358,16 @@ p, h4{
 }
 .specialQuestions{
   width: 100% !important;
+  padding: 16px;
+  margin: 30px 0px 5px 0px;
 }
 .specialQuestions .lightBox{
   padding-top: 29px;
-  height: 150px;
   flex: 1;
-  min-width: 410px;
-  align-content: space-evenly;
+  align-items: center;
 }
-.specialQuestions .lightBox p{
-  font-size: smaller;
-  font-weight: 600;
-}
-.specialQuestions .lightBox canvas{
-  font-size: smaller;
-  font-weight: 600;
+.specialQuestions .lightBox div:first-of-type{
+  height: 90px;
 }
 .specialQuestions .lightBox h3{
   font-size: 71px;
@@ -304,41 +380,99 @@ p, h4{
   opacity: 0.2;
 }
 .specialQuestions div div{
-  background-color: white;
   flex-direction: column;
   display: flex;
-  box-shadow: 0px 0px 6px #00000061;
   padding: 7px;
   text-align: center;
-  min-width: 100px;
+  width: 150px;
 }
-.specialQuestions div:nth-child(2) div p:first-of-type{color: var(--colorCorrect);font-weight: 700;}
-.specialQuestions div:nth-child(3) div p:first-of-type{color: var(--colorWrong);font-weight: 700;}
-.specialQuestions div:nth-child(4) div p:first-of-type{color: var(--colorNotFilled);font-weight: 700;}
-
+.specialQuestions div div p{
+  font-size: 16px;
+  color: var(--colorGrayText);
+  font-weight: 400;
+}
+.specialQuestions span{
+  height: 1px;
+  background-color: var(--colorGrayText);
+  margin: 7px 0px;
+}
+.specialQuestions div div p:first-of-type{
+  font-weight: 700;
+  font-size: 26px;
+}
 .specialQuestions div div p:last-of-type{
-  font-weight: 300;
-  font-size: x-small;
+  font-size: 9px;
+  color: var(--colorGrayText);
 }
 .specialQuestions>div{
   flex-direction: column;
   justify-content: center;
   gap: 5px;
 }
-.questionGeneral{
-  padding-top: 29px;
-  flex: 1;
-  justify-content: center;
-}
 
 #topLeftStats{
-  height: 182px;
   width: 100% !important;
+  margin-bottom: -160px;
+  z-index: 2;
 }
 #topLeftStats>div:first-child{
   flex: 3;
+  padding-bottom: 0px;
   width: 100% !important;
   min-width: 490px;
+}
+
+#allStudentsStats{
+  width: 100%;
+  overflow-x: auto;
+}
+#allStudentsStats>div{
+  height: 180px;
+  width: 100%;
+}
+
+.rankingStats{
+  flex: 1;
+}
+.rankingStats .progress-bar{
+  background-color: var(--colorComposite);
+}
+.rankingStats table{
+  border: 0;
+}
+.rankingStats table p{
+  border: var(--colorComposite) 1px solid;
+  background-color: var(--colorOpened);
+  color: var(--colorComposite);
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-size: x-small;
+}
+.rankingStats th{
+  font-size: x-small;
+  color: var(--colorMidGray);
+  font-weight: 400;
+  padding: 1px 6px;
+  border-bottom: var(--colorMidGray) 1px solid;
+}
+.rankingStats td{
+  border-left: 0px;
+  border-right: 0px;
+  font-size: small;
+  padding: 12px 7px;
+}
+.rankingStats tr>*:first-child, .rankingStats tr>*:last-child{
+  text-align: center;
+}
+.questionGeneral{
+  width: 100%;
+  flex: 3 !important;
+  overflow: auto;
+  min-width: 275px;
+}
+.questionGeneral div{
+  height: 100% !important;
+  width: 100% !important;
 }
 
 /*-------------------------------------------------Attendees----------------------------------------------------------------*/
@@ -1064,18 +1198,14 @@ input[type=text].type{
     margin-top: -14%;
   }
 
-  .correctAnswers{
-    background-color: var(--colorCorrect);
-  }
-  .wrongAnswers{
-    background-color: var(--colorWrong);
-  }
-  .notfilledAnswers{
-    background-color: var(--colorNotFilled);
-  }
-  .toCheckAnswers{
-    background-color: var(--colorToCheck);
-  }
+  .correctAnswers{      background-color: var(--colorCorrect); }
+  .correctAnswersText{  color: var(--colorCorrect) !important; }
+  .wrongAnswers{        background-color: var(--colorWrong);   }
+  .wrongAnswersText{    color: var(--colorWrong) !important;   }
+  .notfilledAnswers{    background-color: var(--colorNotFilled); }
+  .notfilledAnswersText{color: var(--colorNotFilled) !important; }
+  .toCheckAnswers{      background-color: var(--colorToCheck);  }
+  .toCheckAnswersText{  color: var(--colorToCheck) !important;  }
 
 .percDiv{
     font-size:0px;

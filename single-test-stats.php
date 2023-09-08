@@ -8,72 +8,91 @@
 	window.openedTab = 'stats';
 </script>
 <div id="stats">
-	<span>
-		<small for="statsGroup">Based on the results of</small> 
-		<select name="statsGroup" id="statsGroup"> 
-			<option value="rigatoni">Rigatoni</option> 
-			<option value="dave">Dave</option> 
-			<option value="pumpernickel">Pumpernickel</option> 
-			<option value="reeses">Reeses</option> 
-		</select>
-		<small for="statsModules"> for </small> 
-		<select name="statsModules" id="statsModules"> 
-			<option value="rigatoni">Rigatoni</option> 
-			<option value="dave">Dave</option> 
-			<option value="pumpernickel">Pumpernickel</option> 
-			<option value="reeses">Reeses</option> 
-		</select>
-	</span>
+	<div id="sourcePanel" class="ui form">
+		<span class="ui inline fields">
+			<div class="field">
+				<label for="statsGroup">Analysed group</label></br>
+				<select name="statsGroup" id="statsGroup"></select>
+			</div>
+    		<div class="field">
+				<label for="statsModules">Analysed tasks</label></br>
+				<select name="statsModules" id="statsModules"></select>
+			</div>
+		</span>
+	</div>
 	<div class="hotizontalFlex" id="topLeftStats">
-		<div class="lightBox statsBox">
-			<p>General information</p>
-			<div class="lightBox">
-				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/apple.png"/>
-				<div class="statsGeneralBox">
-					<p>182</p>
-					<small>students</small>
-					<a class="taskLink" href="../attendees">Learn more</a>
-				</div>
-			</div>
-			<div class="lightBox">
-				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/result.png"/>
-				<div class="statsGeneralBox">
-					<p>67</p>
-					<small>average score</small>
-					<a class="taskLink" href="../attendees">Learn more</a>
-				</div>
-			</div>
+		<div class="lightBox statsBox " id="allStudentsStats">
+			<p>All students results:</p>
+			<div class="lightBox"  id="allAttendeesResults"></div>
 		</div>
-		<div class="lightBox statsBox questionGeneral">
-			<p>Question status</p>
-			<canvas id="doughnutWCN"></canvas>
+		<div id="statsSummary">
+			<div class="statsSummaryBox">
+				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/people.png"/>
+				<p>182</p>
+				<p>of 182</p>
+				<p>students</p>
+			</div>
+			<div class="statsSummaryBox">
+				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/stats.png"/>
+				<p>67</p>
+				<p>of 100</p>
+				<p>average score</p>
+			</div>
+			<div id="percentPassed">
+				<h4>75%</h4>
+				<p>above the required limit (60%)</p>
+			</div>
 		</div>
 	</div>
+	<div class="lightBox" style="padding-top: 160px;">
+		<div class="lightBox statsBox rankingStats">
+			<p>Top scores:</p>
+			<table>
+				<tbody></tbody>
+			</table>
+		</div>
+		<div class="lightBox statsBox rankingStats">
+			<p>Bottom scores:</p>
+			<table>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+	
 	<div class="lightBox statsBox specialQuestions">
-		<p>The question, that...</p>
-		<div class="lightBox statsBox">
-			<p>... was too easy</p>
-			<div>
-				<p>17B</p>
-				<p>in module 1</p>
-			</div>
-			<canvas id="easiestQuestion"></canvas>
+		<div class="lightBox questionGeneral statsBox">
+			<p>From all given answers:</p>
+			<div></div>
 		</div>
-		<div class="lightBox statsBox">
-			<p>... was too hard</p>
+		<div id="easiestQuestion" class="lightBox">
+			<div></div>
 			<div>
-				<p>17B</p>
-				<p>in module 1</p>
+				<p class="correctAnswersText">17B</p>
+				<p>was too</p>
+				<p>easy</p>
+				<span></span>
+				<p>18 of 20 correct</p>
 			</div>
-			<canvas id="hardestQuestion"></canvas>
 		</div>
-		<div class="lightBox statsBox">
-			<p>... left them speechless</p>
+		<div id="hardestQuestion" class="lightBox">
+			<div></div>
 			<div>
-				<p>17B</p>
-				<p>in module 1</p>
+				<p class="wrongAnswersText">17B</p>
+				<p>was too</p>
+				<p>hard</p>
+				<span></span>
+				<p>18 of 20 correct</p>
 			</div>
-			<canvas id="skippedQuestion"></canvas>
+		</div>
+		<div id="skippedQuestion" class="lightBox">
+			<div></div>
+			<div>
+				<p class="notfilledAnswersText">17B</p>
+				<p>left them</p>
+				<p>speechless</p>
+				<span></span>
+				<p>18 of 20 correct</p>
+			</div>
 		</div>
 	</div>
 </div>

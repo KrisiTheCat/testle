@@ -19,6 +19,8 @@
     --colorClosed:#D7E2E9;
     --colorDescriptive:#A5D4DC;
 
+    --colorLightBlue: #95B3D6;
+
     --colorLightText:#F5F6F7;
     --colorLightGrayText:#D9D9D9;
     --colorMidGray:#A8ACB1;
@@ -47,7 +49,9 @@ body{
 }
 #page{
   flex: 1;
-  width: -webkit-fill-available;
+  padding: 20px;
+  max-width: 100%;
+  width: 100%;
 }
   
 
