@@ -41,7 +41,7 @@ if (isset($_POST['callFormEditFunction'])) {
     $form = get_post_meta( $postID, 'form', true );
 
     if($form == '') $form = array();
-    if(!isset($form[$moduleID]) || !$form[$moduleID] instanceof QuestionForm) $form[$moduleID] = new QuestionForm();
+    if(!isset($form[$moduleID]) || !$form[$moduleID] instanceof QuestionForm) $form[$moduleID] = new QuestionForm('Single');
     $form[$moduleID]->setValue($value,$indArr);
     update_post_meta( $postID, 'form', $form );
 

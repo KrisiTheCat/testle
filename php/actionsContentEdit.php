@@ -35,7 +35,7 @@ function createModule(){
     $resp[count($content)] = new QuestionResponse('Module');
   }
   $content[count($content)] = new QuestionContent('Module');
-  $form[count($form)] = new QuestionForm('Module');
+  $form[count($form)] = new QuestionForm('Layered');
 
   update_post_meta( $postID, 'content', $content );
   update_post_meta( $postID, 'responses', $responses );
@@ -68,7 +68,8 @@ function addQuestion(){
 
   if($type != 'Check'){
     $form = get_post_meta( $postID, 'form', true );
-    $questionF = new QuestionForm($type);
+    if($type == 'Composite' || $type == 'Module') $questionF = new QuestionForm('Layered');
+    else $questionF = new QuestionForm('Single');
     $form[$moduleID]->addSubQ($questionF, $indArr);
     update_post_meta( $postID, 'form', $form );
   }

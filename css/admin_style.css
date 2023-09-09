@@ -2204,6 +2204,9 @@ input[type=text].type{
   text-align: center;
   margin: 17px 0px;
 }
+.upperDivModule p{
+  display: inline-block;
+}
 
 .midVertical{
   position: absolute;

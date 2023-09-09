@@ -112,6 +112,10 @@ function codeToString(code){
     var indArr = decodeIds(code);
     var ans = '';
     if(indArr[1].length>0){
+        ans = 0;
+        for(var moduleID = 0; moduleID < parseInt(indArr[0]); moduleID++){
+            ans += window.contentKrisi[moduleID].subq.length;
+        }
         ans += (indArr[1][0]+1);
         if(indArr[1].length>1){
             ans+= alphabet.charAt(indArr[1][1]%26);

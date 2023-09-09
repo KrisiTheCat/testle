@@ -36,7 +36,7 @@ function initForm(){
                     url: '',
                     type: 'post',
                     data: { "callFormEditFunction": "deleteFormImages", 
-                            "postID" : $('#inputPostId').val(),
+                            "postID" : window.postID,
                             "deleteData" : 'true'},
                     success: function(data) {
                         location.reload();
@@ -48,7 +48,7 @@ function initForm(){
                     url: '',
                     type: 'post',
                     data: { "callFormEditFunction": "deleteFormImages", 
-                            "postID" : $('#inputPostId').val(),
+                            "postID" : window.postID,
                             "deleteData" : 'false'},
                     success: function(data) {
                         location.reload();
@@ -211,7 +211,7 @@ function initForm(){
                         url: '',
                         type: 'post',
                         data: { "callFormEditFunction": "saveFormImages", 
-                                "postID" : $('#inputPostId').val(),
+                                "postID" : window.postID,
                                 "imgBase64": dataURLs,},
                         success: function(data) { 
                             location.reload();
@@ -245,7 +245,7 @@ function initForm(){
                         url: '',
                         type: 'post',
                         data: { "callFormEditFunction": "updateFormQuestion", 
-                        "postID" : $('#inputPostId').val(),
+                        "postID" : window.postID,
                         "moduleID" : selectedFormId[0],
                         "indArr" : selectedFormId[1],
                         "value" : null},
@@ -270,7 +270,7 @@ function initForm(){
                     //     url: '',
                     //     type: 'post',
                     //     data: { "callFormEditFunction": "getFormData", 
-                    //     "postID" : $('#inputPostId').val(),},
+                    //     "postID" : window.postID,},
                     //     success: function(data) {
                     //         form = JSON.parse(data['form']);
                     //         initQuestionTabs();
@@ -299,7 +299,7 @@ function recheckQuestion(formQ, contentQ, code){
             url: '',
             type: 'post',
             data: { "callTestEditFunction": 'getImageURLs',
-                    "postID": $('#inputPostId').val(),
+                    "postID": window.postID,
                     "attArr": Object.keys(window.responsesKrisi),
                     "pageID": formQ.page},
             success: function(data) { 
@@ -316,7 +316,7 @@ function checkQuestionRecursive(resps, ind, formQ, contentQ, code, ans){
             url: '',
             type: 'post',
             data: { "callResponseEditFunction": 'changeAnswerChDiff',
-                    "postID": $('#inputPostId').val(),
+                    "postID": window.postID,
                     "reqArr": ans,
                     "moduleID": code[0],
                     "indArr": code[1]},
@@ -403,7 +403,7 @@ function initCanvasActions(){
                 url: '',
                 type: 'post',
                 data: { "callFormEditFunction": "editEdge", 
-                "postID" : $('#inputPostId').val(),
+                "postID" : window.postID,
                 "pageID" : visiblePageId,
                 "edgeID" : ind,
                 "left" : draggingEdge.offsetLeft/canvas.width,
@@ -472,7 +472,7 @@ function initCanvasActions(){
                 url: '',
                 type: 'post',
                 data: { "callFormEditFunction": "updateFormQuestion", 
-                "postID" : $('#inputPostId').val(),
+                "postID" : window.postID,
                 "moduleID" : selectedFormId[0],
                 "indArr" : selectedFormId[1],
                 "value" : getValueQuestionRectCoords(form[selectedFormId[0]], selectedFormId[1]),},
@@ -525,13 +525,11 @@ function initQuestionTabs(){
                     <p class="moduleID">#` + (moduleID+1) + `</p></div>`;
         for(var questionID = 0; questionID < window.contentKrisi[moduleID]['subq'].length; questionID++){
             if(window.contentKrisi[moduleID]['subq'][questionID]['type'] == 'Composite'){
-                index = 'A';
                 for(var subID = 0; subID < window.contentKrisi[moduleID]['subq'][questionID]['subq'].length; subID++){
-                    text += addQuestionTab(moduleID, [questionID, subID], (questionID+1) + index);
-                    index = String.fromCharCode(index.charCodeAt(0) + 1);
+                    text += addQuestionTab(moduleID, [questionID, subID], codeToString(`${moduleID}_${questionID}_${subID}`));
                 }
             } else {
-                text += addQuestionTab(moduleID, [questionID], (questionID+1));
+                text += addQuestionTab(moduleID, [questionID], codeToString(`${moduleID}_${questionID}`));
             }
         } 
         text += '</div>';
@@ -540,7 +538,8 @@ function initQuestionTabs(){
 }
 function addQuestionTab(moduleID, indArr, id){
     var newTab = "<div class=\"questionFormDiv";
-    if(getValueQuestionRectCoords(form[moduleID], indArr) != undefined){
+    var result = getValueQuestionRectCoords(form[moduleID], indArr);
+    if(result != undefined && Object.keys(result).length > 0){
         newTab+= ' questionFormDivFenced';
     }
     newTab += "\" data-code=\"" + moduleID + '_' + encodeIds(indArr) + "\"><p>" + id + "</p><div></div></div>";

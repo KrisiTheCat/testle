@@ -83,7 +83,7 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
             url: '',
             type: 'post',
             data: { "nullifyTest": "blob", 
-            "postID" : $('#inputPostId').val()},
+            "postID" : window.postID},
             success: function(data) {
                 location.reload();
             }

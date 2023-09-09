@@ -224,27 +224,18 @@ class QuestionForm extends Question{
   public ?array $subq;
   public function __construct($type){
     switch($type){
-    case 'Module':
-      $this->subq = array(new QuestionForm('Closed'));
-      break;
-    case 'Closed':
+    case 'Single':
       $page = null;
       break;
-    case 'Opened':
-      $page = null;
-      break;
-    case 'Descriptive':
-      $page = null;
-      break;
-    case 'Composite':
-      $this->subq = array(new QuestionForm('Closed'));
+    case 'Layered':
+      $this->subq = array(new QuestionForm('Single'));
       break;
     }
   }
   
   public function setValue($value, $indexArr){
     if(count($indexArr) == 1 && empty($value)){
-      $this->subq[$indexArr[0]] = null;
+      $this->subq[$indexArr[0]] =  new stdClass();
       return;
     }
     if(count($indexArr) == 0){
@@ -257,7 +248,7 @@ class QuestionForm extends Question{
     } else {
       $id = intval(array_shift($indexArr));
       if(!isset($this->subq)) $this->subq = array();
-      if(!isset($this->subq[$id])) $this->subq[$id] = new QuestionForm();
+      if(!isset($this->subq[$id])) $this->subq[$id] = new QuestionForm('Single');
       $this->subq[$id]->setValue($value, $indexArr);
     }
   }

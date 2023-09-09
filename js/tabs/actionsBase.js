@@ -114,7 +114,7 @@ function initBase(){
             copyRow.addClass('subQ');
             copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
         }
-        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.radioA').removeClass('radioChecked');
         copyRow.find('.radioB').removeClass('radioChecked');
         copyRow.find('.radioC').removeClass('radioChecked');
@@ -132,7 +132,7 @@ function initBase(){
             copyRow.addClass('subQ');
             copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
         }
-        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.openedAnswer').first().val(answer);
         copyRow.find('.points').first().val(points);
         tbody.append(copyRow);
@@ -146,7 +146,7 @@ function initBase(){
             copyRow.addClass('subQ');
             copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
         }
-        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.descriptiveTable').find('tbody').html('');
         copyRow.find('.points').first().val(points);
         tbody.append(copyRow);
@@ -164,7 +164,7 @@ function initBase(){
         var copyRow = compositeRow.clone();
         copyRow.attr("data-code",code);
         copyRow.removeClass('invisible');
-        copyRow.find('.questionID').first().html(id+"");
+        copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.answer').first().val(answer);
         copyRow.find('.points').first().val(points);
         //copyRow.find('tbody').children().eq(1).remove();
@@ -188,7 +188,7 @@ function initBase(){
                     url: '',
                     type: 'post',
                     data: { "callTestEditFunction": "createModule", 
-                    "postID" : $('#inputPostId').val()},
+                    "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
@@ -216,7 +216,7 @@ function initBase(){
                     "moduleID": table.data('moduleid'),
                     "indArr": '[]',
                     "questionType" : type,
-                    "postID" : $('#inputPostId').val()},
+                    "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
@@ -244,7 +244,7 @@ function initBase(){
                     "moduleID": code[0],
                     "indArr": JSON.stringify(code[1]),
                     "questionType" : type,
-                    "postID" : $('#inputPostId').val()},
+                    "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
@@ -265,7 +265,7 @@ function initBase(){
                 "moduleID": code[0],
                 "indArr": JSON.stringify(code[1]),
                 "questionType" : 'Check',
-                "postID" : $('#inputPostId').val()},
+                "postID" : window.postID},
                 success: function(data) {
                     window.contentKrisi = JSON.parse(data['content']);
                     window.responsesKrisi = JSON.parse(data['responses']);
@@ -288,7 +288,7 @@ function initBase(){
                             data: { "callTestEditFunction": "deleteQuestion", 
                             "moduleID": moduleID,
                             "indArr": '[]',
-                            "postID" : $('#inputPostId').val()},
+                            "postID" : window.postID},
                             success: function(data) {
                                 ajaxRequest = false;
                                 window.contentKrisi = JSON.parse(data['content']);
@@ -312,7 +312,7 @@ function initBase(){
                             data: { "callTestEditFunction": "deleteQuestion", 
                             "moduleID": deleteButtonCode[0],
                             "indArr": JSON.stringify(deleteButtonCode[1]),
-                            "postID" : $('#inputPostId').val()},
+                            "postID" : window.postID},
                             success: function(data) {
                                 ajaxRequest = false;
                                 window.contentKrisi = JSON.parse(data['content']);
@@ -346,7 +346,7 @@ function initBase(){
                     "moduleID": code[0],
                     "indArr": JSON.stringify(code[1]),
                     "answer": $this.data('answer'),
-                    "postID" : $('#inputPostId').val()},
+                    "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
@@ -373,7 +373,7 @@ function initBase(){
                     "moduleID": code[0],
                     "indArr": JSON.stringify(code[1]),
                     "answer": $(this).val(),
-                    "postID" : $('#inputPostId').val()},
+                    "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
@@ -396,7 +396,7 @@ function initBase(){
                     "moduleID": code[0],
                     "indArr": JSON.stringify(code[1]),
                     "answer": $(this).val(),
-                    "postID" : $('#inputPostId').val()},
+                    "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
@@ -419,7 +419,7 @@ function initBase(){
                     "moduleID": code[0],
                     "indArr": JSON.stringify(code[1]),
                     "points": $this.val(),
-                    "postID" : $('#inputPostId').val()},
+                    "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);

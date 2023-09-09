@@ -89,7 +89,7 @@
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/handcheck.png"/>
 			</div>
 			<div>
-				<p>Hand check the questions, that the computer cannot do alone</p>
+				<p>Check student work that the computer cannot do automatically</p>
 				<div>
 					<div style="flex:1">
 						<p class="additionalData"></p>

@@ -21,7 +21,6 @@ $current_fp = get_query_var('fpage'); ?>
 				<canvas id="imageCanvas" width="1000" class="invisible"></canvas>
 				<img id="imageImg" width="1000" class="invisible"/>
 			</div>
-			<input type="text" id="inputPostId" class="invisible" name="postID" value='<?php echo get_the_ID();?>' readonly/>
 			<button type="button" id="nullBtn" class="invisible">Nullify</button>
 			<?php
 			do_action( 'lalita_before_main_content' );

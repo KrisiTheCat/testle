@@ -7,6 +7,7 @@
 <script>
 	window.openedTab = 'stats';
 </script>
+<h3 id="statsNoStud" class="invisible">No students to analyze</h3>
 <div id="stats">
 	<div id="sourcePanel" class="ui form">
 		<span class="ui inline fields">
@@ -28,8 +29,8 @@
 		<div id="statsSummary">
 			<div class="statsSummaryBox">
 				<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/tasks/people.png"/>
-				<p>182</p>
-				<p>of 182</p>
+				<p></p>
+				<p></p>
 				<p>students</p>
 			</div>
 			<div class="statsSummaryBox">
@@ -39,7 +40,7 @@
 				<p>average score</p>
 			</div>
 			<div id="percentPassed">
-				<h4>75%</h4>
+				<h4></h4>
 				<p>above the required limit (60%)</p>
 			</div>
 		</div>

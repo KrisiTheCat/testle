@@ -9,6 +9,12 @@ function initStats(){
   colorsArr.push(style.getPropertyValue('--colorComposite'));
   colorsArr.push(style.getPropertyValue('--colorDarkText'));
 
+  if(Object.keys(window.responsesKrisi).length <= 1){
+    $('#stats').hide();
+    $('#statsNoStud').removeClass('invisible');
+    return;
+  }
+
   initDataSource();
 
   currAtts = Object.keys(window.responsesKrisi);
@@ -30,6 +36,9 @@ function initStatsWithTarget(atts, modules){
   initWCNchart(statusC);
   bestWorstQuestion(statusT);
   initRankings(results, modules);
+
+  $('.statsSummaryBox').first().find('p').first().html(atts.length);
+  $('.statsSummaryBox').first().find('p').eq(1).html(`of ${Object.keys(window.responsesKrisi).length-1}`);
 }
 
 function initDataSource(){
@@ -141,7 +150,10 @@ function initRankings(results, modules){
   };
   $('#allAttendeesResults').html('<canvas></canvas>')
   new Chart(document.getElementById('allAttendeesResults').getElementsByTagName('canvas')[0], graficData);
-  $('.statsGeneralBox').last().find('p').first().html((average/results.length).toFixed(2));
+
+  
+  $('.statsSummaryBox').last().find('p').first().html((average/results.length).toFixed(2));
+  $('.statsSummaryBox').last().find('p').eq(1).html(`of ${maxAmountPoss}`);
   
   var percentPassed = 0;
   text = `<tr>
@@ -238,6 +250,10 @@ function bestWorstQuestion(dataG){
     bestWorstQuestionEinzel(dataG[2], 2, 'Empty', '--colorNotFilled', document.getElementById('skippedQuestion'));
 }
 function bestWorstQuestionEinzel(dataG, index, label, color, div){
+  if(dataG.code.length < 1){
+    $(div).hide();
+    return;
+  }
   dataG.sum = dataG.times[0] + dataG.times[1] + dataG.times[2];
   const doughnutLabel = {
     id: 'doughnutLabet' ,
