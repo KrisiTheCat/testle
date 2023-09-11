@@ -170,6 +170,7 @@
 				<tr class="lastTr">
 					<td colspan='5'>
 						<div class="addQuestionDiv">
+							<h4 class="addSubQP">Add question: </h4>
 							<a class="addQuestionButton addOpened buttonLook">Opened</a>
 							<a class="addQuestionButton addClosed buttonLook">Closed</a>
 							<a class="addQuestionButton addDesciptive buttonLook">Descriptive</a>

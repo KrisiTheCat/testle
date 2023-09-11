@@ -15,6 +15,10 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
 });
 toastr.options = {"icon": false,"closeButton": true, "newestOnTop": true, "progressBar": true, "positionClass": "toast-bottom-right"};
 
+function containsOnlyAllowedCharacters(inputString) {
+    const pattern = /^[a-zA-Zа-яА-Я0-9\s\-_]*$/;
+    return pattern.test(inputString);
+}
 function displayTests(tests){
     text = ``;
     for(test of tests){
@@ -69,7 +73,7 @@ $(document).on('click', '.testTitle', (e)=>{
     e.stopPropagation();
 });
 $(document).on('click', '.testDiv', function (){
-    if($(this).hasClass('createTest')) return;
+    if($(this).hasClass('createTest') || $(this).hasClass('activeCreate')) return;
     window.location.href = $(this).data('link');
 });
 $(document).on('click', '.createTest', function (e){
@@ -86,14 +90,18 @@ $(document).on('click','.createTestCa',function(e){
         $(tarea).val($(tarea).data('original'));
     }
 });
+
 $(document).on('click','.createTestCr',function(e){
     e.stopPropagation();
     var title = $(this).parent().parent().find('textarea').first().val();
     if(title.length < 5){
-        toastr.error("Title too short");
+        toastr.error("Must be at least 5 symbols.","Title too short");
     } 
     else if(title.length > 20){
-        toastr.error("Title too long");
+        toastr.error("Must be at most 20 symbols.","Title too long");
+    }
+    else if(!containsOnlyAllowedCharacters(title)){
+        toastr.error("Allowed: letters, space, dash","Forbidden symbols used");
     }
     else {
         if($(this).parent().parent().hasClass('createTest')){

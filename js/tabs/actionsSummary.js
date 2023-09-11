@@ -142,6 +142,7 @@ function displayEditors(editors){
             }
         });
         $("#newEditorInput").autocomplete({ source: names });
+        console.log(names);
         $(document).on('blur','#newEditorInput',function(){
             let editor = $(this).val();
             let id = -1, role;

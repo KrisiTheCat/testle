@@ -110,6 +110,12 @@ if (isset($_POST['callResponseEditFunction'])) {
     echo json_encode($response_array);
   }
   
+  // $responses = get_post_meta( 49, 'responses', true );
+  // unset($responses[2][2]);
+  // unset($responses[3][2]);
+  // unset($responses[4][2]);
+  // update_post_meta(49,'responses', $responses);
+
   function changeAnswerChArr(){
     $postID = $_POST['postID'];
     $attendeeID = intval($_POST['attendeeID']);

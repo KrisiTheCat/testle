@@ -204,7 +204,7 @@ button:hover, html input[type="button"]:hover, input[type="reset"]:hover, input[
 .testDiv p{
   display: block;
 }
-.testDiv > * {
+.activeCreate > *, .editTestName{
   z-index: 3;
 }
 .editTestName{

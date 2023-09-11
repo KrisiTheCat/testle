@@ -231,7 +231,9 @@ function listUserTests($userID){
 function canSeeTest($userID, $postID){  // 0-no 1-attendee 2-full vision
   $user_meta = get_userdata(get_current_user_id());
   $user_roles = $user_meta->roles;
-  if(in_array("administrator", $user_roles)  || get_post_field( 'post_author', get_the_ID() ) == get_current_user_id()){
+  $editors = get_post_meta($postID, 'editors',true);
+  $key = array_search($userID, array_column($editors, "id"));
+  if(in_array("administrator", $user_roles)  || get_post_field( 'post_author', get_the_ID() ) == get_current_user_id() || $key !== false){
     return 2;
   }
   if(array_key_exists($userID, get_post_meta($postID, 'responses',true))){

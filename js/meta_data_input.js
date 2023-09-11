@@ -35,7 +35,7 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
                 case 'summary':   {initSummary();       break;}
                 case 'stats':     {initStats();         break;}
                 case 'attendees': {initAttendees();     break;}
-                case 'base':      {initBase();          break;}
+                case 'modules':   {initBase();          break;}
                 case 'check':     {initCheck();         break;}
                 case 'handcheck': {initHandCheck();     break;}
                 case 'form':      {initForm();          break;}
@@ -102,6 +102,7 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
     $('.closeButton').on('mouseleave', function(e) {
         $(this).attr('src',window.srcPath + '/img/closeD.png');
     });
+
 });
 
 

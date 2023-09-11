@@ -38,8 +38,6 @@ $current_fp = get_query_var('fpage'); ?>
 					$form = get_post_meta( get_the_ID(), 'form', true );
 					$editors = get_post_meta(get_the_ID(), 'editors',true);
 
-					$canSee = array_search(get_current_user_id(), array_column($editors, "id"));
-
 					switch(canSeeTest(get_current_user_id(), get_the_ID())){
 					case 0:
 						get_template_part( 'single', 'test-notallowed' );
@@ -85,7 +83,7 @@ $current_fp = get_query_var('fpage'); ?>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="baseLink"      href="<?php echo get_permalink() ?>base/"		data-hover="Base">Base</a>
+								<a id="baseLink"      href="<?php echo get_permalink() ?>modules/"		data-hover="Modules">Modules</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">

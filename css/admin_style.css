@@ -366,6 +366,9 @@ p, h4{
   flex: 1;
   align-items: center;
 }
+#easiestQuestion, #hardestQuestion, #skippedQuestion{
+  height: fit-content;
+}
 .specialQuestions .lightBox div:first-of-type{
   height: 90px;
 }

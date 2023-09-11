@@ -55,7 +55,7 @@ function cptui_register_my_cpts_test() {
 $my_fake_pages = array(
     'attendees' => 'Attendees',
     'stats' => 'Stats',
-    'base' => 'Base',
+    'modules' => 'Modules',
     'check' => 'Check',
     'handcheck' => 'Hand Check',
     'form' => 'Form',
