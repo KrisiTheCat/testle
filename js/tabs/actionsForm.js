@@ -43,17 +43,8 @@ function initForm(){
                     }
                 });
             });
-            $(document).on('click', '#formInfoSave', function(){
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: { "callFormEditFunction": "deleteFormImages", 
-                            "postID" : window.postID,
-                            "deleteData" : 'false'},
-                    success: function(data) {
-                        location.reload();
-                    }
-                });
+            $(document).on('click', '#formInfoCancel', function(){
+                $('#formInfoSaveDelete').modal('hide');
             });
         });
 

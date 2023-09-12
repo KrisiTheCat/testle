@@ -34,6 +34,20 @@
 			</div>
 		</div>
 	</div>
+	<p class="noSuchText" style="display: none">No such students</p>
+	<div class="attendeesTable">
+		<table class="data-table">
+			<thead>
+				<tr>
+					<th style="width:100%"><button id="name">Name</button></th>
+					<th><button id="status">Status</button></th>
+					<th><button id="result">Result</button></th>
+					<th><button id="actions">Actions</button></th>
+				</tr>
+			</thead>
+		<tbody id="table-content"></tbody>
+	</table>
+	</div>
 	<div class="userCheckedPopup">
 		<div class="formPopup" id="userCheckedForm">
 			<div class="formContainer">
@@ -44,58 +58,6 @@
 			</div>
 		</div>
 	</div>
-	<div id="noPhotoGroup" class="attendeesGroup">
-		<div class="groupHeader">
-			<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/missingImage.png"/>
-			<p>Students with missing scanned test pages:</p>
-			<img class="showHideTable showAttendeesButton" data-showed="1" src="<?php echo get_stylesheet_directory_uri(); ?>/img/arrowUp.png"/>
-		</div>
-		<p class="noSuchText">No such students</p>
-		<table class="testAttendeedDiv">
-			<tbody>
-				<tr>
-					<th style="width:100%"></th>
-					<th style="min-width:75px">Points</th>
-					<th style="min-width:100px">Test</th>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div id="notCheckedGroup" class="attendeesGroup">
-		<div class="groupHeader">
-			<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/notChecked.png"/>
-			<p>Students with unchecked questions scanned test pages:</p>
-			<img class="showHideTable showAttendeesButton" data-showed="1" src="<?php echo get_stylesheet_directory_uri(); ?>/img/arrowUp.png"/>
-		</div>
-		<p class="noSuchText">No such students</p>
-		<table class="testAttendeedDiv">
-			<tbody>
-				<tr>
-					<th style="width:100%"></th>
-					<th style="min-width:75px">Points</th>
-					<th style="min-width:100px">Test</th>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div id="allFineGroup" class="attendeesGroup">
-		<div class="groupHeader">
-			<p>Students with finished checking:</p>
-			<img class="showHideTable showAttendeesButton" data-showed="1" src="<?php echo get_stylesheet_directory_uri(); ?>/img/arrowUp.png"/>
-		</div>
-		<p class="noSuchText">No such students</p>
-		<table class="testAttendeedDiv">
-			<tbody>
-				<tr>
-					<th style="width:100%"></th>
-					<th style="min-width:75px">Points</th>
-					<th style="min-width:100px">Test</th>
-				</tr>
-			</tbody>
-		</table>
-	</div>
 	<button id="newAttendeeBtn" class="elegantBtn"><b>Edit</b> attendee list</button>
 	<button id="exportAttBtn" class="elegantBtn"  download="file.xml"><b>Export</b></button>
-	<button id="sortNameBtn" class="elegantBtn"><b>Sort by name</b></button>
-	<button id="sortPtsBtn" class="elegantBtn"><b>Sort by pts</b></button>
 </div>

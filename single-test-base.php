@@ -6,7 +6,7 @@
 ?>
 
 <script>
-	window.openedTab = 'base';
+	window.openedTab = 'modules';
 </script>
 <div id="base">
 	<div class="loginPopup">

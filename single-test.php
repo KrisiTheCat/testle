@@ -83,7 +83,7 @@ $current_fp = get_query_var('fpage'); ?>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="baseLink"      href="<?php echo get_permalink() ?>modules/"		data-hover="Modules">Modules</a>
+								<a id="modulesLink"      href="<?php echo get_permalink() ?>modules/"		data-hover="Modules">Modules</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
@@ -117,7 +117,7 @@ $current_fp = get_query_var('fpage'); ?>
 							get_template_part( 'single', 'test-attendees' );
 						} else if ($current_fp == 'stats') {
 							get_template_part( 'single', 'test-stats' );
-						} else if ($current_fp == 'base') {
+						} else if ($current_fp == 'modules') {
 							get_template_part( 'single', 'test-base' );
 						} else if ($current_fp == 'check') {
 							get_template_part( 'single', 'test-check' );

@@ -497,73 +497,108 @@ p, h4{
   color: white !important;
 }
 
-.attendeesGroup{
-  border-radius: 5px;
-  margin-bottom: 15px;
+.attendeesTable .table-container {
+  margin: auto;
+  max-width: 1200px;
+  min-height: 100vh;
+  overflow: scroll;
+  width: 100%;
 }
-#noPhotoGroup{
-  background-color: var(--colorGrayText);
+
+.attendeesTable table {
+  border-collapse: collapse;
+  width: 100%;
 }
-#noPhotoGroup .noSuchText{
-  color: var(--colorDescriptive);
+
+.attendeesTable thead tr {
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  height: 1px;
 }
-#notCheckedGroup{
-  background-color: var(--colorDescriptive);
+
+.attendeesTable th {
+  font-weight: bold;
+  height: inherit;
+  padding: 0;
 }
-#notCheckedGroup .noSuchText{
-  color: var(--colorLightText);
+
+.attendeesTableth:not(:first-of-type) {
+  border-left: 1px solid #ddd;
 }
-#noPhotoGroup .groupHeader,#notCheckedGroup .groupHeader{
-  color: white;
+
+.attendeesTable th button:hover{
+  color: var(--colorComposite);
 }
-#allFineGroup{
-  background-color: var(--colorLightText);
-}
-#allFineGroup .noSuchText{
+.attendeesTable th button {
+  background-color: var(--colorOpened);
   color: var(--colorGrayText);
+  font-weight: 400 !important;
+  font-size: 17px !important;
+  border: none;
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  height: 100%;
+  margin: 0;
+  min-width: max-content;
+  padding: 0.5rem 1rem;
+  position: relative;
+  text-align: left;
+  width: 100%;
 }
+
+.attendeesTable th button::after {
+  position: absolute;
+  right: 0.5rem;
+}
+
+.attendeesTable th button[data-dir="asc"]::after {
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpolygon points='0, 0 8,0 4,8 8' fill='%23818688'/%3E%3C/svg%3E");
+}
+
+.attendeesTable th button[data-dir="desc"]::after {
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpolygon points='4 0,8 8,0 8' fill='%23818688'/%3E%3C/svg%3E");
+}
+
+.attendeesTable tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.attendeeStatus:before {
+  content: "•";
+  margin-right: 3px;
+}
+.attendeeStatus{
+  padding: 1px 12px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 13px;
+  width: fit-content;
+}
+.attendeeStatus0 { background: color-mix(in srgb, var(--colorGrayText), transparent 66%); color: var(--colorGrayText);}
+.attendeeStatus1 { background: color-mix(in srgb, var(--colorToCheck), transparent 66%); color: var(--colorToCheck);}
+.attendeeStatus2 { background: color-mix(in srgb, var(--colorCorrect), transparent 66%); color: var(--colorCorrect);}
+
+.checkResponse{
+  background:url('../img/checking.png') no-repeat;
+  background-size: contain;
+  height: 23px;
+  color: transparent;
+  width: 100%;
+  display: block;
+}
+.checkResponse:hover{
+  background:url('../img/checkingColor.png') no-repeat;
+  background-size: contain;
+}
+
 .noSuchText{
   font-size: 14px;
   padding-left: 11px;
   padding-bottom: 11px;
 }
 
-.groupHeader{
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  gap: 10px;
-}
-.groupHeader p{
-  font-weight: 700;
-  font-size: 13px;
-  flex: 1;
-}
-.groupHeader img:nth-child(1){
-  height: 35px;
-}
-
-.attendeesGroup table{
-  border-spacing: 10px;
-  border: none;
-  margin-top: -32px;
-}
-.attendeesGroup td{
-  background-color: white;
-  border: var(--colorClosed) 1px solid;
-  border-radius: 5px;
-  font-size: 13px;
-}
-.attendeesGroup td:not(:nth-child(1)) {
-  text-align: center;
-}
-.attendeesGroup th{
-  font-size: 13px;
-  font-weight: 300;
-  border: none;
-  text-align: center;
-  padding: 0px;
-}
 .attendeeCheckBtn{
   background-color: #d5d5d5;
 }
@@ -1979,12 +2014,12 @@ input[type=text].type{
   font-size: 13px;
   font-weight: 300;
 }
-#formInfoSave{
-  background-color: var(--colorComposite);
+#formInfoCancel{
+  color: var(--colorComposite);
+  background-color: transparent;
   border-radius: 3px;
-  color: white;
   font-size: 13px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 #canvasDiv {

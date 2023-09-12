@@ -17,6 +17,50 @@ function containsToBeChecked(response){
     }
     return containsToBeChecked(response['subq']);
 }
+function amountPotentialToBeChecked(response){
+    if(!response) return 0;
+    if('type' in response){
+        switch(response.type){
+            case 'Opened': case 'Descriptive':
+                return 1;
+            case 'Closed':
+                return 0;
+            default:
+                return amountPotentialToBeChecked(response.subq);
+        }
+    }
+    var ans = 0;
+    for(var module in response){
+        if(module == Number(module)){
+            ans += amountPotentialToBeChecked(response[module]);
+        }
+    }
+    return ans;
+}
+function amountToBeChecked(response, content){
+    if(!response) return 0;
+    if('type' in content){
+        switch(content.type){
+            case 'Opened': 
+                if(response['status'] == 3) return 1;
+                return 0;
+            case 'Descriptive':
+                if(response.subq[0]['status'] == 3) return 1;
+                return 0;
+            case 'Closed':
+                return 0;
+            default:
+                return amountToBeChecked(response.subq, content.subq);
+        }
+    }
+    var ans = 0;
+    for(var module in response){
+        if(module == Number(module)){
+            ans += amountToBeChecked(response[module], content[module]);
+        }
+    }
+    return ans;
+}
 
 function calcPoints(response, content){
     if(!response) return 0;
@@ -129,4 +173,23 @@ const STATUS = {
     CORRECT: 1,
     NOTFILLED: 2,
     TOBECHECKED: 3
+}
+const ATTENDEE_STATUS = {
+    NO_PHOTO: 0,
+    CHECKING: 1,
+    FINISHED: 2
+}
+const ATTENDEE_STATUS_DATA = {
+    0: {
+        class: 'attendeeStatus0',
+        label: 'Capturing'
+    },
+    1: {
+        class: 'attendeeStatus1',
+        label: 'Checking'
+    },
+    2: {
+        class: 'attendeeStatus2',
+        label: 'Finished'
+    }
 }

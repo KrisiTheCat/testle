@@ -38,11 +38,14 @@
 		<div class="modal-dialog  modal-lg" role="document" style="margin: 3rem auto;">
 			<div class="modal-content">
 				<div class="modal-header border-0" style="flex-direction: column">
-					<h3>Do you wish to <b>delete</b> all form info?</h3>
+					<h3 style="margin: 0;">Losing info</h3>
+				</div>
+				<div class="modal-body">
+					<p>This action will delete all form info (the sections answering the individual questions). Do you wish to continue?</p>
 				</div>
 				<div class="modal-footer">
-					<button id="formInfoDelete">Delete</button>
-					<button id="formInfoSave">Save</button>
+					<button id="formInfoCancel">Cancel</button>
+					<button id="formInfoDelete">Continue</button>
 				</div>
 			</div>
 		</div>

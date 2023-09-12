@@ -9,16 +9,22 @@ function initNotifCircles(){
     var pages = window.pageInfo.length;
 
     var students = Object.keys(window.responsesKrisi).length-1;
-    sortAttInGroups();
-    setDataInNotif($('#attendeesLink').parent().find('.notifCircle'), Object.keys(attendeesByGroups[0]).length);
-    setDataInNotif($('#handcheckLink').parent().find('.notifCircle'), students - Object.keys(attendeesByGroups[2]).length);
+    
+    var [noPhoto, handCheckAll, handCheckToDo] = findNoPhotos();
+    handCheckAll*=students;
+
+    setDataInNotif($('#attendeesLink').parent().find('.notifCircle'), noPhoto);
+    setDataInNotif($('#handcheckLink').parent().find('.notifCircle'), handCheckToDo);
 
     sumInfo = {
         students: students,
         tasks: tasks,
         pages: pages,
         questions: 0,
-        sectoredQuestions: 0
+        sectoredQuestions: 0,
+        noPhoto: noPhoto,
+        handCheckAll: handCheckAll, 
+        handCheckToDo: handCheckToDo
     }
     initFormCircle();
 }
@@ -63,14 +69,14 @@ function initSummary(){
         $('#listStudentsTask').find('.additionalData').html(`${sumInfo.students} listed`);
     }
 
-    $('#noPhotoTask').find('.additionalData').html(`${sumInfo.students - Object.keys(attendeesByGroups[0]).length} | ${sumInfo.students}`);
-    if(Object.keys(attendeesByGroups[0]).length != 0 || sumInfo.students != 0){
-        $('#noPhotoTask').find('.progress-bar').css('width', Math.round(((sumInfo.students - Object.keys(attendeesByGroups[0]).length)/sumInfo.students)*100) + '%');
+    $('#noPhotoTask').find('.additionalData').html(`${sumInfo.students -sumInfo.noPhoto} | ${sumInfo.students}`);
+    if(sumInfo.noPhoto != 0 || sumInfo.students != 0){
+        $('#noPhotoTask').find('.progress-bar').css('width', Math.round(((sumInfo.students - sumInfo.noPhoto)/sumInfo.students)*100) + '%');
     }else{$('#noPhotoTask').find('.progress').hide();}
 
-    $('#handCheckTask').find('.additionalData').html(`${Object.keys(attendeesByGroups[2]).length} | ${sumInfo.students}`);
-    if(Object.keys(attendeesByGroups[2]).length != sumInfo.students || sumInfo.students != 0){
-        $('#handCheckTask').find('.progress-bar').css('width', Math.round((Object.keys(attendeesByGroups[2]).length/sumInfo.students)*100) + '%');
+    $('#handCheckTask').find('.additionalData').html(`${sumInfo.handCheckAll-sumInfo.handCheckToDo} | ${sumInfo.handCheckAll}`);
+    if(sumInfo.handCheckToDo != 0 || sumInfo.students != 0){
+        $('#handCheckTask').find('.progress-bar').css('width', Math.round(((sumInfo.handCheckAll-sumInfo.handCheckToDo)/sumInfo.handCheckAll)*100) + '%');
     }
     else{
         $('#handCheckTask').find('.progress').hide();
@@ -108,6 +114,20 @@ function initSummary(){
         }
     });
     
+}
+
+function findNoPhotos(){
+    var noPhoto = 0, handCheckAll = 0, handCheckToDo = 0;
+    handCheckAll = amountPotentialToBeChecked(window.contentKrisi);
+    for(attID in window.responsesKrisi){
+        if(attID!=0){
+            if(!window.responsesKrisi[attID]['images'] || window.pageInfo.length != window.responsesKrisi[attID]['images'].length){
+                noPhoto++;
+            }
+            handCheckToDo += amountToBeChecked(window.responsesKrisi[attID],window.contentKrisi);
+        }
+    }
+    return [noPhoto,handCheckAll, handCheckToDo];
 }
 
 function displayEditors(editors){

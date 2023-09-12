@@ -1,5 +1,5 @@
 var $ = jQuery;
-var attendeesByGroups=[[],[],[]];
+var attendeesFormated=[];
 
 function initAttendees(){
 
@@ -83,72 +83,40 @@ function initAllAttPopup(){
 
 function refreshAttendees(){
     sortAttInGroups();
-    pushAllAttendeesInTables();
+    if(attendeesFormated.length == 0){
+      $('#attendees').find('.noSuchText').show();
+      $('#attendees').find('.attendeesTable').hide();
+    }
+    else {
+      importToTable();
+    }
 }
 
 function sortAttInGroups(){
     
-    attendeesByGroups = [[],[],[]];
+    attendeesFormated = [];
     for(attID in window.responsesKrisi){
         if(attID!=0){
-            attendeesByGroups[whichGroup(window.responsesKrisi[attID])].push({
-                user:window.usersKrisi[attID],
-                pts:calcPoints(window.responsesKrisi[attID], window.contentKrisi)});
+            attendeesFormated.push({
+                "name":window.usersKrisi[attID].name,
+                "status":getStatus(window.responsesKrisi[attID]),
+                "result":calcPoints(window.responsesKrisi[attID], window.contentKrisi),
+                "actions": attID
+            });
         }
     }
 }
 
-function whichGroup(response){
-    if(!response['images'] || window.pageInfo.length != response['images'].length){
-        return 0;
-    }
-    if(containsToBeChecked(response)){
-        return 1;
-    }
-    return 2;
+function getStatus(response){
+  /* return Object.values(ATTENDEE_STATUS)[Math.floor(Object.keys(ATTENDEE_STATUS).length * Math.random())]; */
+  if(!response['images'] || window.pageInfo.length != response['images'].length){
+      return ATTENDEE_STATUS.NO_PHOTO;
+  }
+  if(containsToBeChecked(response)){
+      return ATTENDEE_STATUS.CHECKING;
+  }
+  return ATTENDEE_STATUS.FINISHED;
 }
-
-function pushAllAttendeesInTables(){
-    pushAttendeesInTable(attendeesByGroups[0], $('#noPhotoGroup'));
-    pushAttendeesInTable(attendeesByGroups[1], $('#notCheckedGroup'));
-    pushAttendeesInTable(attendeesByGroups[2], $('#allFineGroup'));
-}
-function pushAttendeesInTable(attendees, div){
-    var table = div.find('.testAttendeedDiv');
-    var text = '<tr>' + table.find('tr').first().html() + '</tr>';
-    var count = 0;
-    for(att of attendees){
-        text += '<tr><td>' + att.user.name + '</td>';
-        if(att.pts !== undefined) text += '<td>' + att.pts + '</td>';
-        else text += '<td>unchecked</td>';
-        text += '<td class="attendeeCheckBtn"><a href="../check/?attendee=' + att.user.id + '" class="checkResponse" >Check</a></td></tr>';
-        count++;
-    }
-    if(count == 0) {
-        table.addClass('invisible');
-        div.find('.noSuchText').removeClass('invisible');
-    } else {
-        table.removeClass('invisible');
-        div.find('.noSuchText').addClass('invisible');
-        console.log(div.find('.noSuchText'));
-    }
-    table.html(text);
-}
-
-$(document).on('click','#sortNameBtn', function(){
-    for(var g = 0; g < 3; g++){
-        attendeesByGroups[g].sort((a,b)=>{a.user.name.localeCompare(b.user.name)});
-    }
-    pushAllAttendeesInTables();
-});
-$(document).on('click','#sortPtsBtn', function(){
-    for(var g = 0; g < 3; g++){
-        attendeesByGroups[g].sort((a,b)=>{
-            return b.pts - a.pts;
-        });
-    }
-    pushAllAttendeesInTables();
-});
 
 $(document).on('click','#exportAttBtn', function(){
     var data = [["Name"]];
@@ -169,4 +137,89 @@ $(document).on('click','#exportAttBtn', function(){
     wb.Sheets["demo"] = XLSX.utils.aoa_to_sheet(data);
     XLSX.writeFile(wb, "demo.xlsx");
 });
+
+function importToTable(){
+     
+     const tableContent = document.getElementById("table-content")
+     const tableButtons = document.querySelectorAll("th button");
+     
+     const createRow = (obj) => {
+        const row = document.createElement("tr");
+        const objKeys = Object.keys(obj);
+        objKeys.map((key) => {
+          const cell = document.createElement("td");
+          cell.setAttribute("data-attr", key);
+          if(key == 'actions'){
+            cell.innerHTML = `<a href="../check/?attendee=${obj[key]}" class="checkResponse" ></a>`;
+          } 
+          else if(key == 'status'){
+            cell.innerHTML = `<p class="${ATTENDEE_STATUS_DATA[obj[key]].class} attendeeStatus" >${ATTENDEE_STATUS_DATA[obj[key]].label}</a>`;
+          } 
+          else{
+            cell.innerHTML = obj[key];
+          }
+          row.appendChild(cell);
+        });
+        return row;
+     };
+     
+     const getTableContent = (data) => {
+       data.map((obj) => {
+         const row = createRow(obj);
+         tableContent.appendChild(row);
+       });
+     };
+     
+     const sortData = (data, param, direction = "asc") => {
+       tableContent.innerHTML = '';
+       const sortedData =
+         direction == "asc"
+           ? [...data].sort(function (a, b) {
+               if (a[param] < b[param]) {
+                 return -1;
+               }
+               if (a[param] > b[param]) {
+                 return 1;
+               }
+               return 0;
+             })
+           : [...data].sort(function (a, b) {
+               if (b[param] < a[param]) {
+                 return -1;
+               }
+               if (b[param] > a[param]) {
+                 return 1;
+               }
+               return 0;
+             });
+     
+       getTableContent(sortedData);
+     };
+     
+     const resetButtons = (event) => {
+       [...tableButtons].map((button) => {
+         if (button !== event.target) {
+           button.removeAttribute("data-dir");
+         }
+       });
+     };
+     
+     window.addEventListener("load", () => {
+       getTableContent(attendeesFormated);
+     
+       [...tableButtons].map((button) => {
+         button.addEventListener("click", (e) => {
+           resetButtons(e);
+           if (e.target.getAttribute("data-dir") == "desc") {
+             sortData(attendeesFormated, e.target.id, "desc");
+             e.target.setAttribute("data-dir", "asc");
+           } else {
+             sortData(attendeesFormated, e.target.id, "asc");
+             e.target.setAttribute("data-dir", "desc");
+           }
+         });
+       });
+     });
+     
+}
 
