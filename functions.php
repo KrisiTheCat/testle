@@ -186,7 +186,7 @@ if(isset($_POST['getImageURL'])){
 }
 
 
-
+/*TODO
 if(isset($_POST['submitUserAttendees'])){
   add_attendee(intval($_POST['postID']));
 }
@@ -225,7 +225,7 @@ function add_attendee( $postID ){
     } 
   }
   update_post_meta( $postID, 'responses', $responsesNew);
-}
+}*/
 
 function bootstrap_enqueue_styles() {
   wp_register_style('bootstrap',get_stylesheet_directory_uri() . '/bootstrap/css/bootstrap.min.css' );

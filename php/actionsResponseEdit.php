@@ -35,8 +35,16 @@ if (isset($_POST['callResponseEditFunction'])) {
         changeAnswerChArr();
         die();
         break;
-      case 'deleteAttendeeImage':
-        deleteAttendeeImage();
+      case 'addAttendee':
+        $postID = intval($_POST['postID']);
+        $attID = intval($_POST['attendeeID']);
+        addAttendee($postID, $attID);
+        die();
+        break;
+      case 'removeAttendee':
+        $postID = intval($_POST['postID']);
+        $attID = intval($_POST['attendeeID']);
+        removeAttendee($postID, $attID);
         die();
         break;
       case 'uploadAttendeeImage':
@@ -48,6 +56,30 @@ if (isset($_POST['callResponseEditFunction'])) {
         die();
         break;
     }
+  }
+
+  function addAttendee($postID, $attID){
+    $responses = get_post_meta( $postID, 'responses', true );
+    if(!array_key_exists($attID, $responses)){
+      $responses[$attID] = array();
+      for($moduleID = 0; isset($responses[0][$moduleID]); $moduleID++) {
+        $responses[$attID][$moduleID] = $responses[0][$moduleID]->cloneSelf();
+      }
+      update_post_meta( $postID, 'responses', $responses );
+    }
+    $response_array['responses'] = json_encode($responses);  
+    header('Content-type: application/json');
+    echo json_encode($response_array);
+  }
+
+  function removeAttendee($postID, $attID){
+    $responses = get_post_meta( $postID, 'responses', true );
+    unset($responses[$attID]);
+    update_post_meta( $postID, 'responses', $responses );
+    
+    $response_array['responses'] = json_encode($responses);  
+    header('Content-type: application/json');
+    echo json_encode($response_array);
   }
   
   function deleteAttendeeImage(){

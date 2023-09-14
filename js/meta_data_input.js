@@ -100,6 +100,13 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
     $('.closeButton').on('mouseleave', function(e) {
         $(this).attr('src',window.srcPath + '/img/closeD.png');
     });
+    
+    $(document).on('mouseenter','.deleteButton', function(e){
+        $(this).attr('src',window.srcPath + '/img/close.png');
+    });
+    $(document).on('mouseleave','.deleteButton', function(e){
+        $(this).attr('src',window.srcPath + '/img/closeD.png');
+    });
 
 });
 

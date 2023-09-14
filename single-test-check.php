@@ -8,11 +8,6 @@
 	window.openedTab = 'check';
 </script>
  <div id="check">
-	<div id="hoverPopupDiff">
-		<p style="font-size: small;">This sign shows that there is a diffrence the answer, saved for this question, and what was extracted from the photo</p>
-		<p style="display: inline-block;">Saved answer:</p>
-		<p style="display: inline-block;" id="hoverPopupDiffAns"></p>
-	</div>
 	<div id="hoverPopupPhoto">
 		<canvas id = "hoverPopupPhotoCanvas"></canvas>
 	</div>

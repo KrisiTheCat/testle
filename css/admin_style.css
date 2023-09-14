@@ -496,7 +496,35 @@ p, h4{
   background-color: var(--colorGrayText) !important;
   color: white !important;
 }
-
+.ui-autocomplete {
+  z-index: 100;
+  overflow-x: hidden;
+}
+#newAttendeeInput{
+  font-weight: 300;
+  width: 100%;
+  padding: 2px 0px 2px 8px;
+}
+*:has(.addNewButton){
+  position: relative;
+}
+.addNewButton{
+  font-size: 17px;
+  padding: 0px 0px 3px 1px;
+  width: 20px;
+  height: 20px;
+  line-height: 13px;
+  top: 50%;
+  right: 16px;
+  transform: translate(0, -50%);
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--colorCorrect), transparent 66%);
+  position: absolute;
+}
+.addNewButton:hover{
+  background-color: var(--colorCorrect);
+  color: white;
+}
 .attendeesTable .table-container {
   margin: auto;
   max-width: 1200px;
@@ -505,9 +533,17 @@ p, h4{
   width: 100%;
 }
 
+.attendeesTable td:last-child{
+  display: flex;
+}
+.attendeesTable td:nth-child(3){
+  text-align: center;
+}
+
 .attendeesTable table {
   border-collapse: collapse;
   width: 100%;
+  font-size: 16px;
 }
 
 .attendeesTable thead tr {
@@ -1432,9 +1468,88 @@ input[type=text].type{
     margin-top: 19px;
   }
 
-  #userCheckedForm{
-    z-index: 100;
-    width: 300px;
+  .beautifulModal .modal-confirm {		
+    color: #636363;
+    width: 400px;
+  }
+  .beautifulModal .modal-confirm .modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+  }
+  .beautifulModal .modal-confirm .modal-header {
+    border-bottom: none;   
+    position: relative;
+  }
+  .beautifulModal .modal-confirm h4 {
+    text-align: center;
+    font-size: 26px;
+    margin: 30px 0 -10px;
+  }
+  .beautifulModal .modal-confirm .close {
+    position: absolute;
+    top: -5px;
+    right: -2px;
+  }
+  .beautifulModal .modal-confirm .modal-body {
+    color: #999;
+  }
+  .beautifulModal .modal-confirm .modal-footer {
+    border: none;
+    text-align: center;		
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 10px 15px 25px;
+  }
+  .beautifulModal .modal-confirm .modal-footer a {
+    color: #999;
+  }		
+  .beautifulModal .modal-confirm .icon-box {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    border-radius: 50%;
+    z-index: 9;
+    text-align: center;
+    border: 3px solid #f15e5e;
+  }
+  .beautifulModal .modal-confirm .icon-box i {
+    color: #f15e5e;
+    font-size: 46px;
+    font-style: inherit;
+    display: inline-block;
+    margin-top: 9px;
+  }
+  .beautifulModal .modal-confirm .btn, .modal-confirm .btn:active {
+    color: #fff;
+    border-radius: 4px;
+    background: #60c7c1;
+    text-decoration: none;
+    transition: all 0.4s;
+    line-height: normal;
+    min-width: 120px;
+    border: none;
+    min-height: 40px;
+    border-radius: 3px;
+    margin: 0 5px;
+  }
+  .beautifulModal .modal-confirm .btn-secondary {
+    background: #c1c1c1;
+  }
+  .beautifulModal .modal-confirm .btn-secondary:hover, .modal-confirm .btn-secondary:focus {
+    background: #a8a8a8;
+  }
+  .beautifulModal .modal-confirm .btn-danger {
+    background: #f15e5e;
+  }
+  .beautifulModal .modal-confirm .btn-danger:hover, .modal-confirm .btn-danger:focus {
+    background: #ee3535;
+  }
+  .trigger-btn {
+    display: inline-block;
+    margin: 100px auto;
   }
   
 
@@ -1793,18 +1908,6 @@ input[type=text].type{
 }
 .relativePosition{
   position: relative;
-}
-
-#hoverPopupDiff{
-  display: none;
-  position: fixed;
-  z-index: 6;
-  background-color: #ffe17f;
-  border: #775898 5px solid;
-  border-radius: 25px;
-  padding: 12px;
-  text-align: center;
-  width: 300px;
 }
 
 #hoverPopupPhoto{

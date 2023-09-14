@@ -327,12 +327,6 @@ function initBase(){
                 });
             }
         });
-        $(document).on('mouseenter','.deleteButton', function(e){
-            $(this).attr('src',window.srcPath + '/img/close.png');
-        });
-        $(document).on('mouseleave','.deleteButton', function(e){
-            $(this).attr('src',window.srcPath + '/img/closeD.png');
-        });
 
         $(document).on('click','.radio', function(e){
             if(!ajaxRequest){

@@ -45,19 +45,28 @@
 					<th><button id="actions">Actions</button></th>
 				</tr>
 			</thead>
-		<tbody id="table-content"></tbody>
-	</table>
+			<tbody id="table-content"></tbody>
+		</table>
 	</div>
-	<div class="userCheckedPopup">
-		<div class="formPopup" id="userCheckedForm">
-			<div class="formContainer">
-				<h3>Deleting checked attendee</h3>
-				<label>The results from this attendee have already been <strong>checked</strong>. Are you sure you wish to delete him/her?</label>
-				<button id="yesUserCheckedButton">Yes</button>
-				<button id="cancelUserCheckedButton">Cancel</button>
+	<div id="youSureDeleteAtt" class="modal fade beautifulModal ">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header flex-column">
+					<div class="icon-box">
+						<i class="material-icons">X</i>
+					</div>						
+					<h4 class="modal-title w-100">Are you sure?</h4>	
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p>Do you really want to delete these response? Each of their checked tasks will also be deleted. This process cannot be undone.</p>
+				</div>
+				<div class="modal-footer justify-content-center">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-danger" id="deleteAttendeeConfirm">Delete</button>
+				</div>
 			</div>
 		</div>
-	</div>
-	<button id="newAttendeeBtn" class="elegantBtn"><b>Edit</b> attendee list</button>
+	</div>     
 	<button id="exportAttBtn" class="elegantBtn"  download="file.xml"><b>Export</b></button>
 </div>
