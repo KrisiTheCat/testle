@@ -139,7 +139,6 @@ function example_enqueue_styles() {
     
     
     // Enqueue jQuery UI from a CDN or local file
-    wp_enqueue_script('jquery-ui', 'https://code.jquery.com/ui/1.13.0/jquery-ui.min.js', array('jquery'), '1.13.0', true);
     wp_enqueue_script('excelFunctions', 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', array('jquery'), '1.13.0', true);
     wp_enqueue_script('globalFunctions', get_template_directory_uri() . '-child/js/globalFunctions.js', array('jquery'));
     wp_enqueue_script('actionsResults', get_template_directory_uri() . '-child/js/tabs/actionsResults.js', array('jquery'));
@@ -179,53 +178,10 @@ if(isset($_POST['nullifyTest'])){
   exit();
 }
 
-
 if(isset($_POST['getImageURL'])){
   echo json_encode(array('url'=> wp_get_attachment_url($_POST['getImageURL']), 'pageId'=> $_POST['pageId']));
   exit();
 }
-
-
-/*TODO
-if(isset($_POST['submitUserAttendees'])){
-  add_attendee(intval($_POST['postID']));
-}
-
-function add_attendee( $postID ){
-  if(isset($_POST['addedAttendees'])) $newAttendees = $_POST['addedAttendees'];
-  else  $newAttendees = array();
-  $responses = get_post_meta( $postID, 'responses', true );
-  // echo '<pre>';
-  // print_r($responses);
-  if($responses == '') $responses = array();
-  $responsesNew = array();
-  $responsesNew[0] = $responses[0];
-  foreach($newAttendees as $attendee){
-    $attendee = intval($attendee);
-    if(!array_key_exists($attendee, $responses)){
-      $responsesNew[$attendee] = array();
-      for($moduleID = 0; isset($responses[0][$moduleID]); $moduleID++) {
-        $responsesNew[$attendee][$moduleID] = $responses[0][$moduleID]->cloneSelf();
-      }
-    } else {
-      $responsesNew[$attendee] = $responses[$attendee];
-    }
-    $tests = get_user_meta( $attendee, 'tests', true);
-    if($tests=='') $tests = array();
-    if(!array_key_exists($postID, $tests)){
-      $tests[$postID] = 0;
-      update_user_meta( $attendee, 'tests', $tests);
-    }
-  }
-  foreach ($responses as $attendee => $value) {
-    if(!in_array($attendee, $newAttendees)){
-      $tests = get_user_meta( $attendee, 'tests', true);
-      unset($tests[$postID]);
-      update_user_meta( $attendee, 'tests', $tests);
-    } 
-  }
-  update_post_meta( $postID, 'responses', $responsesNew);
-}*/
 
 function bootstrap_enqueue_styles() {
   wp_register_style('bootstrap',get_stylesheet_directory_uri() . '/bootstrap/css/bootstrap.min.css' );

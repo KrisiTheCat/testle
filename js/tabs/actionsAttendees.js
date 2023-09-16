@@ -13,11 +13,8 @@ function refreshAttendees(){
     console.log(attendeesFormated);
     if(attendeesFormated.length == 0){
       $('#attendees').find('.noSuchText').show();
-      $('#attendees').find('.attendeesTable').hide();
     }
-    else {
       importToTable();
-    }
 }
 
 function sortAttInGroups(){
@@ -52,7 +49,7 @@ $(document).on('click','#exportAttBtn', function(){
     for(var m = 0; m < window.contentKrisi.length; m++){
       data[0].push(`Module ${m+1}`);
     }
-    data[0].push("All");
+    data[0].push("Total");
     for(user of attendeesFormated){
       var arr = [user.name];
       for(var m = 0; m < window.contentKrisi.length; m++){
@@ -174,6 +171,7 @@ function importToTable(){
     [...tableButtons].map((button) => {
       button.addEventListener("click", (e) => {
         resetButtons(e);
+        if(e.target.id!='actions')
         if (e.target.getAttribute("data-dir") == "desc") {
           sortData(attendeesFormated, e.target.id, "desc");
           e.target.setAttribute("data-dir", "asc");
@@ -190,7 +188,6 @@ function initTableActions(){
   $(document).on('click', '.deleteAttendee', function(){
     $('#youSureDeleteAtt').modal('show');
     var attendeeID = $(this).data('attid');
-    console.log(attendeeID);
     $(document).on('click', '#deleteAttendeeConfirm', function(){
       $.ajax({
         url: '',
@@ -231,7 +228,6 @@ function initTableActions(){
                   "attendeeID" : attendeeID},
           success: function(data) {
               window.responsesKrisi = JSON.parse(data['responses']);
-              console.log(window.responsesKrisi);
               refreshAttendees();
           }
         });

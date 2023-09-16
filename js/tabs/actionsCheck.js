@@ -350,9 +350,9 @@ function generateClQuestionRow(id, code, myanswer, answer, mypoints, points, sta
                 row+= `" data-answer="D">D</div>
             </div></td>`;
     row += '<td>' + divStatus.html() + '</td>';
-    row += `<td class="photoField" data-id="` + code + `">`;
+    row += `<td class="photoField">`;
     if(hasPhoto) {
-    row += `    <img src="` + tempPath + `/photo.png"/>`;
+    row += `    <img class="photoFieldImg" data-id="` + code + `" src="` + tempPath + `/photo.png"/>`;
     }
     row += `</td>`;
     row += '<td class="checkTd scoreTd pointsField' + code + '">' + mypoints + ' | ' + points + '</td>';
@@ -374,7 +374,7 @@ function generateOQuestionRow(id, code, myanswer, answer, mypoints, points, stat
     row += '<td>' + divStatus.html() + '</td>';
     row += `<td class="photoField" data-id="` + code + `">`;
     if(responsesKrisi[attendeeID]['images'] && responsesKrisi[attendeeID]['images'][getQuestionPage(window.formKrisi, code)]) {
-    row += `    <img src="` + tempPath + `/photo.png"/>`;
+    row += `    <img class="photoFieldImg" src="` + tempPath + `/photo.png"/>`;
     }
     row += `</td>`;
     row += '<td class="checkTd scoreTd pointsField' + code + '">' + mypoints + ' | ' + points + '</td>';
@@ -713,7 +713,7 @@ $(document).on('mouseleave', '.attendeePageDiv', function(){
     $(this).find('div').hide();
     $(this).find('.emptyPageOverlay').show();
 });
-$(document).on('mouseenter', '.photoField', function(){
+$(document).on('mouseenter', '.photoFieldImg', function(){
     var $this = $(this);
     var code = $this.data('id');
     var formQuestion = getQuestion(window.formKrisi,code);
@@ -732,7 +732,7 @@ $(document).on('mouseenter', '.photoField', function(){
     $('#hoverPopupPhoto').css({left: this.getBoundingClientRect().x - 310,
                                 top: this.getBoundingClientRect().y - 30});
 });
-$(document).on('mouseleave', '.photoField', function(){
+$(document).on('mouseleave', '.photoFieldImg', function(){
     $('#hoverPopupPhoto').hide();
 });
 

@@ -1,3 +1,4 @@
+var $ = jQuery;
 jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
     $(document).ready(function(){
         $.ajax({
@@ -31,8 +32,10 @@ function displayTests(tests){
         text += `<div class="testDiv ${addclass}" data-link="${test.link}" data-id="${test.postID}">
                     <textarea  class="testTitle" maxlength="20" data-original="${test.postName}" readonly>${test.postName}</textarea >
                     <p class="testRole">Role: ${test.role}</p>`
-        if(test.role[0] == 'c' || test.role[0] == 'e')
-        text +=     `<img class="editTestName" src="${window.tempPath + '/edit.png'}"/>`
+        if(test.role[0] == 'c' || test.role[0] == 'e'){
+        text +=     `<img class="editTestName" src="${window.tempPath + '/edit.png'}"/>`;
+        text +=     `<p class="deleteTest deleteButton">X</p>`;
+        }
         text +=     `<div>
                         <button class="createTestCr">Save</button>
                         <button class="createTestCa">Cancel</button>
@@ -63,6 +66,27 @@ function displayTests(tests){
     });
 }
 
+$(document).on('click', '.deleteTest', function (e){
+    e.stopPropagation();
+    var parent = $(this).parent();
+    var postID = parseInt(parent.data('id'));
+    console.log($('#youSureDeleteTest'));
+    $('#youSureDeleteTest').modal('show');
+    console.log(postID);
+    $(document).on('click', '#deleteTestConfirm', function(){
+      $.ajax({
+        url: '',
+        type: 'post',
+        data: {"callTestEditFunction": "deleteTest", 
+                "postID" : postID},
+        success: function(data) {
+            //console.log(data);
+            $('#youSureDeleteTest').modal('hide');
+            parent.hide();
+        }
+      });
+    });
+});
 $(document).on('click', '.editTestName', function (e){
     e.stopPropagation();
     this.parentElement.getElementsByTagName('textarea')[0].removeAttribute("readonly");
@@ -108,7 +132,7 @@ $(document).on('click','.createTestCr',function(e){
             $.ajax({
                 url: '',
                 type: 'post',
-                data: { "callUsersFunction": "createPost", 
+                data: { "callTestEditFunction": "createPost", 
                 "userID" : window.attID,
                 "title" : title},
                 success: function(data) {
@@ -132,7 +156,7 @@ $(document).on('click','.createTestCr',function(e){
             $.ajax({
                 url: '',
                 type: 'post',
-                data: { "callUsersFunction": "changeTitle", 
+                data: { "callTestEditFunction": "changeTitle", 
                 "postID" : postID,
                 "title" : title},
                 success: function(data) {

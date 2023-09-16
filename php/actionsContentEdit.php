@@ -105,6 +105,7 @@ function deleteArgs($form, $responses, $content, $postID, $moduleID, $indArr){
       array_splice($resp, $moduleID, 1);
     }
   } else {
+    $contentQ =  $content[$moduleID]->getQuestion(json_decode(json_encode($indArr)));
     $toDel = $content[$moduleID]->delete(json_decode(json_encode($indArr)));
     if($toDel){
       deleteArgs($form, $responses, $content, $postID, $moduleID, array());
@@ -113,7 +114,11 @@ function deleteArgs($form, $responses, $content, $postID, $moduleID, $indArr){
     foreach($responses as &$resp){
       $resp[$moduleID]->delete(json_decode(json_encode($indArr)));
     }
+    if($contentQ->type=='Check'){
+      array_pop($indArr);
+    }
     $form[$moduleID]->delete(json_decode(json_encode($indArr)));
+
   }
   update_post_meta( $postID, 'form', $form );
   calcResponses($responses, $content, $postID);

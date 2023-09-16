@@ -12,19 +12,33 @@ get_header(); ?>
 
 	<div id="primary" class="content-area grid-parent mobile-grid-100 grid-100 tablet-grid-100 primary-single-test">
 		<main id="main" <?php lalita_main_class(); ?>>
+			<div id="youSureDeleteTest" class="modal fade beautifulModal ">
+				<div class="modal-dialog modal-confirm">
+					<div class="modal-content">
+						<div class="modal-header flex-column">
+							<div class="icon-box">
+								<i class="material-icons">X</i>
+							</div>						
+							<h4 class="modal-title w-100">Are you sure?</h4>	
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+						<div class="modal-body">
+							<p>Do you really want to delete this test? This process cannot be undone.</p>
+						</div>
+						<div class="modal-footer justify-content-center">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="button" class="btn btn-danger" id="deleteTestConfirm">Delete</button>
+						</div>
+					</div>
+				</div>
+			</div>   
+
 			<?php
 
             do_action( 'lalita_before_main_content' );
             while ( have_posts() ) : the_post();
                 get_template_part( 'content', 'single' );
 				
-  $query = new WP_Query( array('post_type' =>  'test'));
-  $ans = array();
-
-  foreach ($query->posts as $post) { 
-				//var_dump($post);
-  }
-    		
                 if(!is_user_logged_in()){
 					?><script>
 						window.userRole = 'notLogged';

@@ -34,7 +34,6 @@
 			</div>
 		</div>
 	</div>
-	<p class="noSuchText" style="display: none">No such students</p>
 	<div class="attendeesTable">
 		<table class="data-table">
 			<thead>
@@ -48,6 +47,7 @@
 			<tbody id="table-content"></tbody>
 		</table>
 	</div>
+	<p class="noSuchText" style="display: none">No students</p>
 	<div id="youSureDeleteAtt" class="modal fade beautifulModal ">
 		<div class="modal-dialog modal-confirm">
 			<div class="modal-content">
@@ -59,7 +59,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
-					<p>Do you really want to delete these response? Each of their checked tasks will also be deleted. This process cannot be undone.</p>
+					<p>Do you really want to delete this response? Each of their checked tasks will also be deleted. This process cannot be undone.</p>
 				</div>
 				<div class="modal-footer justify-content-center">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

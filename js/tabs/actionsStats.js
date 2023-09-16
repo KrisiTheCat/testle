@@ -165,7 +165,7 @@ function initRankings(results, modules){
   for(var i = 0; i < Math.min(results.length,5); i++){
     text += `<tr>
         <td>${i+1}</td>
-        <td>${window.usersKrisi[results[i].attID].name}</td>
+        <td><a href="/my-profile/?uid=${results[i].attID}">${window.usersKrisi[results[i].attID].name}</a></td>
         <td>
           <div class="progress">
             <div class="progress-bar" style="width:${Math.round(results[i].allPoints*100/maxAmountPoss)}%" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
@@ -188,7 +188,7 @@ function initRankings(results, modules){
   for(var i = startId; i >= Math.max(0, startId-5); i--){
     text += `<tr>
         <td>${i+1}</td>
-        <td>${window.usersKrisi[results[i].attID].name}</td>
+        <td><a href="/my-profile/?uid=${results[i].attID}">${window.usersKrisi[results[i].attID].name}</a></td>
         <td>
           <div class="progress">
             <div class="progress-bar" style="width:${Math.round(results[i].allPoints*100/maxAmountPoss)}%" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>

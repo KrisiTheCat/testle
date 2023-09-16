@@ -195,6 +195,24 @@ button:hover, html input[type="button"]:hover, input[type="reset"]:hover, input[
   -moz-transition: width .5s ease-out;
   -o-transition: width .5s ease-out;
 }
+.deleteTest:hover{
+  background-color: var(--colorWrong);
+  cursor: pointer;
+}
+.deleteTest{
+  z-index: 3;
+  background-color: var(--danger);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 24px;
+  position: absolute;
+  top: 33px;
+  right: 4px;
+}
 .testDiv button{
   width: 0%;
   display: none;

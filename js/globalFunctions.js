@@ -186,7 +186,7 @@ const ATTENDEE_STATUS_DATA = {
     },
     1: {
         class: 'attendeeStatus1',
-        label: 'Checking'
+        label: 'Prossesing'
     },
     2: {
         class: 'attendeeStatus2',
