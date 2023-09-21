@@ -25,7 +25,7 @@
 				<div style="display: flex; width:100%">
 					<div id="handCheckDescrButtons"  style="flex:1">
 						<img class="handCheckArrow" data-direction="left" style="left:5%" src="<?php echo get_stylesheet_directory_uri(); ?>/img/arrowLeft.png"/>
-						<p class="handCheckAttP">Response of:</p>
+						<select name="responseof" id="responseOfId"></select>
 						<img class="handCheckArrow" data-direction="right" style="right:5%" src="<?php echo get_stylesheet_directory_uri(); ?>/img/arrowRight.png"/>
 					</div>
 					<p id="handCheckingCorrect">correct answer: </p>
@@ -34,9 +34,13 @@
 			<div class="modal-body" style="padding-top: 0px !important;">
 				<img id="handCheckAttendeePage" style="display:none"/>
 				<div class="handCheckOpened">
-					<div>
+					<div class="handCheckOpenTop">
+						<div>
+							<h6>CORRECT</h6>
+						</div>
 						<img width="20px" src="<?php echo get_stylesheet_directory_uri(); ?>/img/dragDrop.png"/>
 						<small>Drag and drop in container</small>
+						<p></p>
 						<div class="draggable-div" draggable="true">
 							<canvas id="handCheckOpenAttCanvas" height="0"></canvas>
 						</div>
@@ -57,6 +61,7 @@
 					</div>
 				</div>
 				<div class="handCheckDescr">
+					<div class="handCheckDescrNoPhoto"></div>
 					<div style="position: relative;">
 						<div style="width:100%">
 							<canvas id="handCheckDescrAttCanvas" height="0"></canvas>
@@ -71,7 +76,7 @@
 			<div class="modal-footer">
 				<p id="handCheckDescrPText">Points:</p>
 				<p id="handCheckDescrPoints">0</p>
-				<button id="handCheckDescrNotFilled">Skip</button>
+				<button id="handCheckDescrNotFilled">Empty</button>
 				<button id="handCheckDescrReady">Ready</button>
 			</div>
 			</div>

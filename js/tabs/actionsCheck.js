@@ -19,7 +19,6 @@ function initCheck(){
         }
     }
     if(typeof attendeeID === 'undefined' || isNaN(attendeeID) || !(attendeeID in window.responsesKrisi)){
-        console.log('HERE');
         window.location.href = document.querySelector('#summaryLink').href;
         return;
     }
@@ -51,6 +50,11 @@ function initCheck(){
     initAnswerUploadWays();
     displayAllPages(-1);
     answerTemplateInit();
+
+    if(window.pageInfo.length==0){
+        $('#photosDiv').html('<p>No form uploaded. Fix <a href="../form">here</p>');
+        $('#photosDiv').css('padding-bottom','0px');
+    }
 }
 
 function initAnswerUploadWays(){
@@ -274,7 +278,6 @@ function handleQuestion(attendeeID, id, questionResp, questionCont, code, genera
         status[questionResp['status']]+=questionCont['points'];
         if(generate){
             text = generateChQuestionRow(
-                id,
                 code,
                 questionCont['answer'],
                 points,
@@ -289,7 +292,6 @@ function handleQuestion(attendeeID, id, questionResp, questionCont, code, genera
         status[questionResp['status']]+=questionCont['points'];
         if(generate){
             text = generateOQuestionRow(
-                id,
                 code,
                 questionResp['answer'],
                 questionCont['answer'],
@@ -305,7 +307,6 @@ function handleQuestion(attendeeID, id, questionResp, questionCont, code, genera
         status[questionResp['status']]+=questionCont['points'];
         if(generate){
             text = generateClQuestionRow(
-                id,
                 code,
                 questionResp['answer'],
                 questionCont['answer'],
@@ -325,14 +326,14 @@ function changeImage(stIcons, status){
     stIcons.eq(status).removeClass('statusIconDis');
     return stIcons;
 }
-function generateClQuestionRow(id, code, myanswer, answer, mypoints, points, status, hasPhoto){
+function generateClQuestionRow(code, myanswer, answer, mypoints, points, status, hasPhoto){
     var stIcons = divStatus.find('.statusIcon');
     for(var i = 0; i < stIcons.length; i++){
         stIcons.eq(i).attr('name', code);
     }
     stIcons = changeImage(stIcons, status);
     row='<tr>';
-    row += '<td>' + id + '</td>';
+    row += '<td>' + codeToString(code) + '</td>';
     row += '<td>' + answer + '</td>';
     row += `<td>
             <div class="radioAnswersCh" data-code="` + code + `">
@@ -359,7 +360,7 @@ function generateClQuestionRow(id, code, myanswer, answer, mypoints, points, sta
     row += '</tr>';
     return row;
 }
-function generateOQuestionRow(id, code, myanswer, answer, mypoints, points, status){
+function generateOQuestionRow(code, myanswer, answer, mypoints, points, status){
     var stIcons = divStatus.find('.statusIcon');
     for(var i = 0; i < stIcons.length; i++){
         stIcons.eq(i).attr('name', code);
@@ -367,14 +368,14 @@ function generateOQuestionRow(id, code, myanswer, answer, mypoints, points, stat
     stIcons = changeImage(stIcons, status);
     if(myanswer == null) myanswer = '';
     row='<tr>';
-    row += '<td>' + id + '</td>';
+    row += '<td>' + codeToString(code) + '</td>';
     row += '<td>' + answer + '</td>';
     row += '<td><input type="text" name="' + code +
         '" class="answerChField answerChField' + code + '" value = "' + myanswer + '"/></td>';
     row += '<td>' + divStatus.html() + '</td>';
-    row += `<td class="photoField" data-id="` + code + `">`;
+    row += `<td class="photoField">`;
     if(responsesKrisi[attendeeID]['images'] && responsesKrisi[attendeeID]['images'][getQuestionPage(window.formKrisi, code)]) {
-    row += `    <img class="photoFieldImg" src="` + tempPath + `/photo.png"/>`;
+    row += `    <img class="photoFieldImg" data-id="` + code + `" src="` + tempPath + `/photo.png"/>`;
     }
     row += `</td>`;
     row += '<td class="checkTd scoreTd pointsField' + code + '">' + mypoints + ' | ' + points + '</td>';
@@ -395,14 +396,14 @@ function generateCQuestionRow(code, mypoints, points){
         </tr>`;
     return row;
 }
-function generateChQuestionRow(id, code, answer, mypoints, points, status){
+function generateChQuestionRow(code, answer, mypoints, points, status){
     var stIcons = divStatus.find('.statusIcon');
     for(var i = 0; i < stIcons.length; i++){
         stIcons.eq(i).attr('name',code);
     }
     stIcons = changeImage(stIcons, status);
     row ='<tr class="checkTr">';
-    row += `<td>${id}</td>`;
+    row += `<td>${codeToString(code)}</td>`;
     row += '<td class="checkCondition" colspan="2">• ' + answer + '</td>';
     row += '<td>' + divStatus.html() + '</td>';
     row += '<td></td>';
@@ -434,7 +435,7 @@ function answerTemplateInit(){
 
 function displayAllPages(justChanged){
     var photosDiv = $('#photosDiv');
-    photosDiv.html('');
+    photosDiv.html(`<p>Upload student's answers to the corresponding pages here:</p>`);
     for(var pageId in window.pageInfo){
         var image = window.responsesKrisi[attendeeID]['images'] && pageId in window.responsesKrisi[attendeeID]['images'];
         var text = `<div id="attendeePageDiv` + pageId + `" class="attendeePageDiv" data-id=`+pageId+`>
@@ -743,6 +744,9 @@ function initStage1(){
     steps.eq(0).attr("class","step currentStep");
     steps.eq(1).attr("class","step");
     steps.eq(2).attr("class","step");
+    var src = document.getElementById('attendeePageImg' + changingPageId).src;
+    document.getElementById('backgroundImageStage1').style.backgroundImage="url('"+src+"')";
+	document.getElementById('backgroundImageStage1').style.backgroundSize="cover";
     const dropArea = document.getElementById("dropArea");
     dropArea.addEventListener("dragenter", (e) => {
         e.preventDefault();
@@ -814,12 +818,15 @@ function initStage2(){
         cv.imshow('imageCanvas', image);
         image.delete();
         imageCanvas = document.getElementById('imageCanvas');
-        uploadImageImgWidth = imageCanvas.width;
-        uploadImageImgHeight = imageCanvas.height;
+        uploadImageImgWidth = this.width;
+        uploadImageImgHeight = this.height;
+        console.log(this);
+        console.log($(this).width());
         maxX = uploadImageImgWidth - canvasPadding;
         maxY = uploadImageImgHeight - canvasPadding;
         edges = find4Edges(document.getElementById('imageCanvas'));
         ableToMoveCrosses = true;
+        console.log(uploadImageImgWidth,uploadImageImgHeight);
         drawEdgesOnPageCheck(edges,uploadImageImgWidth, uploadImageImgHeight);
     }, {once : true});
 
@@ -888,3 +895,21 @@ function initStage2(){
     });
 
 }
+
+$(document).on('click','#resetBtn', function(){
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callResponseEditFunction": "resetAttendee", 
+        "postID" : window.postID,
+        "attendeeID" : attendeeID,},
+        success: function(data) {
+            window.responsesKrisi = JSON.parse(data['responses']);
+            refreshResponseTable();
+            displayAllPages(-1);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            toastr.error("Unable to upload answer");
+        }
+    });
+});

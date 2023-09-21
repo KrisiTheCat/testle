@@ -11,15 +11,16 @@
 	<div id="hoverPopupPhoto">
 		<canvas id = "hoverPopupPhotoCanvas"></canvas>
 	</div>
-	<div style="display: flex">
+	<div style="display: flex; gap:10px">
 		<label id="attendeeNameLbl" for="attendeeName">Response of </label>
 		<input type="text" id="attendeeName" value="Unknown" readonly/>
+		<button class="btn btn-danger" id="resetBtn">Reset</button>
 	</div>
 	<div id="imageUploadPopupDiv" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog  modal-lg" role="document" style="margin: 3rem auto; height: calc(100% - 6rem);">
+		<div class="modal-dialog  modal-lg" role="document" style="margin: 3rem auto;">
 			<div class="modal-content" style="height: -webkit-fill-available;">
 				<div class="modal-header border-0" style="flex-direction: column">
-					<h5>Uploading attendee photo</h5>
+					<h5>Uploading attendee answer</h5>
 					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png" class="closeButton" id="imageUploadCloseBtn"></img>
 					<div class="progressStepsHeader" style="width: 100%;">
 						<div style="padding: 0px 23px;">
@@ -50,7 +51,7 @@
 				</div>
 				<div class="modal-body">
 					<div id="photoUploadStage1" style="display:none">
-						<div>
+						<div id="backgroundImageStage1">
 							<div id="dropArea" class="center step1Overlay">
 								<div>
 									<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/photo.png" width="40px"/>
@@ -74,7 +75,8 @@
 							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/edge.png" class="edgePoint" data-id="3"></img>
 						</div>
 						<img id="uploadImageImg" height="300px"></img>
-						<p id="cutPage" class="elegantBtn">></p>
+						<p style="padding-left: 16px;    font-size: 14px;">Please drag the targets so that they point to the four black rectangles located in the corners of the sheet.</p>
+						<p id="cutPage" class="elegantBtn">Submit</p>
 					</div>
 				</div>
 			</div>

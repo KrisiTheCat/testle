@@ -174,6 +174,20 @@ const STATUS = {
     NOTFILLED: 2,
     TOBECHECKED: 3
 }
+const STATUS_HANDCHECK_DATA = {
+    0: {
+        class: 'handCheckOpenTopWrong',
+        label: 'WRONG',
+    },
+    1: {
+        class: 'handCheckOpenTopCorrect',
+        label: 'CORRECT',
+    },
+    2: {
+        class: 'handCheckOpenTopNotFilled',
+        label: 'EMPTY',
+    }
+}
 const ATTENDEE_STATUS = {
     NO_PHOTO: 0,
     CHECKING: 1,
@@ -182,14 +196,17 @@ const ATTENDEE_STATUS = {
 const ATTENDEE_STATUS_DATA = {
     0: {
         class: 'attendeeStatus0',
-        label: 'Capturing'
+        label: 'Capturing',
+        icon: '&#9866;'
     },
     1: {
         class: 'attendeeStatus1',
-        label: 'Prossesing'
+        label: 'Prossesing',
+        icon: ''
     },
     2: {
         class: 'attendeeStatus2',
-        label: 'Finished'
+        label: 'Finished',
+        icon: '&#10003;'
     }
 }

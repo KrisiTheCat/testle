@@ -21,6 +21,7 @@ p, h4{
   color: white;
   font-size: 13px !important;
   font-weight: 300;
+  cursor: pointer;
 }
 .elegantBtn:hover{
   box-shadow: 5px 5px 0px 0px #00000036;
@@ -702,6 +703,7 @@ p, h4{
   line-height: 24px;
   font-weight: 400;
   font-size:14px;
+  cursor: pointer;
 }
 
 .radioChecked{
@@ -1019,11 +1021,6 @@ input[type=text].type{
     image-rendering: pixelated;
   }
 
-  .handCheckAttP{
-    font-size: 14px;
-    color: #6B7A99;
-  }
-
   .draggable-div {
     width: 60%;
     overflow: hidden;
@@ -1039,12 +1036,20 @@ input[type=text].type{
     -o-transition: all .3s ease-out;
   }
 
+  #responseOfId{
+    font-size: 13px;
+  }
+
+
   #handCheckOpenAttCanvas{
     width: 100%;
     display: block;
+    position: relative;
   }
 
   #handCheckDescrAttCanvas{
+    margin-left: -13px;
+    position: relative;
     width: 100%;
     border-radius: 3px;
     -webkit-transition: opacity .2s ease-out;
@@ -1052,6 +1057,17 @@ input[type=text].type{
     -moz-transition: opacity .2s ease-out;
     -o-transition: opacity .2s ease-out;
   }
+
+.handCheckDescrNoPhoto{
+  display: none;
+  background-color: var(--colorClosed);
+  border-radius: 7px;
+  border: var(--colorComposite) 1px solid;
+  color: var(--colorComposite);
+  font-size: 15px;
+  text-align: center;
+  padding: 14px 0px;
+}
 
 #handCheckDescrChecks>div>div:first-child{
   height: 24px;
@@ -1233,7 +1249,8 @@ input[type=text].type{
     display: inline;
   }
 
-  .handCheckOpened>div:first-child{
+  .handCheckOpenTop{
+    overflow: hidden;
     min-height: 130px;
     position: relative;
     margin-bottom: 16px;
@@ -1246,6 +1263,45 @@ input[type=text].type{
     gap: 7px;
     color: var(--colorComposite);
     font-size: initial;
+  }
+
+  .handCheckOpenTop>div:first-child{
+    display: none;
+    position: absolute;
+    top: -32px;
+    left: -55px;
+    transform: rotateY(0deg) rotate(315deg);
+    height: 89px;
+    width: 133px;
+  }
+  .handCheckOpenTop h6{
+    position: absolute;
+    bottom: 5px;
+    margin: 0px;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+    font-size: 12px;
+    padding: 3px 0px 1px 0px;
+  }
+  
+  .handCheckOpenTopCorrect{ background-color: color-mix(in srgb, var(--colorCorrect), transparent 80%); }
+  .handCheckOpenTopCorrect>div:first-child{
+    display: block;
+    background-color: var(--colorCorrect);
+    color: var(--colorCorrect);
+  }
+  .handCheckOpenTopWrong{ background-color: color-mix(in srgb, var(--colorWrong), transparent 80%); }
+  .handCheckOpenTopWrong>div:first-child{
+    display: block;
+    background-color: var(--colorWrong);
+    color: var(--colorWrong);
+  }
+  .handCheckOpenTopNotFilled{ background-color: color-mix(in srgb, var(--colorNotFilled), transparent 80%); }
+  .handCheckOpenTopNotFilled>div:first-child{
+    display: block;
+    background-color: var(--colorNotFilled);
+    color: var(--colorNotFilled);
   }
 
   .basketsDiv{
@@ -1569,12 +1625,16 @@ input[type=text].type{
   font-size: 16px;
   color: white;
   padding: 12px 20px 12px 16px;
-  margin-right: -10px;
+  margin-right: -20px;
   background-color: var(--colorMidGray);
   font-weight: 700;
   box-shadow: inset 4px 4px 6px #0000003d;
   border-radius: 5px;
   width: 150px;
+}
+
+#resetBtn{
+  font-size: 15px;
 }
 
 
@@ -1682,6 +1742,7 @@ input[type=text].type{
 }
 
 .statusIcon{
+  cursor: pointer;
   border-radius: 50%;
   height: 27px;
 }
@@ -1789,11 +1850,11 @@ input[type=text].type{
   gap: 10px;
 }
 #photoUploadStage1{
-  height: 100%;
+  height: 430px;
 }
 #photoUploadStage2{
   position: relative;
-  height: 100%;
+  display: flex;
 }
 #photoUploadStage1>div:first-child{
   position: relative;
@@ -1801,8 +1862,6 @@ input[type=text].type{
   overflow: hidden;
   box-shadow: 2px 2px 8px 1px var(--colorShadow);
   height: inherit;
-  background-image: url(http://localhost/wordpress/wp-content/uploads/templates/form_49_page_1-1.png);
-  background-size: cover;
 }
 .orLines{
   display:flex; 
@@ -1813,8 +1872,7 @@ input[type=text].type{
 }
 
 #uploadImageImg{
-  position: absolute;
-  height: 100%;
+  height: 430px;
 }
 
 .answerCanvas{
@@ -1969,8 +2027,15 @@ input[type=text].type{
   display: flex;
   border-radius: 6px;
   gap: 10px;
-  padding: 10px;
+  padding: 40px 10px 10px 10px;
   margin: 50px 0px;
+  position: relative;
+}
+#photosDiv > p{
+  position: absolute;
+  top: 10px;
+  font-size: 16px;
+  font-weight: 300;
 }
 
 .transferAns{
@@ -1980,15 +2045,10 @@ input[type=text].type{
 }
 #cutPage{
   position: absolute;
-  font-size: 28px !important;
-  text-align: center;
-  line-height: 26px;
+  font-size: 16px !important;
+  padding: 5px 11px;
   right: 0px;
   bottom: 0px;
-  width: 30px;
-  height: 30px;
-  background-color: var(--colorComposite);
-  border-radius: 50%;
   box-shadow: 3px 3px 9px var(--colorShadow);
 }
 .changeImage{

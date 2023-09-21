@@ -9,6 +9,12 @@ if (isset($_POST['callResponseEditFunction'])) {
         changeStatusDescriptive();
         die();
         break;
+      case 'resetAttendee':
+        $postID = $_POST['postID'];
+        $attendeeID = intval($_POST['attendeeID']);
+        resetAttendee($postID,$attendeeID);
+        die();
+        break;
       case 'changeAnswerCh':
         $postID = $_POST['postID'];
         $attendeeID = intval($_POST['attendeeID']);
@@ -47,6 +53,10 @@ if (isset($_POST['callResponseEditFunction'])) {
         removeAttendee($postID, $attID);
         die();
         break;
+      case 'deleteAttendeeImage':
+        deleteAttendeeImage();
+        die();
+        break;
       case 'uploadAttendeeImage':
         uploadAttendeeImage();
         die();
@@ -56,6 +66,24 @@ if (isset($_POST['callResponseEditFunction'])) {
         die();
         break;
     }
+  }
+
+  function resetAttendee($postID, $attID){
+    $responses = get_post_meta( $postID, 'responses', true );
+    if(isset($responses[$attID]['images'])){
+      foreach ($responses[$attID]['images'] as $id => $else){ 
+        wp_delete_attachment( intval($responses[$attID]['images'][$id]['attID']), true );
+        unset($responses[$attID]['images'][$id]);
+      }
+    }
+    $responses[$attID] = array();
+    for($moduleID = 0; isset($responses[0][$moduleID]); $moduleID++) {
+      $responses[$attID][$moduleID] = $responses[0][$moduleID]->cloneSelf();
+    }
+    update_post_meta( $postID, 'responses', $responses );
+    $response_array['responses'] = json_encode($responses);  
+    header('Content-type: application/json');
+    echo json_encode($response_array);
   }
 
   function addAttendee($postID, $attID){

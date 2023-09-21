@@ -62,13 +62,9 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
             // table.toggle( "fold" );
             table.toggle( "slide" );
             if(showed == '0'){
-                // table.show();
-                //table.slideDown();
                 $this.data('showed','1');
                 $this.attr('src', tempPath + '/arrowUp.png');
             } else {
-                // table.hide();
-                //table.slideUp();
                 $this.data('showed','0');
                 $this.attr('src', tempPath + '/arrowDown.png');
             }

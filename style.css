@@ -304,6 +304,7 @@ button:hover, html input[type="button"]:hover, input[type="reset"]:hover, input[
     letter-spacing: 1px;
     margin: 0;
     text-decoration: none;
+    font-size: 15px;
   }
   .testMenu a:after {
     bottom: 100%;

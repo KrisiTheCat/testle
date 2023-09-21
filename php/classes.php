@@ -194,8 +194,6 @@ class QuestionResponse extends Question{
   public function calcPoints($content){
     $points = 0;
     if($content->type == 'Module' || $content->type == 'Composite' || $content->type == 'Descriptive'){
-       var_dump($this);
-       var_dump($content);
       for($i = 0; $i < count($this->subq);$i++){
         $points += $this->subq[$i]->calcPoints($content->subq[$i]);
       }
