@@ -52,6 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 *
 	 * @hooked lalita_construct_header - 10
 	 */
+	
 	do_action( 'lalita_header' );
 
 	/**

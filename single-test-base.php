@@ -17,13 +17,6 @@
 			<button id="noYouSureButton">Cancel</button>
 		</div>
 	</div>
-	<div class="loginPopup">
-		<div class="formPopup" id="popupEmptyOpForm">
-			<h3 style="margin: 0px 0px 20px 0px;">Not allowed</h3>
-			<label style="display: block; margin-bottom: 21px;">Leaving an opened question without an answer is not allowed.</label>
-			<button id="closeEmptyOButton">Close</button>
-		</div>
-	</div>
 
 	<div id="copyModule" class="moduleDiv invisible">
 		<div style="display:flex; align-items: center;">

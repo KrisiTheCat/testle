@@ -1,5 +1,7 @@
 <?php
 
+$DEFAULT_CONDITION = 'Condition';
+
 class Question{
   public ?array $subq = null;
 
@@ -74,6 +76,8 @@ class QuestionContent extends Question{
   public ?string $answer;
 
   public function __construct($typeI){
+    
+  global $DEFAULT_CONDITION;
     $this->type = $typeI;
     $this->points = 1;
     switch($typeI){
@@ -87,7 +91,7 @@ class QuestionContent extends Question{
         $this->answer = '0';
         break;
       case 'Check':
-        $this->answer = 'Condition';
+        $this->answer = $DEFAULT_CONDITION;
         break;
       case 'Descriptive':
         $this->subq = array(new QuestionContent('Check'));

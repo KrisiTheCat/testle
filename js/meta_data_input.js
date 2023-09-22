@@ -53,8 +53,10 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
             var $this = $(this);
             var showed = $this.data('showed');
             var table;
-            if($this.hasClass('showSubQButton'))
+            if($this.hasClass('showSubQButton')){
                 table = $this.closest(".compositeQuestion").find(".compositeTable").eq(0);
+                $this.closest(".compositeQuestion").toggleClass('compositeQuestionHidden');
+            }
             if($this.hasClass('showDescrButton'))
                 table = $this.closest(".descriptiveQuestion").find(".descriptiveTable").eq(0);
             if($this.hasClass('showModuleButton'))

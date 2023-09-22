@@ -62,7 +62,7 @@
 		</div>
 		<div id="formViewRibbon">
 			<div id="formPagesLeft" class="formPagesBtn"><p><</p><p>Previous Page</p></div>
-			<button id="changePdfBtn"><b>Change</b> PDF</button>
+			<button id="changePdfBtn"><b>Remove</b> this PDF</button>
 			<div id="formPagesRight" class="formPagesBtn"><p>Next Page</p><p>></p></div>
 		</div>
 		<div id="formPagesDiv" style="display:none; width:100%; position: relative;">

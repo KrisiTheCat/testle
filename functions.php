@@ -198,3 +198,14 @@ add_action( 'wp_enqueue_scripts', 'bootstrap_enqueue_styles' ,1);
 add_action( 'wp_enqueue_scripts', 'bootstrap_enqueue_scripts',1 ); 
 
 
+function ti_custom_login_redirect($url, $request, $user){
+  if($user && is_object($user) && is_a($user, 'WP_User')){
+    $url = home_url('/dashboard');
+  }
+  return $url;
+}
+
+function wpb_custom_new_menu() {
+  register_nav_menu('footer-menu',__( 'Footer Menu' ));
+}
+add_action( 'init', 'wpb_custom_new_menu' );

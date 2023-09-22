@@ -168,6 +168,7 @@ function codeToString(code){
     return ans;
 }
 
+const DEFAULT_CONDITION = 'Condition';
 const STATUS = {
     WRONG: 0,
     CORRECT: 1,

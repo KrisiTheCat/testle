@@ -1,14 +1,14 @@
 /* 
- Theme Name:   twentytwentythree-child
+ Theme Name:   lalita-child
  Theme URI:    http://localhost/wordpress/Lalita-child/
  Description:  child theme
  Author:       Krisi
  Author URI:   http://localhost/wordpress
- Template:     twentytwentythree
+ Template:     Lalita
  Version:      1.0
  License:      GNU General Public License v2 or later
  License URI:  http://www.gnu.org/licenses/gpl-2.0.html
- Text Domain:  twentytwentythree-child
+ Text Domain:  lalita-child
 
  /* == Add your own styles below this line ==
 --------------------------------------------*/
@@ -111,24 +111,40 @@ button:hover, html input[type="button"]:hover, input[type="reset"]:hover, input[
   padding: 21px 0px;
 }
 
-.footer div div{
+.footermenu ul{
+  margin: 0px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   gap: 55px;
   text-transform: lowercase;
   font-size: 20px;
+  list-style: none;
 }
+
 .footer p{
   color: var(--colorClosed);
   text-align: right;
   font-size: 12px;
 }
-.footer a{
+.footer a, #site-navigation a{
   color: var(--colorClosed);
 }
+.footer a:hover, #site-navigation a:hover{
+  color: var(--colorDescriptive);
+}
 
-
+#site-navigation{
+  background-color: #0000;
+}
+.site-header{
+  background-size: cover;
+  color: white;
+}
+.header-image{
+  height: 57px;
+  margin-top: 5px;
+}
 
 
 .testDivAttendee{background-color: var(--colorClosed);}

@@ -172,7 +172,6 @@ function refreshResponseTable(){
         for(var questionID = 0; questionID < window.contentKrisi[moduleID]['subq'].length; questionID++){
             var questionInfo = handleQuestion(
                 attendeeID,
-                (questionID+1),
                 window.responsesKrisi[attendeeID][moduleID]['subq'][questionID],
                 window.contentKrisi[moduleID]['subq'][questionID],
                 moduleID+'_'+questionID,
@@ -248,14 +247,14 @@ function addStatusArrays(array, adding){
     return array;
 }
 
-function handleQuestion(attendeeID, id, questionResp, questionCont, code, generate){
+function handleQuestion(attendeeID, questionResp, questionCont, code, generate){
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
     var text = '', points = 0, status = Array(STATUS_COUNT).fill(0);
     switch(questionCont['type']){
     case 'Descriptive':
     case 'Composite':
         for(var i = 0; i < questionCont['subq'].length; i++){
-            var info = handleQuestion(attendeeID, id + alphabet.charAt(i%26), questionResp['subq'][i],questionCont['subq'][i], code+'_'+i, generate);
+            var info = handleQuestion(attendeeID, questionResp['subq'][i],questionCont['subq'][i], code+'_'+i, generate);
             points += info.points;
             status = addStatusArrays(status, info.status);
             text += info.text;
@@ -272,8 +271,6 @@ function handleQuestion(attendeeID, id, questionResp, questionCont, code, genera
         if(questionResp['status'] == 1){
             points = questionCont['points'];
         }
-        if(id.charAt(id.length-1) == 'a') id=id.slice(0,-1);
-        else id = '';
         
         status[questionResp['status']]+=questionCont['points'];
         if(generate){
@@ -545,7 +542,6 @@ function extractFromPage(pageId){
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             toastr.error("Unable to upload result");
-            console.log(errorThrown);
         }
     });
 }

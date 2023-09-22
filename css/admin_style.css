@@ -762,6 +762,9 @@ p, h4{
 .compositeQuestion td{
   border-bottom: 1px solid var(--colorComposite);
 }
+.compositeQuestionHidden td{
+  border-bottom: none;
+}
 
 .closedQuestion:not(.subQ){ background-color: var(--colorClosed);}
 .closedQuestion:not(.subQ) > * { border-bottom: 9px solid var(--colorClosed) !important;}
@@ -774,6 +777,10 @@ p, h4{
 
 .compositeQuestion:not(.subQ){background-color: var(--colorComposite);}
 .compositeQuestion:not(.subQ) > * { border-bottom: 9px solid var(--colorComposite) !important;}
+.compositeQuestion .points:first-of-type :-webkit-outer-spin-button,
+.compositeQuestion .points:first-of-type :-webkit-outer-spin-button{
+  -webkit-appearance: none;
+}
 
 .subQ .idTypeTD{
   padding: 7px;

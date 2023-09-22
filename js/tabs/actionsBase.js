@@ -8,109 +8,185 @@ function initBase(){
     refreshContentTable();
     initFunctions();
 
+    // function refreshContentTable(){
+    //     var allModulesDiv = $('#allModulesDiv');
+    //     allModulesDiv.empty();
+    //     var copyModule = $('#copyModule');
+    //     for(var moduleID = 0; moduleID < window.contentKrisi.length; moduleID++){
+    //         var table = '<div class="moduleDiv">' + copyModule.html() + '</div>';
+    //         table = table.replace(/KrIsI/g, moduleID);
+    //         table = table.replace(/KrISI/g, (moduleID+1));
+    //         allModulesDiv.append(table);
+    //         table = allModulesDiv.children('.moduleDiv').last();
+    //         var tbody = table.find('tbody').first();
+    //         var id = 1;
+    //         closedRow = tbody.find('.closedQuestion').first().clone();
+    //         openedRow = tbody.find('.openedQuestion').first().clone();
+    //         descriptiveRow = tbody.find('.descriptiveQuestion').first().clone();
+    //         compositeRow = tbody.find('.compositeQuestion').first().clone();
+    //         checkRow = tbody.find('.check').first().clone();
+    //         for(var questionID = 0; questionID < window.contentKrisi[moduleID]['subq'].length; questionID++){
+    //             switch(window.contentKrisi[moduleID]['subq'][questionID]['type']){
+    //                 case 'Closed':
+    //                     createClosedQuestion(moduleID + '_' + questionID,
+    //                         tbody, 
+    //                         id, 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['points']);
+    //                     break;
+    //                 case 'Opened':
+    //                     createOpenedQuestion(moduleID + '_' + questionID ,
+    //                         tbody, 
+    //                         id, 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['points']);
+    //                     break;
+    //                 case 'Descriptive':
+    //                     createDescriptiveQuestion(moduleID + '_' + questionID ,
+    //                         tbody, 
+    //                         id, 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['points']);
+    //                     var descTBody = tbody.find('tbody').last();
+    //                     descTBody.empty();
+    //                     for(var checkID = 0; checkID < window.contentKrisi[moduleID]['subq'][questionID]['subq'].length; checkID++){
+    //                         createCheckQuestion(moduleID + '_' + questionID + '_' + checkID,
+    //                             descTBody, 
+    //                             window.contentKrisi[moduleID]['subq'][questionID]['subq'][checkID]['answer'], 
+    //                             window.contentKrisi[moduleID]['subq'][questionID]['subq'][checkID]['points']);
+    //                     }
+    //                     break;
+    //                 case 'Composite':
+    //                     createCompositeQuestion(moduleID + '_' + questionID ,
+    //                         tbody, 
+    //                         id, 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
+    //                         window.contentKrisi[moduleID]['subq'][questionID]['points']);
+    //                     var index = 'A';
+    //                     var compTBody = tbody.find('tbody').last();
+    //                     for(var subID = 0; subID < window.contentKrisi[moduleID]['subq'][questionID]['subq'].length; subID++){
+    //                         switch(window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['type']){
+    //                             case 'Closed':
+    //                                 createClosedQuestion(moduleID + '_' + questionID + '_' + subID ,
+    //                                     compTBody, 
+    //                                     index, 
+    //                                     window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
+    //                                     window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
+    //                                 break;
+    //                             case 'Opened':
+    //                                 createOpenedQuestion(moduleID + '_' + questionID + '_' + subID ,
+    //                                     compTBody, 
+    //                                     index, 
+    //                                     window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
+    //                                     window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
+    //                                 break;
+    //                             case 'Descriptive':
+    //                                 createDescriptiveQuestion(moduleID + '_' + questionID + '_' + subID ,
+    //                                     compTBody, 
+    //                                     index, 
+    //                                     window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
+    //                                     window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
+    //                                 var descTBody = tbody.find('tbody').last();
+    //                                 for(var checkID = 0; checkID < window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'].length; checkID++){
+    //                                     createCheckQuestion(moduleID + '_' + questionID + '_' + subID + '_' + checkID,
+    //                                         descTBody, 
+    //                                         window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'][checkID]['answer'], 
+    //                                         window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'][checkID]['points']);
+    //                                 }
+    //                                 break;
+    //                         }
+    //                         index = String.fromCharCode(index.charCodeAt(0) + 1);
+    //                     }
+    //                     break;
+    //             }
+    //             id++;
+    //         }
+    //         var lastTr = tbody.find('.lastTr').last().detach();
+    //         tbody.append(lastTr);
+    //     }
+    // }
     function refreshContentTable(){
         var allModulesDiv = $('#allModulesDiv');
         allModulesDiv.empty();
-        var copyModule = $('#copyModule');
+        copyModule = $('#copyModule');
         for(var moduleID = 0; moduleID < window.contentKrisi.length; moduleID++){
+            baseHandleQuestion(allModulesDiv, window.contentKrisi[moduleID],moduleID,false);
+        }
+    }
+    var copyModule;
+    var closedRow;
+    var openedRow;
+    var descriptiveRow;
+    var compositeRow;
+    var checkRow;
+    function baseHandleQuestion(tbody, questionCont, code, subq){
+        switch(questionCont.type){
+        case 'Module':
             var table = '<div class="moduleDiv">' + copyModule.html() + '</div>';
-            table = table.replace(/KrIsI/g, moduleID);
-            table = table.replace(/KrISI/g, (moduleID+1));
-            allModulesDiv.append(table);
-            table = allModulesDiv.children('.moduleDiv').last();
-            var tbody = table.find('tbody').first();
-            var id = 1;
-            closedRow = tbody.find('.closedQuestion').first().clone();
-            openedRow = tbody.find('.openedQuestion').first().clone();
-            descriptiveRow = tbody.find('.descriptiveQuestion').first().clone();
-            compositeRow = tbody.find('.compositeQuestion').first().clone();
-            checkRow = tbody.find('.check').first().clone();
-            for(var questionID = 0; questionID < window.contentKrisi[moduleID]['subq'].length; questionID++){
-                switch(window.contentKrisi[moduleID]['subq'][questionID]['type']){
-                    case 'Closed':
-                        createClosedQuestion(moduleID + '_' + questionID + '_-1_-1',
-                            tbody, 
-                            id, 
-                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
-                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
-                        break;
-                    case 'Opened':
-                        createOpenedQuestion(moduleID + '_' + questionID + '_-1_-1',
-                            tbody, 
-                            id, 
-                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
-                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
-                        break;
-                    case 'Descriptive':
-                        createDescriptiveQuestion(moduleID + '_' + questionID + '_-1_-1',
-                            tbody, 
-                            id, 
-                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
-                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
-                        var descTBody = tbody.find('tbody').last();
-                        descTBody.empty();
-                        for(var checkID = 0; checkID < window.contentKrisi[moduleID]['subq'][questionID]['subq'].length; checkID++){
-                            createCheckQuestion(moduleID + '_' + questionID + '_-1_' + checkID,
-                                descTBody, 
-                                window.contentKrisi[moduleID]['subq'][questionID]['subq'][checkID]['answer'], 
-                                window.contentKrisi[moduleID]['subq'][questionID]['subq'][checkID]['points']);
-                        }
-                        break;
-                    case 'Composite':
-                        createCompositeQuestion(moduleID + '_' + questionID + '_-1_-1',
-                            tbody, 
-                            id, 
-                            window.contentKrisi[moduleID]['subq'][questionID]['answer'], 
-                            window.contentKrisi[moduleID]['subq'][questionID]['points']);
-                        var index = 'A';
-                        var compTBody = tbody.find('tbody').last();
-                        for(var subID = 0; subID < window.contentKrisi[moduleID]['subq'][questionID]['subq'].length; subID++){
-                            switch(window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['type']){
-                                case 'Closed':
-                                    createClosedQuestion(moduleID + '_' + questionID + '_' + subID + '_-1',
-                                        compTBody, 
-                                        index, 
-                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
-                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
-                                    break;
-                                case 'Opened':
-                                    createOpenedQuestion(moduleID + '_' + questionID + '_' + subID + '_-1',
-                                        compTBody, 
-                                        index, 
-                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
-                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
-                                    break;
-                                case 'Descriptive':
-                                    createDescriptiveQuestion(moduleID + '_' + questionID + '_' + subID + '_-1',
-                                        compTBody, 
-                                        index, 
-                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['answer'], 
-                                        window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['points']);
-                                    var descTBody = tbody.find('tbody').last();
-                                    for(var checkID = 0; checkID < window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'].length; checkID++){
-                                        createCheckQuestion(moduleID + '_' + questionID + '_' + subID + '_' + checkID,
-                                            descTBody, 
-                                            window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'][checkID]['answer'], 
-                                            window.contentKrisi[moduleID]['subq'][questionID]['subq'][subID]['subq'][checkID]['points']);
-                                    }
-                                    break;
-                            }
-                            index = String.fromCharCode(index.charCodeAt(0) + 1);
-                        }
-                        break;
-                }
-                id++;
+            table = table.replace(/KrIsI/g, code);
+            table = table.replace(/KrISI/g, (code+1));
+            tbody.append(table);
+            table = tbody.children('.moduleDiv').last();
+            var newTbody = table.find('tbody').first();
+            closedRow = newTbody.find('.closedQuestion').first().clone();
+            openedRow = newTbody.find('.openedQuestion').first().clone();
+            descriptiveRow = newTbody.find('.descriptiveQuestion').first().clone();
+            compositeRow = newTbody.find('.compositeQuestion').first().clone();
+            checkRow = newTbody.find('.check').first().clone();
+            for(var id = 0; id < questionCont.subq.length; id++){
+                baseHandleQuestion(newTbody, questionCont.subq[id], code + '_' + id, false);
             }
-            var lastTr = tbody.find('.lastTr').last().detach();
-            tbody.append(lastTr);
+            var lastTr = newTbody.find('.lastTr').last().detach();
+            newTbody.append(lastTr);
+            break;
+        case 'Composite':
+            createCompositeQuestion(code,
+                        tbody, 
+                        questionCont['points']);
+            var newTbody = tbody.find('tbody').last();
+            for(var id = 0; id < questionCont.subq.length; id++){
+                baseHandleQuestion(newTbody, questionCont.subq[id], code + '_' + id, true);
+            }
+            break;
+        case 'Closed':
+            createClosedQuestion(code,
+                tbody, 
+                questionCont['answer'], 
+                questionCont['points'],
+                subq);
+            break;
+        case 'Opened':
+            createOpenedQuestion(code,
+                tbody, 
+                questionCont['answer'], 
+                questionCont['points'],
+                subq);
+            break;
+        case 'Check':
+            createCheckQuestion(code,
+                tbody, 
+                questionCont['answer'], 
+                questionCont['points']);
+            break;
+        case 'Descriptive':
+            createDescriptiveQuestion(code,
+                tbody, 
+                questionCont['points'],
+                subq);
+            var newTBody = tbody.find('tbody').last();
+            newTBody.empty();
+            for(var id = 0; id < questionCont['subq'].length; id++){
+                baseHandleQuestion(newTBody, questionCont.subq[id], code + '_' + id, false);
+            }
+            break;
         }
     }
 
-    function createClosedQuestion(code,tbody,id,answer,points){
+    function createClosedQuestion(code,tbody,answer,points,subq){
         var copyRow = closedRow.clone();
         copyRow.removeClass('invisible');
         copyRow.attr("data-code",code);
-        if(isNaN(id)){
+        if(subq){
             copyRow.addClass('subQ');
             copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
         }
@@ -124,11 +200,11 @@ function initBase(){
         tbody.append(copyRow);
     }
 
-    function createOpenedQuestion(code,tbody,id,answer,points){
+    function createOpenedQuestion(code,tbody,answer,points,subq){
         var copyRow = openedRow.clone();
         copyRow.removeClass('invisible');
         copyRow.attr("data-code",code);
-        if(isNaN(id)){
+        if(subq){
             copyRow.addClass('subQ');
             copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
         }
@@ -138,11 +214,11 @@ function initBase(){
         tbody.append(copyRow);
     }
 
-    function createDescriptiveQuestion(code,tbody,id,answer,points){
+    function createDescriptiveQuestion(code,tbody,points, subq){
         var copyRow = descriptiveRow.clone();
         copyRow.removeClass('invisible');
         copyRow.attr("data-code",code);
-        if(isNaN(id)){
+        if(subq){
             copyRow.addClass('subQ');
             copyRow.find('.type').val('Sub' + copyRow.find('.type').val());
         }
@@ -160,12 +236,11 @@ function initBase(){
         tbody.append(copyRow);
     }
 
-    function createCompositeQuestion(code, tbody,id,answer,points){
+    function createCompositeQuestion(code, tbody, points){
         var copyRow = compositeRow.clone();
         copyRow.attr("data-code",code);
         copyRow.removeClass('invisible');
         copyRow.find('.questionID').first().html(codeToString(code));
-        copyRow.find('.answer').first().val(answer);
         copyRow.find('.points').first().val(points);
         //copyRow.find('tbody').children().eq(1).remove();
         tbody.append(copyRow);
@@ -200,6 +275,7 @@ function initBase(){
         });
 
         $(document).on('click','.addQuestionButton', function(e){
+            console.log('here');
             $this = $(this);
             if(!ajaxRequest){
                 ajaxRequest = true;
@@ -351,45 +427,70 @@ function initBase(){
             }
         });
         
+        $(document).on('keypress', '.openedAnswer', function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){ //enter
+                $(this).trigger( "blur" );
+            }
+        });
         $(document).on('blur', '.openedAnswer', function() {
             if(!ajaxRequest){
                 ajaxRequest = true;
-            var $this = $(this);
-            if($this.val() == ''){
-                $('#popupEmptyOpForm').show();
-                $this.val('simple answer');
-            }
-            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: { "callTestEditFunction": "changeAnswer", 
-                    "moduleID": code[0],
-                    "indArr": JSON.stringify(code[1]),
-                    "answer": $(this).val(),
-                    "postID" : window.postID},
-                    success: function(data) {
-                        ajaxRequest = false;
-                        window.contentKrisi = JSON.parse(data['content']);
-                        window.responsesKrisi = JSON.parse(data['responses']);
-                        refreshContentTable();
-                    }
-                });
+                var $this = $(this);
+                var newVal = $this.val();
+                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+                if(newVal.length==0){
+                    toastr.error("The answer cannot be empty");
+                    $this.val(getQuestion(window.contentKrisi, $this.closest('.questionOrCheck').data('code')).answer);
+                }
+                else{
+                    $.ajax({
+                        url: '',
+                        type: 'post',
+                        data: { "callTestEditFunction": "changeAnswer", 
+                        "moduleID": code[0],
+                        "indArr": JSON.stringify(code[1]),
+                        "answer": $(this).val(),
+                        "postID" : window.postID},
+                        success: function(data) {
+                            ajaxRequest = false;
+                            window.contentKrisi = JSON.parse(data['content']);
+                            window.responsesKrisi = JSON.parse(data['responses']);
+                            refreshContentTable();
+                        }
+                    });
+                }
             }
         });
         
+        $(document).on('keypress', '.conditionCheck', function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){ //enter
+                $(this).trigger( "blur" );
+            }
+        });
+        $(document).on('click', '.conditionCheck', function() {
+            if($(this).val() == DEFAULT_CONDITION){
+                $(this).select();
+            }
+        });
         $(document).on('blur', '.conditionCheck', function() {
-            if(!ajaxRequest){
+            var $this = $(this);
+            var newVal = $this.val();
+            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+            if(newVal.length==0){
+                toastr.error("The condition cannot be empty");
+                $this.val(getQuestion(window.contentKrisi, $this.closest('.questionOrCheck').data('code')).answer);
+            }
+            else{
                 ajaxRequest = true;
-                var $this = $(this);
-                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
                 $.ajax({
                     url: '',
                     type: 'post',
                     data: { "callTestEditFunction": "changeAnswer", 
                     "moduleID": code[0],
                     "indArr": JSON.stringify(code[1]),
-                    "answer": $(this).val(),
+                    "answer": newVal,
                     "postID" : window.postID},
                     success: function(data) {
                         ajaxRequest = false;
