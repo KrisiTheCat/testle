@@ -71,12 +71,14 @@ p, h4{
 #editorsList li{
   font-weight: 500;
   font-size: 15px;
+  margin-bottom: 3px;  
 }
 .meLi{
   font-weight: 600!important;
 }
-.removableLi:hover{
-  text-decoration: line-through;
+.editorLi a{
+  width: calc(100% - 28px);
+  display: inline-block;
 }
 
 .toggleResp input{
@@ -514,12 +516,13 @@ p, h4{
   width: 24px !important;
   min-width: 24px;
   height: 24px;
-  line-height: 20px;
+  line-height: 22px;
   text-align: center;
   color: white;
   padding: 0px;
   border-radius: 50%;
   background-color: color-mix(in srgb, var(--colorCorrect), transparent 66%);
+  cursor: pointer;
 }
 .addNewButton:hover{
   background-color: var(--colorCorrect);
@@ -979,17 +982,6 @@ input[type=text].type{
   border: var(--colorComposite) 3px solid;
 }
 
-.formPopup {
-    display: none;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border: 3px solid #999999;
-    background-color: white;
-    z-index: 9;
-}
-
   .formContainer .btn {
     padding: 12px 20px;
     border: none;
@@ -1006,10 +998,6 @@ input[type=text].type{
   .formContainer .btn:hover,
   .openButton:hover {
     opacity: 1;
-  }
-
-  .formPopup{
-    padding: 12px;
   }
 
   #toBeCheckedPopup{

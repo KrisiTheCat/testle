@@ -71,31 +71,31 @@ $current_fp = get_query_var('fpage'); ?>
 						?>	
 						<ul id="menu-book-nav" class="testMenu">
 							<li class="menu-item">
-								<a id="summaryLink"   href="<?php echo get_permalink(); ?>"     		data-hover="Dashboard">Dashboard</a>
+								<a id="summaryLink"   href="<?php echo get_permalink(); ?>"     		>General</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="statsLink"   href="<?php echo get_permalink(); ?>stats/"     		data-hover="Statistics">Statistics</a>
+								<a id="statsLink"   href="<?php echo get_permalink(); ?>stats/"     	>Statistics</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="attendeesLink" href="<?php echo get_permalink() ?>attendees/" 	data-hover="Attendees">Attendees</a>
+								<a id="attendeesLink" href="<?php echo get_permalink() ?>attendees/" 	>Attendees</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="modulesLink"      href="<?php echo get_permalink() ?>modules/"		data-hover="Modules">Modules</a>
+								<a id="modulesLink"      href="<?php echo get_permalink() ?>modules/"	>Modules</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="checkLink"     href="<?php echo get_permalink() ?>check/"		data-hover="Check">Check</a>
+								<a id="checkLink"     href="<?php echo get_permalink() ?>check/"		>Check</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="handcheckLink" href="<?php echo get_permalink() ?>handcheck/"	data-hover="Hand check">Hand Check</a>
+								<a id="handcheckLink" href="<?php echo get_permalink() ?>handcheck/"	>Hand Check</a>
 								<div class="notifCircle">0</div>
 							</li>
 							<li class="menu-item">
-								<a id="formLink"      href="<?php echo get_permalink() ?>form/"		data-hover="Form">Form</a>
+								<a id="formLink"      href="<?php echo get_permalink() ?>form/"			>Form</a>
 								<div class="notifCircle">0</div>
 							</li>
 						</ul>
@@ -112,7 +112,7 @@ $current_fp = get_query_var('fpage'); ?>
 							window.responsesKrisi = '<?php echo json_encode($responses);?>';
 						</script><?php
 						if (!$current_fp) {
-							get_template_part( 'single', 'test-index' );
+							get_template_part( 'single', 'test-general' );
 						} else if ($current_fp == 'attendees') {
 							get_template_part( 'single', 'test-attendees' );
 						} else if ($current_fp == 'stats') {

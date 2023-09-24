@@ -126,6 +126,7 @@ function initBase(){
             table = table.replace(/KrISI/g, (code+1));
             tbody.append(table);
             table = tbody.children('.moduleDiv').last();
+            table.find('.deleteButton').first().prop('title', 'Delete module ' + (code+1));
             var newTbody = table.find('tbody').first();
             closedRow = newTbody.find('.closedQuestion').first().clone();
             openedRow = newTbody.find('.openedQuestion').first().clone();
@@ -196,6 +197,7 @@ function initBase(){
         copyRow.find('.radioD').removeClass('radioChecked');
         copyRow.find('.radio' + answer).addClass('radioChecked');
         copyRow.find('.points').first().val(points);
+        copyRow.find('.deleteButton').prop('title', 'Delete ' + codeToLongText(code));
         tbody.append(copyRow);
     }
 
@@ -210,6 +212,7 @@ function initBase(){
         copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.openedAnswer').first().val(answer);
         copyRow.find('.points').first().val(points);
+        copyRow.find('.deleteButton').prop('title', 'Delete ' + codeToLongText(code));
         tbody.append(copyRow);
     }
 
@@ -225,6 +228,7 @@ function initBase(){
         copyRow.find('.descriptiveTable').find('tbody').html('');
         copyRow.find('.points').first().val(points);
         copyRow.find('.points').first().addClass('no-spinners');
+        copyRow.find('.deleteButton').prop('title', 'Delete ' + codeToLongText(code));
         tbody.append(copyRow);
     }
 
@@ -233,6 +237,7 @@ function initBase(){
         copyRow.attr("data-code",code);
         copyRow.find('.conditionCheck').first().val(answer);
         copyRow.find('.points').first().val(points);
+        copyRow.find('.deleteButton').prop('title', 'Delete ' + codeToLongText(code));
         tbody.append(copyRow);
     }
 
@@ -243,19 +248,12 @@ function initBase(){
         copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.points').first().val(points);
         copyRow.find('.points').first().addClass('no-spinners');
+        copyRow.find('.deleteButton').prop('title', 'Delete ' + codeToLongText(code));
         //copyRow.find('tbody').children().eq(1).remove();
         tbody.append(copyRow);
     }
 
     function initFunctions() {
-
-        $(document).on('click','#noYouSureButton', function(e){
-            $('#popupForm').hide();
-        });
-
-        $(document).on('click','#closeEmptyOButton', function(e){
-            $('#popupEmptyOpForm').hide();
-        });
 
         $(document).on('click', '.addModule', function(e){
             $.ajax({
@@ -340,10 +338,12 @@ function initBase(){
         var deleteButtonCode;
         $(document).on('click','.deleteButton', function(e){
             var $this = $(this);
+            $('#youSureBaseDelete').modal('show');
             if($this.hasClass('deleteModule')){
                 var moduleID = $this.data('moduleid');
-                $('#popupForm').show();
-                $(document).on('click','#yesYouSureButton', function(e){
+                $('#youSureBaseDelete').find('p').first()
+                    	.html(`This action will delete module ${moduleID+1}. Do you wish to continue?`);
+                $(document).on('click','#deleteBaseConfirm', function(e){
                     $.ajax({
                         url: '',
                         type: 'post',
@@ -357,13 +357,17 @@ function initBase(){
                             refreshContentTable();
                         }
                     });
-                    $('#popupForm').hide();
+                    $('#youSureBaseDelete').modal('hide');
                 });
             }
             else {
-                deleteButtonCode = decodeIds($this.closest('.questionOrCheck').data('code'));
-                $('#popupForm').show();
-                $(document).on('click','#yesYouSureButton', function(e){
+                deleteButtonCode = $this.closest('.questionOrCheck').data('code');
+                console.log($("#youSureBaseDelete"));
+                console.log(deleteButtonCode);
+                $('#youSureBaseDelete').find('p').first()
+                    	.html(`This action will delete ${codeToLongText(deleteButtonCode)}. Do you wish to continue?`);
+                deleteButtonCode = decodeIds(deleteButtonCode);
+                $(document).on('click','#deleteBaseConfirm', function(e){
                     $.ajax({
                         url: '',
                         type: 'post',
@@ -379,7 +383,7 @@ function initBase(){
                             refreshContentTable();
                         }
                     });
-                    $('#popupForm').hide();
+                    $('#youSureBaseDelete').modal('hide');
                 });
             }
         });

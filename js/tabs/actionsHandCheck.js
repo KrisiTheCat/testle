@@ -402,8 +402,7 @@ function handleBasketDrop(basketId) {
         toastr.error("Please upload image first!");
     }
     else if(currChecking.attendeeID && currChecking.indArr && currChecking.moduleID){
-        console.log($('#' + basketId));
-        $('#' + basketId).effect( "bounce", "slow" );
+        doBounce($('#' + basketId), 4, '20px', 100);   
         var newStatus = 3;
         switch (basketId) {
             case 'basket0':
@@ -548,3 +547,10 @@ $(document).on('keydown',function(e) {
         }
     }
 });
+
+function doBounce(element, times, distance, speed) {
+    for(var i = 0; i < times; i++) {
+        element.animate({marginTop: '-='+distance}, speed)
+            .animate({marginTop: '+='+distance}, speed);
+    }        
+}

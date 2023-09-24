@@ -8,9 +8,10 @@
 	window.openedTab = 'summary';
 </script>
 <div id="summary">
+	<input type="text" id="dubPost" placeholder="Dublicating post"/>
+	<button id="dublicateFromTest">Dublicate modules and form from other test <- TO FIX NAME</button>
 	<h4>Editors:</h4>
 	<ul id="editorsList">
-		<li><input type="text" id="newEditorInput"/></li>
 	</ul>
 	<h4>Tasks:</h4>
 	<div id="allTasks">

@@ -1,6 +1,7 @@
 var $ = jQuery;
 var sumInfo = {};
 var editors;
+var tests;
 
 function initNotifCircles(){
     var tasks = 0;
@@ -114,6 +115,66 @@ function initSummary(){
             toastr.error("Unable to retrieve editors");
         }
     });
+
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callUsersFunction": "listUserTests", 
+        "userID" : window.userID,},
+        success: function(data) {
+            tests = JSON.parse(data['roles']);
+            var sTests = [];
+            for(test of tests){
+                if(test.postID != window.postID){
+                    sTests.push(test.postName);
+                }
+            }
+            setTimeout(() => { 
+                $("#dubPost").autocomplete({ 
+                    minLength: 0,
+                    source: sTests,
+                    select:function(event,ui){
+                        $("#dubPost").val(ui.item.label); 
+                        return false;
+                    },
+                    change: function(event, ui) {
+                        if (ui.item == null) {
+                        this.setCustomValidity("You must select an attendee");
+                        }
+                    }
+                });
+            }, 1000);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            toastr.error("Unable to dublicate test");
+        }
+    });
+
+    $(document).on('click', '#dublicateFromTest', function(){
+        var name = $('#dubPost').val();
+        var id = -1;
+        for(el in tests){
+            if(tests[el].postName == name){
+                id = tests[el].postID;
+            }
+        }
+        if(id!=-1){
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callTestEditFunction": "dublicateTest", 
+                "postID" : window.postID,
+                "dublPostID" : id}, //TODO
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error("Unable to dublicate test");
+                }
+            });
+        }
+        console.log(name, id);
+    });
     
 }
 
@@ -152,14 +213,15 @@ function displayEditors(editors){
     $('#editorsList').find(`[data-id='${window.userID}']`).addClass('meLi');
     var isCreator = $('.meLi').hasClass('creatorLi');
     if(isCreator){
-        $('#editorsList').html($('#editorsList').html() + `<li>
-        	<input type="text" id="newEditorInput" placeholder="Add editor"/>
-            <button id="addEditorBtn" class="addNewButton">+</button>
+        $('#editorsList').html($('#editorsList').html() + `<li style="display: flex;gap: 10px;">
+            <input type="text" id="newEditorInput" placeholder="Add editor"/>
+            <p id="addEditorBtn" class="addNewButton">+</p>
         </li>`);
         var lis = $('#editorsList').find('li');
         for(li of lis){
-            if(!$(li).hasClass('meLi') && $(li).hasClass('editorLi')){
-                $(li).addClass('removableLi');
+            if($(li).hasClass('editorLi')){
+                $(`<img src="${window.srcPath}/img/iconStatus0.png" class="deleteButton deleteEditor"/>`)
+                .appendTo(li);
             }
         }
         const names = [];
@@ -184,7 +246,6 @@ function displayEditors(editors){
                 }
             });
         }, 1000);
-        // TODO addEditorBtn
         $(document).on('click', '#addEditorBtn', function(){
             var attendeeID = -1;
             var searchFor = $('#newEditorInput').val().trim();
@@ -221,8 +282,8 @@ function displayEditors(editors){
                 }
             }
         });
-        $(document).on('click', '.removableLi', function(){
-            var id = parseInt($(this).data('id'));
+        $(document).on('click', '.deleteEditor', function(){
+            var id = parseInt($(this).parent().data('id'));
             if($(this).hasClass('creatorLi')){
                 toastr.error("Unable to remove creator");
             }

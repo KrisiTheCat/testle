@@ -9,14 +9,26 @@
 	window.openedTab = 'modules';
 </script>
 <div id="base">
-	<div class="loginPopup">
-		<div class="formPopup" id="popupForm">
-			<h3 style="margin: 0px 0px 20px 0px;">You sure?</h3>
-			<label style="display: block; margin-bottom: 21px;">Are you sure you want to delete this item?</label>
-			<button id="yesYouSureButton">Yes</button>
-			<button id="noYouSureButton">Cancel</button>
+	<div id="youSureBaseDelete" class="modal fade beautifulModal ">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header flex-column">
+					<div class="icon-box">
+						<i class="material-icons">X</i>
+					</div>						
+					<h4 class="modal-title w-100">Are you sure?</h4>	
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p>Do you really want to delete this response? Each of their checked tasks will also be deleted. This process cannot be undone.</p>
+				</div>
+				<div class="modal-footer justify-content-center">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-danger" id="deleteBaseConfirm">Delete</button>
+				</div>
+			</div>
 		</div>
-	</div>
+	</div>   
 
 	<div id="copyModule" class="moduleDiv invisible">
 		<div style="display:flex; align-items: center;">
@@ -145,7 +157,7 @@
 								<td class="pointsTD">
 									<input type="number" min="0.5" step="0.5" class="points" title="Points" name="pointsKrIsI[]" value="1" readonly/></td>
 								</td>
-								<td class="buttonTD"><img class="deleteButton1" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/></td>
+								<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/></td>
 							</tr>
 							<tr>
 								<td colspan = "1"></td>

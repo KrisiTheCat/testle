@@ -14,6 +14,12 @@ if (isset($_POST['callTestEditFunction'])) {
       deleteTest($postID);
       die();
       break;
+    case 'dublicateTest':
+      $postID = intval($_POST['postID']);
+      $dublPostID = intval($_POST['dublPostID']);
+      dublicateTest($postID, $dublPostID);
+      die();
+      break;
     case 'changeTitle':
       $postID = intval($_POST['postID']);
       $title = $_POST['title'];
@@ -27,6 +33,29 @@ if (isset($_POST['callTestEditFunction'])) {
       die();
       break;
   }
+}
+
+function dublicateTest($postID, $dublPostID){
+  $content = get_post_meta($dublPostID, 'content', true);
+  update_post_meta($postID, 'content', $content);
+  $response_array['content'] = json_encode($content);
+
+  $responses = get_post_meta($dublPostID, 'responses', true);
+  $responsesNew = array();
+  $responsesNew[0] = $responses[0];
+  update_post_meta($postID, 'responses', $responsesNew);
+  $response_array['responses'] = json_encode($responsesNew);
+
+  $form = get_post_meta($dublPostID, 'form', true);
+  update_post_meta($postID, 'form', $form);
+  $response_array['form'] = json_encode($form);
+  
+  $pageInfo = get_post_meta($dublPostID, 'pageInfo', true);
+  update_post_meta($postID, 'pageInfo', $pageInfo);
+  $response_array['pageInfo'] = json_encode($pageInfo);
+
+  header('Content-type: application/json');
+  echo json_encode($response_array);
 }
 
 function changeTitle($postID, $new_title){
