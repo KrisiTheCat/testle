@@ -1,6 +1,5 @@
 var $ = jQuery;
 function initBase(){
-    var ajaxRequest = false;
     var tempPath;
     tempPath = $('.showDescrButton').eq(0).attr('src');
     tempPath = tempPath.substring(0,tempPath.lastIndexOf('/'));
@@ -225,6 +224,7 @@ function initBase(){
         copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.descriptiveTable').find('tbody').html('');
         copyRow.find('.points').first().val(points);
+        copyRow.find('.points').first().addClass('no-spinners');
         tbody.append(copyRow);
     }
 
@@ -242,6 +242,7 @@ function initBase(){
         copyRow.removeClass('invisible');
         copyRow.find('.questionID').first().html(codeToString(code));
         copyRow.find('.points').first().val(points);
+        copyRow.find('.points').first().addClass('no-spinners');
         //copyRow.find('tbody').children().eq(1).remove();
         tbody.append(copyRow);
     }
@@ -257,78 +258,65 @@ function initBase(){
         });
 
         $(document).on('click', '.addModule', function(e){
-            if(!ajaxRequest){
-                ajaxRequest = true;
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: { "callTestEditFunction": "createModule", 
-                    "postID" : window.postID},
-                    success: function(data) {
-                        ajaxRequest = false;
-                        window.contentKrisi = JSON.parse(data['content']);
-                        window.responsesKrisi = JSON.parse(data['responses']);
-                        refreshContentTable();
-                    }
-                });
-            }
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callTestEditFunction": "createModule", 
+                "postID" : window.postID},
+                success: function(data) {
+                    window.contentKrisi = JSON.parse(data['content']);
+                    window.responsesKrisi = JSON.parse(data['responses']);
+                    refreshContentTable();
+                }
+            });
         });
 
         $(document).on('click','.addQuestionButton', function(e){
-            console.log('here');
             $this = $(this);
-            if(!ajaxRequest){
-                ajaxRequest = true;
-                var type = -1;
-                if($this.hasClass('addClosed')) type="Closed";
-                if($this.hasClass('addOpened')) type="Opened";
-                if($this.hasClass('addDesciptive')) type="Descriptive";
-                if($this.hasClass('addComposite')) type="Composite";
-                var table = $this.closest('.questionTable');
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: { "callTestEditFunction": "addQuestion", 
-                    "moduleID": table.data('moduleid'),
-                    "indArr": '[]',
-                    "questionType" : type,
-                    "postID" : window.postID},
-                    success: function(data) {
-                        ajaxRequest = false;
-                        window.contentKrisi = JSON.parse(data['content']);
-                        window.responsesKrisi = JSON.parse(data['responses']);
-                        refreshContentTable();
-                    }
-                });
-            }
+            var type = -1;
+            if($this.hasClass('addClosed')) type="Closed";
+            if($this.hasClass('addOpened')) type="Opened";
+            if($this.hasClass('addDesciptive')) type="Descriptive";
+            if($this.hasClass('addComposite')) type="Composite";
+            var table = $this.closest('.questionTable');
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callTestEditFunction": "addQuestion", 
+                "moduleID": table.data('moduleid'),
+                "indArr": '[]',
+                "questionType" : type,
+                "postID" : window.postID},
+                success: function(data) {
+                    window.contentKrisi = JSON.parse(data['content']);
+                    window.responsesKrisi = JSON.parse(data['responses']);
+                    refreshContentTable();
+                }
+            });
         });
 
         $(document).on('click','.addSubQButton', function(e){
-            if(!ajaxRequest){
-                ajaxRequest = true;
-                $this = $(this);
-                var type = -1;
-                if($this.hasClass('addClosed')) type="Closed";
-                if($this.hasClass('addOpened')) type="Opened";
-                if($this.hasClass('addDesciptive')) type="Descriptive";
-                if($this.hasClass('addComposite')) type="Composite";
-                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: { "callTestEditFunction": "addQuestion", 
-                    "moduleID": code[0],
-                    "indArr": JSON.stringify(code[1]),
-                    "questionType" : type,
-                    "postID" : window.postID},
-                    success: function(data) {
-                        ajaxRequest = false;
-                        window.contentKrisi = JSON.parse(data['content']);
-                        window.responsesKrisi = JSON.parse(data['responses']);
-                        refreshContentTable();
-                    }
-                });
-            }
+            $this = $(this);
+            var type = -1;
+            if($this.hasClass('addClosed')) type="Closed";
+            if($this.hasClass('addOpened')) type="Opened";
+            if($this.hasClass('addDesciptive')) type="Descriptive";
+            if($this.hasClass('addComposite')) type="Composite";
+            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callTestEditFunction": "addQuestion", 
+                "moduleID": code[0],
+                "indArr": JSON.stringify(code[1]),
+                "questionType" : type,
+                "postID" : window.postID},
+                success: function(data) {
+                    window.contentKrisi = JSON.parse(data['content']);
+                    window.responsesKrisi = JSON.parse(data['responses']);
+                    refreshContentTable();
+                }
+            });
         });
         
         $(document).on('click','.addCheck', function(e){
@@ -356,75 +344,63 @@ function initBase(){
                 var moduleID = $this.data('moduleid');
                 $('#popupForm').show();
                 $(document).on('click','#yesYouSureButton', function(e){
-                    if(!ajaxRequest){
-                        ajaxRequest = true;
-                        $.ajax({
-                            url: '',
-                            type: 'post',
-                            data: { "callTestEditFunction": "deleteQuestion", 
-                            "moduleID": moduleID,
-                            "indArr": '[]',
-                            "postID" : window.postID},
-                            success: function(data) {
-                                ajaxRequest = false;
-                                window.contentKrisi = JSON.parse(data['content']);
-                                window.responsesKrisi = JSON.parse(data['responses']);
-                                refreshContentTable();
-                            }
-                        });
-                        $('#popupForm').hide();
-                    }
+                    $.ajax({
+                        url: '',
+                        type: 'post',
+                        data: { "callTestEditFunction": "deleteQuestion", 
+                        "moduleID": moduleID,
+                        "indArr": '[]',
+                        "postID" : window.postID},
+                        success: function(data) {
+                            window.contentKrisi = JSON.parse(data['content']);
+                            window.responsesKrisi = JSON.parse(data['responses']);
+                            refreshContentTable();
+                        }
+                    });
+                    $('#popupForm').hide();
                 });
             }
             else {
                 deleteButtonCode = decodeIds($this.closest('.questionOrCheck').data('code'));
                 $('#popupForm').show();
                 $(document).on('click','#yesYouSureButton', function(e){
-                    if(!ajaxRequest){
-                        ajaxRequest = true;
-                        $.ajax({
-                            url: '',
-                            type: 'post',
-                            data: { "callTestEditFunction": "deleteQuestion", 
-                            "moduleID": deleteButtonCode[0],
-                            "indArr": JSON.stringify(deleteButtonCode[1]),
-                            "postID" : window.postID},
-                            success: function(data) {
-                                ajaxRequest = false;
-                                window.contentKrisi = JSON.parse(data['content']);
-                                window.responsesKrisi = JSON.parse(data['responses']);
-                                console.log(window.contentKrisi);
-                                console.log(window.responsesKrisi);
-                                refreshContentTable();
-                            }
-                        });
-                        $('#popupForm').hide();
-                    }
+                    $.ajax({
+                        url: '',
+                        type: 'post',
+                        data: { "callTestEditFunction": "deleteQuestion", 
+                        "moduleID": deleteButtonCode[0],
+                        "indArr": JSON.stringify(deleteButtonCode[1]),
+                        "postID" : window.postID},
+                        success: function(data) {
+                            window.contentKrisi = JSON.parse(data['content']);
+                            window.responsesKrisi = JSON.parse(data['responses']);
+                            console.log(window.contentKrisi);
+                            console.log(window.responsesKrisi);
+                            refreshContentTable();
+                        }
+                    });
+                    $('#popupForm').hide();
                 });
             }
         });
 
         $(document).on('click','.radio', function(e){
-            if(!ajaxRequest){
-                ajaxRequest = true;
             var $this = $(this);
             var code = decodeIds($this.closest('.questionOrCheck').data('code'));
-                $.ajax({
-                    url: '',
-                    type: 'post',
-                    data: { "callTestEditFunction": "changeAnswer", 
-                    "moduleID": code[0],
-                    "indArr": JSON.stringify(code[1]),
-                    "answer": $this.data('answer'),
-                    "postID" : window.postID},
-                    success: function(data) {
-                        ajaxRequest = false;
-                        window.contentKrisi = JSON.parse(data['content']);
-                        window.responsesKrisi = JSON.parse(data['responses']);
-                        refreshContentTable();
-                    }
-                });
-            }
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "callTestEditFunction": "changeAnswer", 
+                "moduleID": code[0],
+                "indArr": JSON.stringify(code[1]),
+                "answer": $this.data('answer'),
+                "postID" : window.postID},
+                success: function(data) {
+                    window.contentKrisi = JSON.parse(data['content']);
+                    window.responsesKrisi = JSON.parse(data['responses']);
+                    refreshContentTable();
+                }
+            });
         });
         
         $(document).on('keypress', '.openedAnswer', function(event){
@@ -434,32 +410,28 @@ function initBase(){
             }
         });
         $(document).on('blur', '.openedAnswer', function() {
-            if(!ajaxRequest){
-                ajaxRequest = true;
-                var $this = $(this);
-                var newVal = $this.val();
-                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
-                if(newVal.length==0){
-                    toastr.error("The answer cannot be empty");
-                    $this.val(getQuestion(window.contentKrisi, $this.closest('.questionOrCheck').data('code')).answer);
-                }
-                else{
-                    $.ajax({
-                        url: '',
-                        type: 'post',
-                        data: { "callTestEditFunction": "changeAnswer", 
-                        "moduleID": code[0],
-                        "indArr": JSON.stringify(code[1]),
-                        "answer": $(this).val(),
-                        "postID" : window.postID},
-                        success: function(data) {
-                            ajaxRequest = false;
-                            window.contentKrisi = JSON.parse(data['content']);
-                            window.responsesKrisi = JSON.parse(data['responses']);
-                            refreshContentTable();
-                        }
-                    });
-                }
+            var $this = $(this);
+            var newVal = $this.val();
+            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+            if(newVal.length==0){
+                toastr.error("The answer cannot be empty");
+                $this.val(getQuestion(window.contentKrisi, $this.closest('.questionOrCheck').data('code')).answer);
+            }
+            else{
+                $.ajax({
+                    url: '',
+                    type: 'post',
+                    data: { "callTestEditFunction": "changeAnswer", 
+                    "moduleID": code[0],
+                    "indArr": JSON.stringify(code[1]),
+                    "answer": $(this).val(),
+                    "postID" : window.postID},
+                    success: function(data) {
+                        window.contentKrisi = JSON.parse(data['content']);
+                        window.responsesKrisi = JSON.parse(data['responses']);
+                        refreshContentTable();
+                    }
+                });
             }
         });
         
@@ -483,7 +455,6 @@ function initBase(){
                 $this.val(getQuestion(window.contentKrisi, $this.closest('.questionOrCheck').data('code')).answer);
             }
             else{
-                ajaxRequest = true;
                 $.ajax({
                     url: '',
                     type: 'post',
@@ -493,7 +464,6 @@ function initBase(){
                     "answer": newVal,
                     "postID" : window.postID},
                     success: function(data) {
-                        ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
                         window.responsesKrisi = JSON.parse(data['responses']);
                         refreshContentTable();
@@ -503,10 +473,14 @@ function initBase(){
         });
         
         $(document).on('input','.points', function(e){
-            if(!ajaxRequest){
-                ajaxRequest = true;
-                var $this = $(this);
-                var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+            var $this = $(this);
+            var newVal = $this.val();
+            var code = decodeIds($this.closest('.questionOrCheck').data('code'));
+            if(newVal==0){
+                toastr.error("The points cannot be zero");
+                $this.val(getQuestion(window.contentKrisi, $this.closest('.questionOrCheck').data('code')).points);
+            }
+            else{
                 $.ajax({
                     url: '',
                     type: 'post',
@@ -516,7 +490,6 @@ function initBase(){
                     "points": $this.val(),
                     "postID" : window.postID},
                     success: function(data) {
-                        ajaxRequest = false;
                         window.contentKrisi = JSON.parse(data['content']);
                         window.responsesKrisi = JSON.parse(data['responses']);
                         refreshContentTable();

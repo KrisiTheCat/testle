@@ -21,7 +21,7 @@
 			<div class="modal-content" style="height: -webkit-fill-available;">
 				<div class="modal-header border-0" style="flex-direction: column">
 					<h5>Uploading attendee answer</h5>
-					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png" class="closeButton" id="imageUploadCloseBtn"></img>
+					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png" class="closeButton" id="imageUploadCloseBtn"></img>
 					<div class="progressStepsHeader" style="width: 100%;">
 						<div style="padding: 0px 23px;">
 							<div class="step finishedStep">

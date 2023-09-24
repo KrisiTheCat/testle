@@ -107,8 +107,14 @@ function startDescrCheckForAttendee(){
     if(currChecking.status == ATTENDEE_STATUS.NO_PHOTO){
         $('.handCheckDescrNoPhoto').show();
         $('#handCheckDescrAttCanvas').hide();
-        $('.handCheckDescrNoPhoto').html(
-            `No image of page ${pageId+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
+        if(typeof pageId == 'undefined'){
+            $('.handCheckDescrNoPhoto').html(
+                `Missing location of question. Fix <b><a href='../form'>here</a></b>`);
+        }
+        else {
+            $('.handCheckDescrNoPhoto').html(
+                `No image of page ${pageId+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
+        }
     }
     else {
         $('.handCheckDescrNoPhoto').hide();
@@ -160,8 +166,14 @@ function startOpenCheckForAttendee(){
         $('.handCheckOpenTop').find('small').first().hide();
         $('#handCheckOpenAttCanvas').hide();
         $('.handCheckOpenTop').find('p').first().show();
-        $('.handCheckOpenTop').find('p').first().html(
-            `No image of page ${pageId+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
+        if(typeof pageId == 'undefined'){
+            $('.handCheckOpenTop').html(
+                `<p>Missing location of question. Fix <b><a href='../form'>here</a></b></p>`);
+        }
+        else {
+            $('.handCheckOpenTop').html(
+                `No image of page ${pageId+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
+        }
     }
     else {
         $('#handCheckOpenAttCanvas').show();

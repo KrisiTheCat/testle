@@ -510,17 +510,16 @@ p, h4{
   position: relative;
 }
 .addNewButton{
-  font-size: 17px;
-  padding: 0px 0px 3px 1px;
-  width: 20px;
-  height: 20px;
-  line-height: 13px;
-  top: 50%;
-  right: 16px;
-  transform: translate(0, -50%);
+  font-size: 27px !important;
+  width: 24px !important;
+  min-width: 24px;
+  height: 24px;
+  line-height: 20px;
+  text-align: center;
+  color: white;
+  padding: 0px;
   border-radius: 50%;
   background-color: color-mix(in srgb, var(--colorCorrect), transparent 66%);
-  position: absolute;
 }
 .addNewButton:hover{
   background-color: var(--colorCorrect);
@@ -536,6 +535,8 @@ p, h4{
 
 .attendeesTable td:last-child{
   display: flex;
+  justify-content: right;
+  gap: 10px
 }
 .attendeesTable td:nth-child(3){
   text-align: center;
@@ -618,16 +619,17 @@ p, h4{
 .attendeeStatus2 { background: color-mix(in srgb, var(--colorCorrect), transparent 66%); color: var(--colorCorrect);}
 
 .checkResponse{
-  background:url('../img/checking.png') no-repeat;
-  background-size: contain;
-  height: 23px;
+  background-color: var(--colorMidGray);
+  border-radius: 50%;
+  height: 24px;
+  width: 24px !important;;
   color: transparent;
   width: 100%;
   display: block;
 }
 .checkResponse:hover{
-  background:url('../img/checkingColor.png') no-repeat;
-  background-size: contain;
+  background-color: var(--colorToCheck);
+  cursor: pointer;
 }
 
 .noSuchText{
@@ -759,6 +761,19 @@ p, h4{
   vertical-align: middle;
 }
 
+.deleteButton, .closeButton{
+  background-color: var(--colorMidGray);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+}
+
+.deleteButton:hover, .closeButton:hover{
+  background-color: var(--colorWrong);
+  cursor: pointer;
+}
+
 .compositeQuestion td{
   border-bottom: 1px solid var(--colorComposite);
 }
@@ -777,9 +792,15 @@ p, h4{
 
 .compositeQuestion:not(.subQ){background-color: var(--colorComposite);}
 .compositeQuestion:not(.subQ) > * { border-bottom: 9px solid var(--colorComposite) !important;}
-.compositeQuestion .points:first-of-type :-webkit-outer-spin-button,
-.compositeQuestion .points:first-of-type :-webkit-outer-spin-button{
+
+.no-spinners{
+  padding-right: 17px !important;
+  -moz-appearance: textfield;
+}
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  margin: 0;
 }
 
 .subQ .idTypeTD{
@@ -1172,14 +1193,6 @@ input[type=text].type{
 
   .modal-content{
     background-color: #f3f3f3;
-  }
-
-  .closeButton{
-    width: 26px;
-    align-self: flex-start;
-  }
-  .closeButton:hover{
-    cursor: pointer;
   }
 
   #handCheckDescrButtons{

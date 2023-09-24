@@ -83,8 +83,9 @@ function importToTable(){
           cell.innerHTML = `<a href="/my-profile/?uid=${obj.id}">${obj[key]}</a>`;
         } 
         else if(key == 'actions'){
-          cell.innerHTML = `<a href="../check/?attendee=${obj[key]}" class="checkResponse" ></a>
-            <img src="${window.srcPath}/img/closeD.png" class="deleteButton deleteAttendee" data-attid="${obj.id}"/>`;
+          cell.innerHTML = `<a href="../check/?attendee=${obj[key]}">
+              <img class="checkResponse" src="${window.srcPath}/img/checkIcon.png" /></a>
+            <img src="${window.srcPath}/img/iconStatus0.png" class="deleteButton deleteAttendee" data-attid="${obj.id}"/>`;
         } 
         else if(key == 'status'){
           cell.innerHTML = `<p class="${ATTENDEE_STATUS_DATA[obj[key]].class} attendeeStatus" >${ATTENDEE_STATUS_DATA[obj[key]].label}</a>`;
@@ -99,8 +100,12 @@ function importToTable(){
      
     const getTableContent = (data) => {
       $(`<tr>
-        <td colspan="4" style="display:table-cell;"><input type="text" placeholder="Start typing a name" id="newAttendeeInput"/>
-        <button id="addAttendeeBtn" class="addNewButton">+</button></td>
+        <td colspan="4" style="display:table-cell;">
+          <div style="display: flex; gap: 10px;">
+            <input type="text" placeholder="Start typing a name" id="newAttendeeInput" class="ui-autocomplete-input" autocomplete="off">
+            <p id="addAttendeeBtn" class="addNewButton">+</p>
+          </div>
+        </td>
       </tr>`).appendTo($(tableContent));
       data.map((obj) => {
         const row = createRow(obj);

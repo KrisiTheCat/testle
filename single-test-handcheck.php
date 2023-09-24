@@ -20,7 +20,7 @@
 						<p id="handCheckingQuesID">#</p>
 						
 					</div>
-					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png" class="closeButton" id="handCheckCloseBtn"></img>
+					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png" class="closeButton" id="handCheckCloseBtn"></img>
 				</div>
 				<div style="display: flex; width:100%">
 					<div id="handCheckDescrButtons"  style="flex:1">

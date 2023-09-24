@@ -92,20 +92,7 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
     $(document).on('click','.closeButton', function(){
         $(this).closest('.modal').modal('hide');
     });
-    $('.closeButton').on('mouseenter', function(e) {
-        $(this).attr('src',window.srcPath + '/img/close.png');
-    });
-    $('.closeButton').on('mouseleave', function(e) {
-        $(this).attr('src',window.srcPath + '/img/closeD.png');
-    });
     
-    $(document).on('mouseenter','.deleteButton', function(e){
-        $(this).attr('src',window.srcPath + '/img/close.png');
-    });
-    $(document).on('mouseleave','.deleteButton', function(e){
-        $(this).attr('src',window.srcPath + '/img/closeD.png');
-    });
-
 });
 
 

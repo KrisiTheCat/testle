@@ -15,7 +15,7 @@
 			<div class="modal-content">
 				<div class="modal-header border-0">
 					<p><b>Attendees</b> list:</p>
-					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png" class="closeButton"></img>
+					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png" class="closeButton"></img>
 				</div>
 				<div class="modal-body" style="padding-top: 0px !important;">
 					<form  accept-charset="UTF-8" action="" method="POST" enctype="multipart/form-data" class="formContainer">

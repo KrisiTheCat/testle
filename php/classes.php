@@ -235,6 +235,16 @@ class QuestionForm extends Question{
     }
   }
   
+  public function resetAll(){
+    foreach($this->subq as $id=>$sub){
+      if(key_exists('page', $sub)){
+        $this->subq[$id] =  new stdClass();
+      }
+      else {
+        $sub->resetAll();
+      }
+    }
+  }
   public function setValue($value, $indexArr){
     if(count($indexArr) == 1 && empty($value)){
       $this->subq[$indexArr[0]] =  new stdClass();

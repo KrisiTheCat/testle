@@ -54,7 +54,10 @@ if (isset($_POST['callResponseEditFunction'])) {
         die();
         break;
       case 'deleteAttendeeImage':
-        deleteAttendeeImage();
+        $postID = $_POST['postID'];
+        $attendeeID = intval($_POST['attendeeID']);
+        $id = $_POST['pageID'];
+        deleteAttendeeImage($postID, $attendeeID, $id);
         die();
         break;
       case 'uploadAttendeeImage':
@@ -110,11 +113,7 @@ if (isset($_POST['callResponseEditFunction'])) {
     echo json_encode($response_array);
   }
   
-  function deleteAttendeeImage(){
-    $postID = $_POST['postID'];
-    $attendeeID = intval($_POST['attendeeID']);
-    $id = $_POST['pageID'];
-
+  function deleteAttendeeImage($postID, $attendeeID, $id){
     $responses = get_post_meta( $postID, 'responses', true );
     wp_delete_attachment( intval($responses[$attendeeID]['images'][$id]['attID']), true );
     unset($responses[$attendeeID]['images'][$id]);

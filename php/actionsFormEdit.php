@@ -29,6 +29,7 @@ if (isset($_POST['callFormEditFunction'])) {
     $postID = $_POST['postID'];
     $form = get_post_meta( $postID, 'form', true );
     $response_array['form'] = json_encode($form);  
+    $response_array['form'] = json_encode($form);  
     header('Content-type: application/json');
     echo json_encode($response_array);
   }
@@ -107,13 +108,29 @@ if (isset($_POST['callFormEditFunction'])) {
 }
   function deleteFormImages(){
     $postID = $_POST['postID'];
-    $deleteData = $_POST['deleteData'];
-    if($deleteData == 'true') update_post_meta( $postID, 'form', array() );
+
+    $form = get_post_meta($postID, 'form', true);
+    foreach( $form as &$formMod ) {
+      $formMod->resetAll();
+    }
+    update_post_meta( $postID, 'form', $form );
+
     $pageInfo = get_post_meta( $postID, 'pageInfo', true );
     foreach( $pageInfo as $attach ) {
       wp_delete_attachment( intval($attach['attID']), true );
     }
     update_post_meta( $postID, 'pageInfo', array() );
+
+    $responses = get_post_meta( $postID, 'responses', true );
+    foreach($responses as $id => $response){
+      if(isset($response['images'])){
+        foreach($response['images'] as $image){
+          wp_delete_attachment( intval($image['attID']), true );
+        }
+        unset($responses[$id]['images']);
+      }
+    }
+    update_post_meta( $postID, 'responses', $responses );
   }
   
   function uploadDirToTemplates( $dir ) {

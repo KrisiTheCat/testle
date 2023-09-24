@@ -23,7 +23,7 @@
 			<p class="moduleID"><b>Module</b>#KrISI</p>
 			<div style="flex:1"></div>
 			<img class="showHideTable showModuleButton" data-showed="1" src="<?php echo get_stylesheet_directory_uri(); ?>/img/arrowUp.png"/>
-			<img class="deleteModule deleteButton" data-moduleid="KrIsI" src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png"/>
+			<img class="deleteModule deleteButton" data-moduleid="KrIsI" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/>
 		</div>
 		<table class = "questionTable" data-moduleid="KrIsI">
 			<tbody>
@@ -57,9 +57,9 @@
 						</div>
 					</td>
 					<td class="pointsTD">
-						<input type="number" min="0.5" step="0.5" step="0.5" class="points" name="pointsKrIsI[]" value="1"/>
+						<input type="number" min="0.5" step="0.5" step="0.5" class="points" title="Points" name="pointsKrIsI[]" value="1"/>
 					</td>
-					<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png"/></td>
+					<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/></td>
 				</tr>
 				<tr class="question openedQuestion questionOrCheck invisible">
 					<td class="idTypeTD">
@@ -74,8 +74,8 @@
 						</div>
 					</td>
 					<td class="pointsTD">
-						<input type="number" min="0.5" step="0.5" class="points" required="required" name="pointsKrIsI[]" value="1"/></td>
-					<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png"/></td>
+						<input type="number" min="0.5" step="0.5" class="points" title="Points" required="required" name="pointsKrIsI[]" value="1"/></td>
+					<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/></td>
 				</tr>
 				<tr class="question descriptiveQuestion questionOrCheck invisible" rowsp>
 					<td class="idTypeTD">
@@ -96,9 +96,9 @@
 									</div>
 								</td>
 								<td class="pointsTD">
-									<input type="number" min="0.5" step="0.5" class="points" name="pointsKrIsI[]" value="1" readonly/></td>
+									<input type="number" min="0.5" step="0.5" class="points" title="Points" name="pointsKrIsI[]" value="1" readonly/></td>
 								</td>
-								<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png"/></td>
+								<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/></td>
 							</tr>
 							<tr>
 								<td colspan = "4" style="padding: 0px;">
@@ -109,9 +109,9 @@
 													<input type="text" class="conditionCheck" value="Вярно разкрити скоби" name='answerKrIsI[]'/>
 												</td>
 												<td class="pointsTD">
-													<input type="number" min="0.5" step="0.5" class="points pointsCheck" name="pointsKrIsI[]" value="1"/></td>
+													<input type="number" min="0.5" step="0.5" class="points pointsCheck" title="Points" name="pointsKrIsI[]" value="1"/></td>
 												</td>
-												<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png"/></td>
+												<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/></td>
 											</tr>
 										</tbody>
 									</table>
@@ -143,9 +143,9 @@
 									</div>
 								</td>
 								<td class="pointsTD">
-									<input type="number" min="0.5" step="0.5" class="points" name="pointsKrIsI[]" value="1" readonly/></td>
+									<input type="number" min="0.5" step="0.5" class="points" title="Points" name="pointsKrIsI[]" value="1" readonly/></td>
 								</td>
-								<td class="buttonTD"><img class="deleteButton" src="<?php echo get_stylesheet_directory_uri(); ?>/img/closeD.png"/></td>
+								<td class="buttonTD"><img class="deleteButton1" src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png"/></td>
 							</tr>
 							<tr>
 								<td colspan = "1"></td>

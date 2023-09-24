@@ -36,8 +36,7 @@ function initForm(){
                     url: '',
                     type: 'post',
                     data: { "callFormEditFunction": "deleteFormImages", 
-                            "postID" : window.postID,
-                            "deleteData" : 'true'},
+                            "postID" : window.postID,},
                     success: function(data) {
                         location.reload();
                     }

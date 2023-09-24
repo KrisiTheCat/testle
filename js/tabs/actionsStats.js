@@ -245,16 +245,16 @@ function initWCNchart(data){
 }
 
 function bestWorstQuestion(dataG){
-    bestWorstQuestionEinzel(dataG[1], 1, 'Correct', '--colorCorrect', document.getElementById('easiestQuestion'));
-    bestWorstQuestionEinzel(dataG[0], 0, 'Wrong', '--colorWrong', document.getElementById('hardestQuestion'));
-    bestWorstQuestionEinzel(dataG[2], 2, 'Empty', '--colorNotFilled', document.getElementById('skippedQuestion'));
+  bestWorstQuestionEinzel(dataG[1], 1, 'Correct', '--colorCorrect', document.getElementById('easiestQuestion'));
+  bestWorstQuestionEinzel(dataG[0], 0, 'Wrong', '--colorWrong', document.getElementById('hardestQuestion'));
+  bestWorstQuestionEinzel(dataG[2], 2, 'Empty', '--colorNotFilled', document.getElementById('skippedQuestion'));
 }
 function bestWorstQuestionEinzel(dataG, index, label, color, div){
   if(dataG.code.length < 1){
     $(div).hide();
     return;
   }
-  dataG.sum = dataG.times[0] + dataG.times[1] + dataG.times[2];
+  dataG.sum = dataG.times[0] + dataG.times[1] + dataG.times[2] + dataG.times[3];
   const doughnutLabel = {
     id: 'doughnutLabet' ,
     beforeDatasetsDraw(chart, args ,pluginOptions) {
