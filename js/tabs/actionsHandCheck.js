@@ -356,7 +356,7 @@ $(document).on('click', '#handCheckDescrNotFilled', function(){
             success: function(data) {
                 window.responsesKrisi = JSON.parse(data['responses']);
                 currChecking.seshResults[0]++;
-                removeCurrCheckingAtt();
+                continueNextAtt();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 toastr.error("Unable to upload answer");

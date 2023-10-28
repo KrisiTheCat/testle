@@ -81,6 +81,11 @@ p, h4{
   display: inline-block;
 }
 
+#dublicateFromTest{
+  margin-top: 17px;
+  float: right;
+}
+
 .toggleResp input{
   height: 0;
   width: 0;
@@ -632,6 +637,15 @@ p, h4{
 }
 .checkResponse:hover{
   background-color: var(--colorToCheck);
+  cursor: pointer;
+}
+
+#uploadPhotosPdf{
+  padding: 6px 0px 50px 0px;
+  text-align: right;
+  font-size: small;
+  text-decoration: underline;
+  color: var(--colorComposite);
   cursor: pointer;
 }
 
@@ -1368,38 +1382,6 @@ input[type=text].type{
     justify-content: space-between;
 }
 
-.notesBtn{
-    position: absolute;
-    background-color: #b2e3f8;
-    border-radius: 3px;
-    border: #65cbf9 solid 5px;
-    position: fixed;
-    bottom: 32px;
-    right: 25px;
-    z-index: 22;
-}
-
-.notesBtn img{
-    width: 40px;
-    
-    transition-duration: 0.8s;
-    transition-property: transform;
-}
-
-#notesTA{
-    position: fixed;
-    bottom: 32px;
-    right: 25px;
-    z-index: 21;
-    width: 25%;
-    height: calc(100% - 110px);
-    -webkit-transition: height .5s ease-out;
-    transition: height .5s ease-out;
-    -moz-transition: height .5s ease-out;
-    -o-transition: height .5s ease-out;
-    padding: 10px;
-}
-
 .rotate180 {
     transform: rotate(-180deg);
     -webkit-transform: rotate(-180deg);
@@ -2036,7 +2018,7 @@ input[type=text].type{
   border-radius: 6px;
   gap: 10px;
   padding: 40px 10px 10px 10px;
-  margin: 50px 0px;
+  margin: 50px 0px 0px 0px;
   position: relative;
 }
 #photosDiv > p{

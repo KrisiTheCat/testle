@@ -14,6 +14,9 @@ function refreshAttendees(){
     if(attendeesFormated.length == 0){
       $('#attendees').find('.noSuchText').show();
     }
+    else {
+      $('#attendees').find('.noSuchText').hide();
+    }
       importToTable();
 }
 
@@ -35,7 +38,7 @@ function sortAttInGroups(){
 
 function getStatus(response){
   /* return Object.values(ATTENDEE_STATUS)[Math.floor(Object.keys(ATTENDEE_STATUS).length * Math.random())]; */
-  if(!response['images'] || window.pageInfo.length != response['images'].length){
+  if(!response['images'] || window.pageInfo.length != Object.keys(response['images']).length){
       return ATTENDEE_STATUS.NO_PHOTO;
   }
   if(containsToBeChecked(response)){
@@ -121,7 +124,6 @@ function importToTable(){
           names.push(user.name);
         }
       });
-      console.log(names);
       console.log($("#newAttendeeInput"));
       $("#newAttendeeInput").unbind().autocomplete({
         minLength: 0,

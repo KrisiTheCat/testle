@@ -99,3 +99,10 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
 function isInArray(el, arr){
     return arr!=null && el!=null && el in arr;
 }
+
+function showLoader(){
+    $('.pageLoader').removeClass('invisible');
+}
+function hideLoader(){
+    $('.pageLoader').addClass('invisible');
+}

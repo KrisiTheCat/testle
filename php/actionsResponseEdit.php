@@ -64,6 +64,10 @@ if (isset($_POST['callResponseEditFunction'])) {
         uploadAttendeeImage();
         die();
         break;
+      case 'uploadAttendeeImages':
+        uploadAttendeeImages();
+        die();
+        break;
       case 'updateEdgesAttendeeImage':
         updateEdgesAttendeeImage();
         die();
@@ -162,6 +166,43 @@ if (isset($_POST['callResponseEditFunction'])) {
     $attach_id = wp_insert_attachment( $postinfo, $filename, $postID );
     if(!isset($responses[$attendeeID]['images']))$responses[$attendeeID]['images']=array();
     $responses[$attendeeID]['images'][$id] = array('attID' => $attach_id,'edges' => $edges);
+    update_post_meta( $postID, 'responses', $responses );
+    remove_filter( 'upload_dir', 'uploadDirToStudents' );
+    $response_array['url'] = wp_get_attachment_url($attach_id);  
+    header('Content-type: application/json');
+    echo json_encode($response_array);
+  }
+  function uploadAttendeeImages(){
+    add_filter( 'upload_dir', 'uploadDirToStudents' );
+    $postID = $_POST['postID'];
+    $attendeeID = intval($_POST['attendeeID']);
+    $queries = $_POST['queries'];
+    $id = 0;
+    $responses = get_post_meta( $postID, 'responses', true );
+    $response_array = [];
+    
+    foreach ($queries as $imgObj){
+      $img = $imgObj['imgURL'];
+      $edges = $imgObj['edges'];
+      $img = str_replace('data:image/png;base64,', '', $img);
+      $img = str_replace(' ', '+', $img);
+      $fileData = base64_decode($img);
+      $title = 'form_' . $postID . '_response_' . $attendeeID . '_page_' . $id . '.png';
+      $attachment = wp_upload_bits( $title, null, $fileData );
+      $filetype = wp_check_filetype( basename( $attachment['file'] ), null );
+      $postinfo = array(
+        'post_mime_type' => $filetype['type'],
+        'post_title' => $title,
+        'post_content' => '',
+        'post_status' => 'inherit',
+      );
+      $filename = $attachment['file'];
+      $attach_id = wp_insert_attachment( $postinfo, $filename, $postID );
+      if(!isset($responses[$attendeeID]['images']))$responses[$attendeeID]['images']=array();
+      $responses[$attendeeID]['images'][$id] = array('attID' => $attach_id,'edges' => $edges);
+      array_push($response_array, wp_get_attachment_url($attach_id));
+      $id++;
+    }
     update_post_meta( $postID, 'responses', $responses );
     remove_filter( 'upload_dir', 'uploadDirToStudents' );
     $response_array['responses'] = json_encode($responses);  

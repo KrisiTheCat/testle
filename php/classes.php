@@ -238,7 +238,7 @@ class QuestionForm extends Question{
   public function resetAll(){
     foreach($this->subq as $id=>$sub){
       if(key_exists('page', $sub)){
-        $this->subq[$id] =  new stdClass();
+        $this->subq[$id] =  new QuestionForm('Single');
       }
       else {
         $sub->resetAll();
@@ -247,7 +247,7 @@ class QuestionForm extends Question{
   }
   public function setValue($value, $indexArr){
     if(count($indexArr) == 1 && empty($value)){
-      $this->subq[$indexArr[0]] =  new stdClass();
+      $this->subq[$indexArr[0]] =  new QuestionForm('Single');
       return;
     }
     if(count($indexArr) == 0){

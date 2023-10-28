@@ -10,16 +10,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 $current_fp = get_query_var('fpage'); ?>
-
+<div class="pageLoader invisible">
+    <div class="loader"></div>
+    <div>Loading...</div>
+</div>
 	<div id="primary" class="content-area grid-parent mobile-grid-100 grid-100 tablet-grid-100 primary-single-test">
 		<main id="main" <?php lalita_main_class(); ?>>
 		
 			<header class="entry-header">
 				<h1 class="entry-title"><?php the_title(); ?></h1>
 			</header><!-- .entry-header -->
-			<div id="usedForChecking">
-				<canvas id="imageCanvas" width="1000" class="invisible"></canvas>
-				<img id="imageImg" width="1000" class="invisible"/>
+			<div id="usedForChecking" class="invisible">
+				<canvas id="imageCanvas" width="1000"></canvas>
+				<canvas id="imageCanvas2" width="1000"></canvas>
+				<img id="imageImg"/>
 			</div>
 			<button type="button" id="nullBtn" class="invisible">Nullify</button>
 			<?php

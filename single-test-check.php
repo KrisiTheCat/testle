@@ -74,7 +74,7 @@
 							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/edge.png" class="edgePoint" data-id="2"></img>
 							<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/edge.png" class="edgePoint" data-id="3"></img>
 						</div>
-						<img id="uploadImageImg" height="300px"></img>
+						<img id="uploadImageImg" height="3000px"></img>
 						<p style="padding-left: 16px;    font-size: 14px;">Please drag the targets so that they point to the four black rectangles located in the corners of the sheet.</p>
 						<p id="cutPage" class="elegantBtn">Submit</p>
 					</div>
@@ -103,6 +103,8 @@
 	<div id="photosDiv">
 
 	</div>
+	<input type="file" class="invisible" accept="application/pdf" id="uploadImagesPDFInput"/>
+	<p id="uploadPhotosPdf">Upload pages as PDF</p>
 	<div id="fullDiv">
 		<div class="statusDivCopy invisible">
 			<div class="statusDiv">
@@ -114,8 +116,4 @@
 		</div>
 		<div id="allModuleChDiv"></div>
 	</div>
-	<div class = "notesBtn">
-		<img class="arrowImg rotate180" src="<?php echo get_stylesheet_directory_uri(); ?>/img/arrow.png"/>
-	</div>
-	<textarea id = "notesTA" class="zeroHeight"></textarea>
 </div>

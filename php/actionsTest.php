@@ -36,6 +36,8 @@ if (isset($_POST['callTestEditFunction'])) {
 }
 
 function dublicateTest($postID, $dublPostID){
+  $response_array = array();
+
   $content = get_post_meta($dublPostID, 'content', true);
   update_post_meta($postID, 'content', $content);
   $response_array['content'] = json_encode($content);
@@ -46,13 +48,15 @@ function dublicateTest($postID, $dublPostID){
   update_post_meta($postID, 'responses', $responsesNew);
   $response_array['responses'] = json_encode($responsesNew);
 
-  $form = get_post_meta($dublPostID, 'form', true);
-  update_post_meta($postID, 'form', $form);
-  $response_array['form'] = json_encode($form);
-  
   $pageInfo = get_post_meta($dublPostID, 'pageInfo', true);
   update_post_meta($postID, 'pageInfo', $pageInfo);
   $response_array['pageInfo'] = json_encode($pageInfo);
+
+
+  $form = get_post_meta($dublPostID, 'form', true);
+  update_post_meta($postID, 'form', $form);
+  $response_array['form'] = json_encode($form);
+
 
   header('Content-type: application/json');
   echo json_encode($response_array);

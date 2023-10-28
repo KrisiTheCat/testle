@@ -12,7 +12,7 @@ function parsePointFromString(point){
 }
 
 function fillRect(canvas, coords, color){
-    var canvasContext = canvas.getContext("2d");
+    var canvasContext = canvas.getContext("2d",{ willReadFrequently: true });
     var width = canvas.width;
     var height = canvas.height;
     canvasContext.beginPath();
@@ -21,12 +21,12 @@ function fillRect(canvas, coords, color){
 }
 
 function clearCanvas(canvas){
-    canvas.getContext("2d").clearRect(0,0,canvas.width, canvas.height);
+    canvas.getContext("2d",{ willReadFrequently: true }).clearRect(0,0,canvas.width, canvas.height);
     return;
 }
 
 function strokeQuad(canvas, quad){
-    var canvasContext = canvas.getContext("2d");
+    var canvasContext = canvas.getContext("2d",{ willReadFrequently: true });
     var width = canvas.width;
     var height = canvas.height;
     canvasContext.beginPath();
@@ -56,7 +56,7 @@ function getBoundingRect(quad){
 }
 
 function strokeRect(canvas, coords){
-    var canvasContext = canvas.getContext("2d");
+    var canvasContext = canvas.getContext("2d",{ willReadFrequently: true });
     var width = canvas.width;
     var height = canvas.height;
     canvasContext.beginPath();

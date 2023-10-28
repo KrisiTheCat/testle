@@ -92,7 +92,6 @@ function initForm(){
         $("#pdf-loader").show();
         $("#pdf-contents").hide();
         $('#analysingLoader').hide();
-        console.log('HERE')
         PDFJS.getDocument(pdf_url).then(function(pdf) {
             thePDF = pdf;
             numPages = pdf.numPages;
@@ -122,18 +121,6 @@ function initForm(){
                 $("#pdf-loader").hide();
                 $("#pdf-contents").show();
             }
-        }
-
-        function drawPageInCanvas(page, canvas, hei){
-            var viewport = page.getViewport( 1 );
-            var context = canvas.getContext('2d');
-            var scale_required;
-            if(hei) scale_required = canvas.height / page.getViewport(1).height;
-            else scale_required = canvas.width / page.getViewport(1).width;
-            var viewport = page.getViewport(scale_required);
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            page.render({canvasContext: context, viewport: viewport});
         }
 
         var pagesArray = [], freshlyPicked = false;
@@ -193,7 +180,7 @@ function initForm(){
                         cv.imshow('imageCanvas', image);
                         image.delete();
                         dataURLs.push({imgURL:document.getElementById('pdf-canvas-' + page).toDataURL("image/png"),
-                                        edges: find4Edges(document.getElementById("imageCanvas"),document.getElementById('pageAnProgress'))});
+                                        edges: find4Edges(document.getElementById("imageCanvas"))});
                     }
                     $('#pdf-main-container').modal('hide');
                     $('#analysingLoader').hide();
@@ -562,4 +549,17 @@ function setValueQuestionRectCoords(form, indArr, val){
     if(!(id in form['subq'])) form['subq'][id] = {};
     form['subq'][id] = setValueQuestionRectCoords(form['subq'][id], indArr2, val);
     return form;
+}
+
+
+function drawPageInCanvas(page, canvas, hei){
+    var viewport = page.getViewport( 1 );
+    var context = canvas.getContext('2d');
+    var scale_required;
+    if(hei) scale_required = canvas.height / page.getViewport(1).height;
+    else scale_required = canvas.width / page.getViewport(1).width;
+    var viewport = page.getViewport(scale_required);
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    return page.render({canvasContext: context, viewport: viewport});
 }

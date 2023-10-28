@@ -8,8 +8,24 @@
 	window.openedTab = 'summary';
 </script>
 <div id="summary">
-	<input type="text" id="dubPost" placeholder="Dublicating post"/>
-	<button id="dublicateFromTest">Dublicate modules and form from other test <- TO FIX NAME</button>
+<div id="dublicatePostModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog  modal-lg" role="document" style="margin: 3rem auto;">
+			<div class="modal-content" style="height: -webkit-fill-available;">
+				<div class="modal-header border-0" style="border-bottom: #00000033 1px solid;">
+					<h5 style="margin: 0px">Dublicating test</h5>
+				</div>
+				<div class="modal-body">
+					<small for="dublicatePostSelect" style="color: black;">Origin post:</small>
+					<select id="dublicatePostSelect" class="lightGradientBackground" style="margin-bottom: 8px"></select>
+				</div>
+				
+				<div class="modal-footer justify-content-right">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-info" id="dublicateTestConfirm">Dublicate</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<h4>Editors:</h4>
 	<ul id="editorsList">
 	</ul>
@@ -112,4 +128,5 @@
 			</div>
 		</div>
 	</div>
+	<button id="dublicateFromTest">Dublicate from test</button>
 </div>

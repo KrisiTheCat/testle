@@ -151,31 +151,50 @@ function initSummary(){
     });
 
     $(document).on('click', '#dublicateFromTest', function(){
-        var name = $('#dubPost').val();
-        var id = -1;
-        for(el in tests){
-            if(tests[el].postName == name){
-                id = tests[el].postID;
-            }
-        }
-        if(id!=-1){
-            $.ajax({
-                url: '',
-                type: 'post',
-                data: { "callTestEditFunction": "dublicateTest", 
-                "postID" : window.postID,
-                "dublPostID" : id}, //TODO
-                success: function(data) {
-                    location.reload();
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    toastr.error("Unable to dublicate test");
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: { "callUsersFunction": "listUserTests", 
+            "userID" : window.userID}, //TODO
+            success: function(data) {
+                var tests = JSON.parse(data['roles']);
+                console.log(tests);
+                var text = '';
+                for(test of tests){
+                    if(test.postID != window.postID){
+                        text += `<option value="${test.postID}">${test.postName}</option>`;
+                    }
                 }
-            });
-        }
-        console.log(name, id);
+                if(text.length == 0){
+                    toastr.error("Unable to dublicate test");    
+                }
+                else {
+                    $('#dublicatePostSelect').html(text);
+                    $('#dublicatePostModal').modal("show");
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                toastr.error("Unable to dublicate test");
+            }
+        });
     });
-    
+
+    $(document).on('click', '#dublicateTestConfirm', function(){
+        var id = $('#dublicatePostSelect').val();
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: { "callTestEditFunction": "dublicateTest", 
+            "postID" : window.postID,
+            "dublPostID" : id},
+            success: function(data) {
+                location.reload();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                toastr.error("Unable to dublicate test");
+            }
+        });
+    });
 }
 
 function findNoPhotos(){

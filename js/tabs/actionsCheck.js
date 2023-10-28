@@ -7,6 +7,8 @@ var divStatus;
 
 var changingPageId = -1;
 
+var imageInCanvas = false;
+
 function initCheck(){
 
     //getID
@@ -50,6 +52,7 @@ function initCheck(){
     initAnswerUploadWays();
     displayAllPages(-1);
     answerTemplateInit();
+    uploadAnswersAsPdf();
 
     if(window.pageInfo.length==0){
         $('#photosDiv').html('<p>No form uploaded. Fix <a href="../form">here</p>');
@@ -189,23 +192,7 @@ function refreshResponseTable(){
     }
     $('.pointsField-1_-1_-1_-1').eq(0).html(pointsAll + ' | ' + contentMaxPoints);
 
-    var openedNotes = false;
-
-    $(document).on('click','.notesBtn',function(e){
-        var $this = $(this);
-        if(openedNotes){
-            $this.find('.arrowImg').addClass('rotate180');
-            $('#notesTA').addClass('zeroHeight');
-            openedNotes = false;
-        } else { 
-            $this.find('.arrowImg').removeClass('rotate180');
-            $('#notesTA').removeClass('zeroHeight');
-            openedNotes = true;
-        }
-    });
 }
-
-
 
 function refreshGeneralScoreStats(content){
     var sum = content['stats'][0] + content['stats'][1] + content['stats'][2] + content['stats'][3];
@@ -421,7 +408,7 @@ function answerTemplateInit(){
         answerTemplateCanvases[id] = document.getElementById('answerTemplCanvas'+id);
         answerTemplateCanvases[id].width = 40;
         answerTemplateCanvases[id].height = 40;
-        var ctx = answerTemplateCanvases[id].getContext("2d");
+        var ctx = answerTemplateCanvases[id].getContext("2d", { willReadFrequently: true });
         ctx.drawImage(this, 0,0,40,40);
         // var imageData = ctx.getImageData(0,0,40,40);
         // drawBlackRect(imageData.data, 13,25,12,27,40, 40);
@@ -430,6 +417,18 @@ function answerTemplateInit(){
     });
 }
 
+function displayPage(pageId, url, justChanged){
+    $('#attendeePageDiv' + pageId).find('.attendeeUploadBtn').hide();
+    $('#attendeePageDiv' + pageId).find('img').first().attr('src',url);
+    if(justChanged){
+        console.log(justChanged);
+        console.log($('#attendeePageDiv' + pageId));
+        $('#attendeePageDiv' + pageId).find('img').first().load(function(){
+            console.log("HERE");
+            extractFromPage(pageId);
+        });
+    }
+}
 function displayAllPages(justChanged){
     var photosDiv = $('#photosDiv');
     photosDiv.html(`<p>Upload student's answers to the corresponding pages here:</p>`);
@@ -476,6 +475,7 @@ function displayAllPages(justChanged){
         }
     }
 }
+
 $(document).on('click', '.attendeeUploadBtn', function(){
     var pageId = $(this).parent().parent().data('id');
     changingPageId = pageId;
@@ -526,24 +526,29 @@ function extractFromPage(pageId){
             m);
         queries = queries.concat(arr);
     }
-    $.ajax({
-        url: '',
-        type: 'post',
-        data: { "callResponseEditFunction": "changeAnswerChArr", 
-        "postID" : window.postID,
-        "attendeeID" : attendeeID,
-        "queries" : queries},
-        success: function(data) {
-            var ans = JSON.parse(data['ansStatus']);
-            toastr.success('</br>' + ans[1] + ' right answers</br>' + ans[0] + ' wrong answers</br>' + ans[2] + ' not filled questions</br>' + ans[3] + ' questions to check', 
-                            queries.length + ' answers extracted');
-            window.responsesKrisi = JSON.parse(data['responses']);
-            refreshResponseTable();  
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            toastr.error("Unable to upload result");
-        }
-    });
+    if(queries.length == 0){
+        toastr.info("Please set locations in form");
+    }
+    else{
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: { "callResponseEditFunction": "changeAnswerChArr", 
+            "postID" : window.postID,
+            "attendeeID" : attendeeID,
+            "queries" : queries},
+            success: function(data) {
+                var ans = JSON.parse(data['ansStatus']);
+                toastr.success('</br>' + ans[1] + ' right answers</br>' + ans[0] + ' wrong answers</br>' + ans[2] + ' not filled questions</br>' + ans[3] + ' questions to check', 
+                                queries.length + ' answers extracted');
+                window.responsesKrisi = JSON.parse(data['responses']);
+                refreshResponseTable();  
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                toastr.error("Unable to upload result");
+            }
+        });
+    }
 }
 
 function checkQuestion(formPageID, form, content, image, code){
@@ -574,7 +579,7 @@ function checkQuestion(formPageID, form, content, image, code){
                 var questionCanvas = document.getElementById('canvasCutQuest'+ i);
                 questionCanvas.width = krisi.width*width/4;
                 questionCanvas.height = krisi.height*height;
-                var questionCanvasCxt = questionCanvas.getContext("2d");
+                var questionCanvasCxt = questionCanvas.getContext("2d", { willReadFrequently: true });
                 questionCanvasCxt.drawImage(image, 
                     krisi.left*width + i*(krisi.width*width/4)  -5, 
                     krisi.top*height                            -5, 
@@ -591,7 +596,7 @@ function checkQuestion(formPageID, form, content, image, code){
             var arrStatus = [];
             for(var i = 0; i < 4; i++){
                 var questionCanvas = document.getElementById('canvasCutQuest'+i);
-                var questionCanvasCxt = questionCanvas.getContext("2d");
+                var questionCanvasCxt = questionCanvas.getContext("2d", { willReadFrequently: true });
                 cropImage(questionCanvas, arrScaling[i], ratio);
                 scaleTo(questionCanvas,40);
                 questionCanvasCxt.putImageData(questionCanvasCxt.getImageData(0, 0, questionCanvas.width, questionCanvas.height),0,0,0,0,40,40);
@@ -621,7 +626,7 @@ function checkQuestion(formPageID, form, content, image, code){
             var questionCanvas = document.getElementById('canvasCutQuest0');
             questionCanvas.width = krisi.width*width;
             questionCanvas.height = krisi.height*height;
-            var questionCanvasCxt = questionCanvas.getContext("2d");
+            var questionCanvasCxt = questionCanvas.getContext("2d", { willReadFrequently: true });
             questionCanvasCxt.drawImage(image, 
                 krisi.left*width, krisi.top*height, krisi.width*width, krisi.height*height,
                 0,0, krisi.width*width, krisi.height*height);
@@ -634,9 +639,9 @@ function checkQuestion(formPageID, form, content, image, code){
     return answerArr;
 }
 
-function saveImageToMedia(canvas, edges){
+function saveImageToMedia(canvas, edges, pageId){
     var imgURL = {imgURL:canvas.toDataURL("image/png"),
-    edges: edges};
+                    edges: edges};
     //console.log(attendeeID);
     $.ajax({
         url: '',
@@ -645,11 +650,9 @@ function saveImageToMedia(canvas, edges){
                 "postID" : window.postID,
                 "attendeeID" : attendeeID,
                 "imgBase64": imgURL,
-                "imageID": changingPageId},
+                "imageID": pageId},
         success: function(data) { 
-            responsesKrisi = JSON.parse(data['responses']);
-            displayAllPages(changingPageId);
-            changingPageId = -1;
+            displayPage(pageId, data.url, true);
         }
     });
 }
@@ -674,8 +677,8 @@ function statusOfCircle(canvas){
     return 1;
 }
 function scaleTo(canvas, size){
-    var cw = canvas.width, ch = canvas.height, cxt = canvas.getContext("2d");
-    answerTemplateCanvases[3].getContext("2d").drawImage(canvas,0,0);
+    var cw = canvas.width, ch = canvas.height, cxt = canvas.getContext("2d", { willReadFrequently: true });
+    answerTemplateCanvases[3].getContext("2d", { willReadFrequently: true }).drawImage(canvas,0,0);
     canvas.width = size;
     canvas.height = size;
     cxt.drawImage(answerTemplateCanvases[3],0,0,cw,ch,0,0,size,size);
@@ -721,12 +724,12 @@ $(document).on('mouseenter', '.photoFieldImg', function(){
     var width = attendeePageImg.naturalWidth, height = attendeePageImg.naturalHeight;
     canvas.width = krisi.width*width;
     canvas.height = krisi.height*height;
-    var canvasCxt = canvas.getContext("2d");
+    var canvasCxt = canvas.getContext("2d", { willReadFrequently: true });
     canvasCxt.drawImage(attendeePageImg, 
         krisi.left*width, krisi.top*height, krisi.width*width, krisi.height*height,
         0,0, krisi.width*width, krisi.height*height);
     $('#hoverPopupPhoto').show();
-    $('#hoverPopupPhoto').css({left: this.getBoundingClientRect().x - 310,
+    $('#hoverPopupPhoto').css({left: this.getBoundingClientRect().x - 380,
                                 top: this.getBoundingClientRect().y - 30});
 });
 $(document).on('mouseleave', '.photoFieldImg', function(){
@@ -769,7 +772,9 @@ function initStage1(){
             if (file.type.startsWith("image/")) {
                 const img = document.getElementById("uploadImageImg");
                 img.src = URL.createObjectURL(file);
+                document.getElementById('imageImg').src = URL.createObjectURL(file);
                 $('#photoUploadStage1').hide(500);
+                imageInCanvas = false;
                 initStage2();
             }
             else{
@@ -786,7 +791,9 @@ function initStage1(){
         var image = document.getElementById('uploadImageImg');
         blob = event.target.files[0];
         image.src = URL.createObjectURL(blob);
+        document.getElementById('imageImg').src = URL.createObjectURL(blob);
         $('#photoUploadStage1').hide(500);
+        imageInCanvas = false;
         initStage2();
     });
 }
@@ -794,6 +801,8 @@ function initStage1(){
 function initStage2(){
     var uploadImageImgWidth;
     var uploadImageImgHeight;
+    var uploadImageImgWidthB;
+    var uploadImageImgHeightB;
 
     let lastX, lastY,x,y;
     let draggingEdge = undefined;
@@ -809,18 +818,29 @@ function initStage2(){
     steps.eq(1).attr("class","step currentStep");
     steps.eq(2).attr("class","step");
     
+    document.getElementById('imageImg').addEventListener("load", function() {
+        uploadImageImgWidthB = this.width;
+        uploadImageImgHeightB = this.height;
+    });
+    
     document.getElementById('uploadImageImg').addEventListener("load", function() {
+        let canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "canvasAn");
+        document.body.appendChild(canvas);
+        let ctx = canvas.getContext("2d", { willReadFrequently: true });
         let image = cv.imread(this);
-        cv.imshow('imageCanvas', image);
+        cv.imshow('canvasAn', image);
         image.delete();
-        imageCanvas = document.getElementById('imageCanvas');
+
         uploadImageImgWidth = this.width;
         uploadImageImgHeight = this.height;
+        // uploadImageImgWidth = 332;
+        // uploadImageImgHeight = 430;
         console.log(this);
         console.log($(this).width());
         maxX = uploadImageImgWidth - canvasPadding;
         maxY = uploadImageImgHeight - canvasPadding;
-        edges = find4Edges(document.getElementById('imageCanvas'));
+        edges = find4Edges3(canvasAn);
         ableToMoveCrosses = true;
         console.log(uploadImageImgWidth,uploadImageImgHeight);
         drawEdgesOnPageCheck(edges,uploadImageImgWidth, uploadImageImgHeight);
@@ -871,22 +891,22 @@ function initStage2(){
         steps.eq(0).attr("class","step finishedStep");
         steps.eq(1).attr("class","step finishedStep");
         steps.eq(2).attr("class","step currentStep");
-        let src = cv.imread('uploadImageImg');
+        let src = cv.imread('imageImg');
         let dst = new cv.Mat();
         let dsize = new cv.Size(src.cols, src.rows);
         let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
-            edges[0].x*uploadImageImgWidth, edges[0].y*uploadImageImgHeight, 
-            edges[1].x*uploadImageImgWidth, edges[1].y*uploadImageImgHeight, 
-            edges[2].x*uploadImageImgWidth, edges[2].y*uploadImageImgHeight, 
-            edges[3].x*uploadImageImgWidth, edges[3].y*uploadImageImgHeight]);
-        let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, uploadImageImgWidth, 0, 0, uploadImageImgHeight,  uploadImageImgWidth, uploadImageImgHeight]);
+            edges[0].x*uploadImageImgWidthB, edges[0].y*uploadImageImgHeightB, 
+            edges[1].x*uploadImageImgWidthB, edges[1].y*uploadImageImgHeightB, 
+            edges[2].x*uploadImageImgWidthB, edges[2].y*uploadImageImgHeightB, 
+            edges[3].x*uploadImageImgWidthB, edges[3].y*uploadImageImgHeightB]);
+        let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, uploadImageImgWidthB, 0, 0, uploadImageImgHeightB,  uploadImageImgWidthB, uploadImageImgHeightB]);
         let M = cv.getPerspectiveTransform(srcTri, dstTri);
         cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
         var canvas = document.getElementById('imageCanvas');
         clearCanvas(canvas);
         cv.imshow('imageCanvas', dst);
         src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
-        saveImageToMedia(canvas, edges);
+        saveImageToMedia(canvas, edges, changingPageId);
         $('#imageUploadPopupDiv').modal('hide');
     });
 
@@ -909,3 +929,117 @@ $(document).on('click','#resetBtn', function(){
         }
     });
 });
+
+/* upload answers as PDF */
+
+function uploadAnswersAsPdf(){
+
+    var thePDF, numPages, pdf_url, dataURLs;
+
+    $(document).on('click', '#uploadPhotosPdf', function(){
+        $("#uploadImagesPDFInput").click();
+    });
+
+    $(document).on('change', '#uploadImagesPDFInput', function(){
+        if(['application/pdf'].indexOf($("#uploadImagesPDFInput").get(0).files[0].type) == -1) {
+            toastr.error("Not a PDF");
+            return;
+        }
+        if($("#uploadImagesPDFInput")[0].files.length != 1) {
+            toastr.error("Too many files");
+            return;
+        }
+        pdf_url = URL.createObjectURL($("#uploadImagesPDFInput").get(0).files[0]);
+        console.log(pdf_url);
+        PDFJS.getDocument(pdf_url).then(function(pdf) {
+            thePDF = pdf;
+            numPages = pdf.numPages;
+            console.log(numPages);
+            if(numPages != window.pageInfo.length) {
+                toastr.error("Not correct number of pages!");
+                return;
+            }
+            currPage = 1;
+            dataURLs = [];
+            thePDF.getPage(currPage).then( handlePDFPages );
+            //showLoader();
+        }).catch(function(error) {
+            alert(error.message);
+        });
+    });
+    
+    function handlePDFPages(page){
+        var canvas = $('#imageCanvas').get(0);
+        var pageRendering = drawPageInCanvas(page,canvas, false);
+        console.log('here');
+        pageRendering.promise.then(function(){
+            var targetCanvas = document.getElementById('imageCanvas2');
+            var targetCtx = targetCanvas.getContext("2d");
+            // $('#photoUploadStage1').hide();
+            // $('#photoUploadStage2').show();
+            // $('#imageUploadPopupDiv').modal('show');
+            // console.log('here');
+            // var img = document.getElementById('uploadImageImg');
+            // console.log('here');
+            // img.src = canvas.toDataURL('image/png');
+            // console.log('here');
+            // imageInCanvas = true;
+            // initStage2();
+
+            console.log(canvas.width, canvas.height);
+            targetCanvas.height = canvas.height;
+            targetCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+            cutPDFPage(canvas, currPage, find4Edges3(targetCanvas));
+            
+            currPage++;
+            if ( thePDF !== null && currPage <= numPages ){
+                thePDF.getPage( currPage ).then( handlePDFPages );
+            }
+            if(currPage == numPages+1){  
+                //hideLoader();  
+                console.log("ready");
+                // $.ajax({
+                //     url: '',
+                //     type: 'post',
+                //     data: { "callResponseEditFunction": "uploadAttendeeImages", 
+                //             "postID" : window.postID,
+                //             "attendeeID" : attendeeID,
+                //             "queries": dataURLs,},
+                //     success: function(data) { 
+                //         console.log(data);
+                //         console.log(JSON.parse(data));
+                //     },
+                //     error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //         toastr.error("Unable to save images");
+                //     }
+                // });
+            }
+        });
+    }
+
+    function cutPDFPage(canvas, pageId, edges){
+        console.log(edges);
+        var width = canvas.width;
+        var height = canvas.height;
+        var img = document.getElementById('imageImg');
+        img.src = canvas.toDataURL('image/png');//TODO
+        img.onload = function() {
+            let src = cv.imread('imageImg');
+            let dst = new cv.Mat();
+            let dsize = new cv.Size(src.cols, src.rows);
+            let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                edges[0].x*width, edges[0].y*height, 
+                edges[1].x*width, edges[1].y*height, 
+                edges[2].x*width, edges[2].y*height, 
+                edges[3].x*width, edges[3].y*height]);
+            let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, width, 0, 0, height,  width, height]);
+            let M = cv.getPerspectiveTransform(srcTri, dstTri);
+            cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
+            var canvas = document.getElementById('imageCanvas2');
+            clearCanvas(canvas);
+            cv.imshow('imageCanvas2', dst);
+            src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
+            saveImageToMedia(canvas, edges, pageId-1);
+        };
+    }
+}

@@ -1,5 +1,8 @@
+
+// first version - looks for ALL rects, accurate, slow
 function find4Edges(canvas){
-    var ctx=canvas.getContext("2d");
+    ctx = canvas.getContext("2d", { willReadFrequently: true });
+    console.log(ctx.getContextAttributes());
     var cw,ch;        
     var bkColor={r:255,g:255,b:255};
     var bkFillColor="rgb("+bkColor.r+","+bkColor.g+","+bkColor.b+")";
@@ -37,7 +40,7 @@ function find4Edges(canvas){
         return({x:x0,y:y0,width:x2-x0+1,height:y2-y0+1});
     }
 
-    function findRects(){
+    function findRects(){// TO DO SEARCH ONLY IN 20%
         var data=ctx.getImageData(0,0,cw,ch).data;
         var pos=findEdge(data,0);
         var rects = [];
@@ -69,12 +72,223 @@ function find4Edges(canvas){
         if(dist(rects[i].x+rects[i].width,rects[i].y+rects[i].height,cw,ch) < 
             dist(rects[br].x+rects[br].width,rects[br].y+rects[br].height,cw,ch)) br = i;
     }
+    console.log(rects[tl]);
+    console.log(rects[tr]);
+    console.log(rects[bl]);
+    console.log(rects[br]);
     var obj =  [convertRectToPercent(rects[tl],cw,ch), 
                 convertRectToPercent(rects[tr],cw,ch),
                 convertRectToPercent(rects[bl],cw,ch),
                 convertRectToPercent(rects[br],cw,ch)];
+                console.log(obj);
     return obj;
 }
+
+// third version - looks for rects in 20%, accurate 50/50, fast
+function find4Edges3(canvas){
+    ctx = canvas.getContext("2d", { willReadFrequently: true });
+    console.log(ctx.getContextAttributes());
+    var cw,ch;        
+    var bkColor={r:255,g:255,b:255};
+    var bkFillColor="rgb("+bkColor.r+","+bkColor.g+","+bkColor.b+")";
+    
+    cw=canvas.width;
+    ch=canvas.height;
+    console.log(cw+' ' +ch);
+    // return;
+
+    function xyIsInImage(data,x,y){
+        var start=(y*cw+x)*4;
+        var r=data[start+0];
+        var g=data[start+1];
+        var b=data[start+2];
+        return(r<70 && g<70 && b<70);
+    }
+
+    function findEdge(data,Y, wBeg, wEnd, hEnd, kr){
+        for(var y=Y;y<hEnd;y++){
+        for(var x=wBeg;x<wEnd;x++){
+            if(kr) console.log(x,y);
+            if(xyIsInImage(data,x,y)){
+                return({x:x,y:y,valid:true});
+            }
+        }}
+        return({x:-100,y:-100,valid:false});
+    }
+
+    function findBoundary(pos,data){
+        var x0=x1=pos.x;
+        var y0=y1=pos.y;
+        while(y1<=ch && xyIsInImage(data,x1,y1)){y1++;}
+        var x2=x1;
+        var y2=y1-1;
+        while(x2<=cw && xyIsInImage(data,x2,y2)){x2++;}
+        return({x:x0,y:y0,width:x2-x0+1,height:y2-y0+1});
+    }
+
+    function findRects(wBeg, wEnd, hBeg, hEnd, rects){
+        var data=ctx.getImageData(0,0,cw,ch).data;
+        var pos=findEdge(data,hBeg, wBeg, wEnd, hEnd);
+       // if(rects.length == 16)pos=findEdge(data,hBeg, wBeg, wEnd, hEnd, true);
+        var rC = rects.length;
+        while(pos.valid){
+            var bb=findBoundary(pos,data);
+            // console.log("Found target at "+bb.x+"/"+bb.y+", size: "+bb.width+"/"+bb.height);     
+            rects.push(bb);       
+            ctx.fillStyle=bkFillColor;
+            ctx.fillRect(bb.x-2,bb.y-2,bb.width+4,bb.height+4);
+            data=ctx.getImageData(0,0,cw,ch).data;
+            pos=findEdge(data,pos.y+1, wBeg, wEnd, hEnd);
+        }
+        if(rects.length == rC) rects.push({x:(wBeg+wEnd)/2,y:(hBeg+hEnd)/2,width:10, height:10});
+    }
+
+    function dist(a,b,c,d){
+        return Math.abs(c-a)+Math.abs(d-b);
+    }
+
+    var rects = [];
+    var w5 = Math.round(cw/5);
+    var h5 = Math.round(ch/5);
+    findRects(0, w5, 0, h5, rects);
+    findRects(0, w5, h5*4, ch, rects);//!
+    findRects(w5*4, cw, 0, h5, rects);
+    findRects(w5*4, cw, h5*4, ch, rects);
+    var tl = 0, tr = 0, bl = 0, br = 0;
+    for(i = 0; i < rects.length;i++){
+        if(dist(rects[i].x,rects[i].y,0,0) < 
+            dist(rects[tl].x,rects[tl].y,0,0)) tl = i;
+        if(dist(rects[i].x+rects[i].width,rects[i].y,cw,0) < 
+            dist(rects[tr].x+rects[tr].width,rects[tr].y,cw,0)) tr = i;
+        if(dist(rects[i].x,rects[i].y+rects[i].height,0,ch) < 
+            dist(rects[bl].x,rects[bl].y+rects[bl].height,0,ch)) bl = i;
+        if(dist(rects[i].x+rects[i].width,rects[i].y+rects[i].height,cw,ch) < 
+            dist(rects[br].x+rects[br].width,rects[br].y+rects[br].height,cw,ch)) br = i;
+    }
+    console.log(rects[tl]);
+    console.log(rects[tr]);
+    console.log(rects[bl]);
+    console.log(rects[br]);
+    var obj =  [convertRectToPercent(rects[tl],cw,ch), 
+                convertRectToPercent(rects[tr],cw,ch),
+                convertRectToPercent(rects[bl],cw,ch),
+                convertRectToPercent(rects[br],cw,ch)];
+                console.log(obj);
+    return obj;
+}
+
+// third version - looks for rects on distance, NOT accurate, fast
+function find4Edges2(canvas){
+    ctx = canvas.getContext("2d", { willReadFrequently: true });
+    console.log(ctx.getContextAttributes());
+    var cw,ch;        
+    
+    cw=canvas.width;
+    ch=canvas.height;
+    console.log(cw+' ' +ch);
+    // return;
+
+    function xyIsInImage(data,x,y){
+        var start=(y*cw+x)*4;
+        var r=data[start+0];
+        var g=data[start+1];
+        var b=data[start+2];
+        return(r<70 && g<70 && b<70);
+    }
+
+    function findBoundary(pos,data, dX, dY, wLim, hLim){
+        var x0=x1=pos.x;
+        var y0=y1=pos.y;
+        while(y1<=hLim && y1>=0 && xyIsInImage(data,x1,y1)){y1+=dX;}
+        var x2=x1;
+        var y2=y1-1;
+        while(x2<=wLim && x2>=0 && xyIsInImage(data,x2,y2)){x2+=dY;}
+        return({x:x0,y:y0,width:x2-x0+1,height:y2-y0+1});
+    }
+
+    function findRectsDirOld(wBeg, wEnd, hBeg, hEnd){
+        console.log(wBeg, wEnd, hBeg, hEnd);
+        var dX = (wBeg < wEnd) ? 1 : -1;
+        var dY = (hBeg < hEnd) ? 1 : -1;
+        var data=ctx.getImageData(Math.min(wBeg,wEnd),Math.min(hBeg,hEnd),Math.max(wBeg,wEnd),Math.max(hBeg,hEnd)).data;
+        for(var dist = 0; dist < (Math.abs(wBeg-wEnd)+Math.abs(hBeg-hEnd))/2; dist++){
+            for(x = 0; x <= dist; x++){
+                if(xyIsInImage(data,wBeg+dX*x,hBeg+dY*(dist-x))){
+                    console.log(dist, x, wBeg+dX*x,hBeg+dY*(dist-x));
+                    return findBoundary({x: wBeg+dX*x, y: hBeg+dY*(dist-x)},data); 
+                }
+            }
+        }
+        return {x:wBeg+dX*10,y:wEnd+dY*10,width:10,height:10};
+    }
+
+    function findRectsDir(wBeg, wEnd, hBeg, hEnd){
+        console.log(wBeg, wEnd, hBeg, hEnd,'---------------------------');
+        var dX = (hBeg < hEnd) ? 1 : -1;
+        var dY = (wBeg < wEnd) ? 1 : -1;
+        var data=ctx.getImageData(Math.min(wBeg,wEnd),Math.min(hBeg,hEnd),Math.max(wBeg,wEnd),Math.max(hBeg,hEnd)).data;
+        for(var dist = 0; dist < (Math.abs(wBeg-wEnd)+Math.abs(hBeg-hEnd))/2; dist++){
+            for(x = 0; x <= dist; x++){
+                if(xyIsInImage(data,hBeg+dX*x,wBeg+dY*(dist-x))){
+                    h = findBoundary({x: wBeg+dY*(dist-x), y: hBeg+dX*x},data, dX, dY, Math.max(wBeg,wEnd), Math.max(hBeg,hEnd));
+                    if(h.width>=10 && h.height>=10){
+                        //ctx.fillRect(h.x-2,h.y-2,h.width+4,h.height+4);
+                        console.log(h, dX, dY);
+                        return h;
+                    }
+                }
+            }
+        }
+        return {x:wBeg+dY*10,y:hBeg+dX*10,width:10,height:10};
+    }
+    function findRectsOld(wBeg, wEnd, hBeg, hEnd){
+        console.log(wBeg, wEnd, hBeg, hEnd,'---------------------------');
+        var dX = (hBeg < hEnd) ? 1 : -1;
+        var dY = (wBeg < wEnd) ? 1 : -1;
+        var data=ctx.getImageData(Math.min(wBeg,wEnd),Math.min(hBeg,hEnd),Math.max(wBeg,wEnd),Math.max(hBeg,hEnd)).data;
+        var perf,h;
+        for(var distSize = 99; distSize < (Math.abs(wBeg-wEnd)+Math.abs(hBeg-hEnd))/2; distSize = Math.min((Math.abs(wBeg-wEnd)+Math.abs(hBeg-hEnd))/2, distSize+100)){
+            perf = undefined;
+            for(var dist = distSize-99; dist <= distSize; dist++){
+                for(x = 0; x <= dist; x++){
+                    if(xyIsInImage(data,hBeg+dX*x,wBeg+dY*(dist-x))){
+                        h = findBoundary({x: wBeg+dY*(dist-x), y: hBeg+dX*x},data);
+                        if(h.width>=10 && h.height>=10){
+                            if(perf == undefined) perf = h;
+                            else if(perf.height < h.height && perf.width < h.width ) perf = h;
+                        }
+                    }
+                }
+            }
+            console.log(distSize, perf);
+            if(perf != undefined) return perf;
+        }
+        return {x:wBeg+dY*10,y:hBeg+dX*10,width:10,height:10};
+    }
+    function findRects(){
+        var rects = [];
+        rects.push(findRectsDir(10   , cw/2,  10,  ch/2));   // top left
+        rects.push(findRectsDir(cw-10, cw/2,  10,  ch/2));  // top right
+        rects.push(findRectsDir(10   , cw/2,ch-10, ch/2));  // bottom left
+        rects.push(findRectsDir(cw-10, cw/2,ch-10, ch/2));  // bottom left
+        return rects;
+    }
+
+    function dist(a,b,c,d){
+        return Math.abs(c-a)+Math.abs(d-b);
+    }
+
+    console.log(ctx.getContextAttributes());
+    var rects = findRects();
+    console.log(rects);
+    var obj =  [convertRectToPercent(rects[0],cw,ch), 
+                convertRectToPercent(rects[1],cw,ch),
+                convertRectToPercent(rects[2],cw,ch),
+                convertRectToPercent(rects[3],cw,ch)];
+    console.log(obj);
+    return obj;
+}
+
 
 function convertRectToPercent(rect,cw,ch){
     return {x: (rect.x+rect.width/2)/cw,
@@ -95,7 +309,7 @@ function contrastImage(imageData, contrast) {  // contrast as an integer percent
 }
 
 function cropImage(canvas, info, ratio){
-    var ctx=canvas.getContext("2d");
+    var ctx=canvas.getContext("2d",{ willReadFrequently: true });
     cw=canvas.width-1;
     ch=canvas.height-1;
     var imageData = ctx.getImageData(0, 0, cw, ch);
@@ -128,7 +342,7 @@ function cropImage(canvas, info, ratio){
 }
 
 function croppedImageWhitespaceRect(canvas){
-    var ctx=canvas.getContext("2d");
+    var ctx=canvas.getContext("2d",{ willReadFrequently: true });
     cw=canvas.width-1;
     ch=canvas.height-1;
     var imageData = ctx.getImageData(0, 0, cw, ch);
@@ -190,7 +404,7 @@ function setColorInData(data, i,j,color,cw){
 }
 
 function drawSeparetingLines(canvas){
-    var ctx=canvas.getContext("2d");
+    var ctx=canvas.getContext("2d",{ willReadFrequently: true });
     cw=canvas.width;
     ch=canvas.height;
     var imageData = ctx.getImageData(0, 0, cw, ch);
