@@ -3,7 +3,7 @@
 $DEFAULT_CONDITION = 'Condition';
 
 class Question{
-  public ?array $subq = null;
+  public $subq = null;
 
   public function getQuestion($indexArr){
     if(count($indexArr) == 0){
@@ -71,9 +71,9 @@ class Question{
 
 
 class QuestionContent extends Question{
-  public ?string $type;
-  public ?float $points;
-  public ?string $answer;
+  public $type = null;
+  public $points = null;
+  public $answer = null;
 
   public function __construct($typeI){
     global $DEFAULT_CONDITION;
@@ -119,9 +119,9 @@ class QuestionContent extends Question{
 }
 
 class QuestionResponse extends Question{
-  public ?int $status;
-  public ?string $answer;
-  public ?array $subq = null;
+  public $status = null;
+  public $answer = null;
+  public $subq = null;
 
   function __construct($typeI){
     switch($typeI){
@@ -217,12 +217,12 @@ class QuestionResponse extends Question{
 }
 
 class QuestionForm extends Question{
-  public ?float $left;
-  public ?float $top;
-  public ?float $width;
-  public ?float $height;
-  public ?float $page;
-  public ?array $subq;
+  public $left = null;
+  public $top = null;
+  public $width = null;
+  public $height = null;
+  public $page = null;
+  public $subq = null;
   public function __construct($type){
     switch($type){
     case 'Single':

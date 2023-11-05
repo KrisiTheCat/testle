@@ -44,6 +44,7 @@
 						<div class="draggable-div" draggable="true">
 							<canvas id="handCheckOpenAttCanvas" height="0"></canvas>
 						</div>
+						<p class="handCheckOpenTopError"></p>
 					</div>
 					<div class="basketsDiv">
 						<div class="basketAnswerType" id="basket0">

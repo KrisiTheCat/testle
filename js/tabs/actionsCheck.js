@@ -421,8 +421,7 @@ function displayPage(pageId, url, justChanged){
     $('#attendeePageDiv' + pageId).find('.attendeeUploadBtn').hide();
     $('#attendeePageDiv' + pageId).find('img').first().attr('src',url);
     if(justChanged){
-        console.log(justChanged);
-        console.log($('#attendeePageDiv' + pageId));
+        $('#attendeePageDiv' + pageId).find('.emptyPageOverlay').hide();
         $('#attendeePageDiv' + pageId).find('img').first().load(function(){
             console.log("HERE");
             extractFromPage(pageId);
@@ -553,7 +552,7 @@ function extractFromPage(pageId){
 
 function checkQuestion(formPageID, form, content, image, code){
     var answerArr = [];
-    if(form!=undefined && form!=null && 'subq' in form){
+    if(form!=undefined && form!=null && 'subq' in form && form.subq != null){
         for (var qId in form['subq']) {
             qId = parseInt(qId);
             var arr = checkQuestion(

@@ -2,10 +2,10 @@ const STATUS_COUNT = 4;
 
 function containsToBeChecked(response){
     if(!response) return false;
-    if('status' in response){
+    if('status' in response && response.status != null){
         return response['status'] == 3;
     }
-    if(!('subq' in response)){
+    if(!('subq' in response && response.subq != null)){
         for(var module in response){
             if(module == Number(module)){
                 if(containsToBeChecked(response[module])){
@@ -68,7 +68,7 @@ function calcPoints(response, content){
         if(response['status'] == 1) return content['points'];
         return 0;
     }
-    if(!('subq' in response)){
+    if(!('subq' in response && form.subq != null)){
         var ans = 0;
         for(var module in response){
             if(module == Number(module)){
@@ -85,7 +85,7 @@ function maxPoints(content){
     if('points' in content){
         return content['points'];
     }
-    if(!('subq' in content)){
+    if(!('subq' in content && form.subq != null)){
         var ans = 0;
         for(var module in content){
             ans += maxPoints(content[module]);
@@ -100,7 +100,7 @@ function countQuestions(content){
     if('answer' in content || 'page' in content || ('type' in content && content.type == 'Descriptive')){
         return 1;
     }
-    if(!('subq' in content)){
+    if(!('subq' in content && form.subq != null)){
         var ans = 0;
         for(var module in content){
             if(module == Number(module)){
@@ -116,7 +116,7 @@ function getQuestion(form, code){
     if(!form) return -1;
     if(code.length == 0) return form;
     var ind = decodeIds(code);
-    if(!('subq' in form)){
+    if(!('subq' in form && form.subq != null)){
         if(!form[ind[0]]) return -1;
         return getQuestion(form[ind[0]], encodeIds(ind[1]));
     }
@@ -127,7 +127,7 @@ function getQuestionPage(form, code){
     if(!form) return -1;
     if(code.length == 0) return form['page'];
     var ind = decodeIds(code);
-    if(!('subq' in form)){
+    if(!('subq' in form && form.subq != null)){
         if(!form[ind[0]]) return -1;
         return getQuestionPage(form[ind[0]], encodeIds(ind[1]));
     }

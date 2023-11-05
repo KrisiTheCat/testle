@@ -41,6 +41,7 @@ function getStatus(response){
   if(!response['images'] || window.pageInfo.length != Object.keys(response['images']).length){
       return ATTENDEE_STATUS.NO_PHOTO;
   }
+  console.log(containsToBeChecked(response));
   if(containsToBeChecked(response)){
       return ATTENDEE_STATUS.CHECKING;
   }

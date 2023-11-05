@@ -113,7 +113,7 @@ function startDescrCheckForAttendee(){
         }
         else {
             $('.handCheckDescrNoPhoto').html(
-                `No image of page ${pageId+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
+                `No image of page ${parseInt(pageId)+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
         }
     }
     else {
@@ -166,13 +166,14 @@ function startOpenCheckForAttendee(){
         $('.handCheckOpenTop').find('small').first().hide();
         $('#handCheckOpenAttCanvas').hide();
         $('.handCheckOpenTop').find('p').first().show();
+        $('.handCheckOpenTop').find('.handCheckOpenTopError').show();
         if(typeof pageId == 'undefined'){
-            $('.handCheckOpenTop').html(
+            $('.handCheckOpenTop').find('.handCheckOpenTopError').html(
                 `<p>Missing location of question. Fix <b><a href='../form'>here</a></b></p>`);
         }
         else {
-            $('.handCheckOpenTop').html(
-                `No image of page ${pageId+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
+            $('.handCheckOpenTop').find('.handCheckOpenTopError').html(
+                `No image of page ${parseInt(pageId)+1} upload. Fix <b><a href='../check/?attendee=${attendeeID}'>here</a></b>`);
         }
     }
     else {
@@ -180,6 +181,7 @@ function startOpenCheckForAttendee(){
         $('.handCheckOpenTop').find('img').first().show();
         $('.handCheckOpenTop').find('small').first().show();
         $('.handCheckOpenTop').find('p').first().hide();
+        $('.handCheckOpenTop').find('.handCheckOpenTopError').hide();
         $.ajax({
             url: '',
             type: 'post',
@@ -195,6 +197,8 @@ function startOpenCheckForAttendee(){
                     var width = image.naturalWidth;
                     var height = image.naturalHeight;
                     var questionCanvas = document.getElementById('handCheckOpenAttCanvas');
+                    console.log(questionCanvas);
+                    console.log(krisi);
                     questionCanvas.width = krisi.width*width;
                     questionCanvas.height = krisi.height*height;
                     var questionCanvasCxt = questionCanvas.getContext("2d");
@@ -271,12 +275,12 @@ $(document).on('click','.handCheckQuestionDiv', function(e){
         currChecking.checkPoints = [];
         currChecking.checkStatus = [];
         for(var i = 0; i < currChecking.questionC['subq'].length; i++){
-            $(` <div>
+            $(` <div data-checkid="` + i + `" class="handCheckDescrCheckDiv">
                     <div>
                         <img src="${window.srcPath}/img/iconStatus1.png">
                     </div>
-                    <input id="handCheckDescrCheck` + i + `" data-checkid="` + i + `" class="handCheckDescrCheck check_box" type="checkbox">
-                    <label for="handCheckDescrCheck` + i + `">` + currChecking.questionC['subq'][i]['answer'] + `</label>
+                    <input id="handCheckDescrCheck${i}" class="handCheckDescrCheck check_box" type="checkbox">
+                    <label for="handCheckDescrCheck${i}">${currChecking.questionC['subq'][i]['answer']}</label>
                 </div>`).appendTo('#handCheckDescrChecks');
                 currChecking.checkPoints.push(0);
                 currChecking.checkStatus.push(0);
@@ -287,15 +291,17 @@ $(document).on('click','.handCheckQuestionDiv', function(e){
     $("#responseOfId").val(allToCheckQuestions[code][currChecking.attInArrId][0]).change();
 });
 
-$(document).on('change', '.handCheckDescrCheck', function(){
+$(document).on('click', '.handCheckDescrCheckDiv', function(){
     var checkID = parseInt($(this).data('checkid'));
-    if($(this).is(":checked")){
-        $(this).parent().addClass('completedTask');
+    var check = $(this).find('.handCheckDescrCheck');
+    check.prop("checked", !check.prop("checked"));
+    if(check.is(":checked")){
+        check.parent().addClass('completedTask');
         currChecking.checkPoints[checkID] = parseInt(currChecking.questionC['subq'][checkID]['points']);
         currChecking.checkStatus[checkID] = 1;
     }
     else {
-        $(this).parent().removeClass('completedTask');
+        check.parent().removeClass('completedTask');
         currChecking.checkPoints[checkID] = 0;
         currChecking.checkStatus[checkID] = 0;
     }

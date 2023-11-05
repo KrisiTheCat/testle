@@ -7,6 +7,7 @@ function initForm(){
     form = window.formKrisi;
     initQuestionTabs();
 
+    console.log(window.pageInfo);
     if(window.pageInfo.length == 0){
         $('#noPDFselected').show();
         $('#formViewRibbon').hide();
@@ -180,7 +181,7 @@ function initForm(){
                         cv.imshow('imageCanvas', image);
                         image.delete();
                         dataURLs.push({imgURL:document.getElementById('pdf-canvas-' + page).toDataURL("image/png"),
-                                        edges: find4Edges(document.getElementById("imageCanvas"))});
+                                        edges: find4Edges3(document.getElementById("imageCanvas"))});
                     }
                     $('#pdf-main-container').modal('hide');
                     $('#analysingLoader').hide();
@@ -316,7 +317,7 @@ function checkQuestionRecursive(resps, ind, formQ, contentQ, code, ans){
     
 function drawQuestion(form, canvas, visiblePageId){
     if(form == null) return;
-    if('subq' in form){
+    if('subq' in form && form.subq != null){
         Object.values(form['subq']).forEach(sub => 
             drawQuestion(sub,canvas, visiblePageId)
         );
@@ -525,11 +526,12 @@ function addQuestionTab(moduleID, indArr, id){
 
 function getValueQuestionRectCoords(form, indArr){
     if(indArr.length == 0){
+        if(form.page == null) return undefined;
         return form;
     }
     var indArr2 = JSON.parse(JSON.stringify(indArr));
     var id = indArr2.shift();
-    if(form!=undefined && 'subq' in form && id in form['subq']) return getValueQuestionRectCoords(form['subq'][id], indArr2);
+    if(form!=undefined && form.subq != null && id in form['subq'] ) return getValueQuestionRectCoords(form['subq'][id], indArr2);
     else return undefined;
 }
 function setValueQuestionRectCoords(form, indArr, val){
@@ -545,7 +547,7 @@ function setValueQuestionRectCoords(form, indArr, val){
     var indArr2 = JSON.parse(JSON.stringify(indArr));
     var id = indArr2.shift();
     if(form === undefined) form = {};
-    if(!('subq' in form)) form['subq'] = {};
+    if(!('subq' in form && form.subq != null)) form['subq'] = {};
     if(!(id in form['subq'])) form['subq'][id] = {};
     form['subq'][id] = setValueQuestionRectCoords(form['subq'][id], indArr2, val);
     return form;
