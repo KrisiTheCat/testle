@@ -126,6 +126,15 @@ include_once( get_template_directory() . '-child/php/actionsResponseEdit.php');
 include_once( get_template_directory() . '-child/php/actionsUsers.php');
 include_once( get_template_directory() . '-child/php/actionsTest.php');
 
+
+
+// $test1 = new Test1();
+// var_dump($test1);
+// var_dump(json_encode($test1));
+// $test2 = new Test2();
+// var_dump($test2);
+// var_dump(json_encode($test2));
+
 function example_enqueue_styles() {
   wp_enqueue_style('parent-theme', get_template_directory_uri() .'/style.css');
   wp_enqueue_style('meta_data_style', get_template_directory_uri() . '-child/css/admin_style.css');

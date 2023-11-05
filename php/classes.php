@@ -76,8 +76,7 @@ class QuestionContent extends Question{
   public ?string $answer;
 
   public function __construct($typeI){
-    
-  global $DEFAULT_CONDITION;
+    global $DEFAULT_CONDITION;
     $this->type = $typeI;
     $this->points = 1;
     switch($typeI){
