@@ -2040,6 +2040,7 @@ input[type=text].type{
   right: 0px;
   bottom: 0px;
   box-shadow: 3px 3px 9px var(--colorShadow);
+  cursor: pointer;
 }
 .changeImage{
   display: block;
@@ -2077,7 +2078,7 @@ input[type=text].type{
   left: 0px;
   transform: translate(-50%,-50%);
   z-index: 4;
-  cursor: grab;
+  cursor: pointer;
 }
 
 .formPagesBtn{

@@ -134,7 +134,7 @@ function find4Edges3(canvas){
         while(pos.valid){
             var bb=findBoundary(pos,data);
             // console.log("Found target at "+bb.x+"/"+bb.y+", size: "+bb.width+"/"+bb.height);     
-            rects.push(bb);       
+            if(bb.height>=15 && bb.width>=15) rects.push(bb);       
             ctx.fillStyle=bkFillColor;
             ctx.fillRect(bb.x-2,bb.y-2,bb.width+4,bb.height+4);
             data=ctx.getImageData(0,0,cw,ch).data;

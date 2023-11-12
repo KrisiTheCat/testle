@@ -76,7 +76,7 @@
 						</div>
 						<img id="uploadImageImg" height="3000px"></img>
 						<p style="padding-left: 16px;    font-size: 14px;">Please drag the targets so that they point to the four black rectangles located in the corners of the sheet.</p>
-						<p id="cutPage" class="elegantBtn">Submit</p>
+						<button id="cutPage" class="elegantBtn">Submit</button>
 					</div>
 				</div>
 			</div>

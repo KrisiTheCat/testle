@@ -192,7 +192,7 @@ function initForm(){
                                 "postID" : window.postID,
                                 "imgBase64": dataURLs,},
                         success: function(data) { 
-                            location.reload();
+                            //location.reload();
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
                             toastr.error("Unable to save images");

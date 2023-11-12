@@ -211,8 +211,8 @@ function initWCNchart(data){
         label: "",
         data: [data[1]*100/sum,data[0]*100/sum,data[2]*100/sum],
         backgroundColor: [
-          style.getPropertyValue('--colorWrong'),
           style.getPropertyValue('--colorCorrect'),
+          style.getPropertyValue('--colorWrong'), 
           style.getPropertyValue('--colorNotFilled'),
         ],
       }]

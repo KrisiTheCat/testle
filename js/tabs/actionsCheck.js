@@ -399,7 +399,7 @@ function generateChQuestionRow(code, answer, mypoints, points, status){
 function answerTemplateInit(){
     answerTemplateCanvases[3] = document.getElementById('diffrencesCanvas');
     for(var i =0 ; i < 3; i++){
-        jQuery(`<img width=40 class="answerTemplImage invisible" data-id="` + i + `" src="` + window.srcPath + `/img/answers3/answer` + i + `.jpg"/>
+        jQuery(`<img width=40 class="answerTemplImage invisible" data-id="` + i + `" src="` + window.srcPath + `/img/answers5/answer` + i + `.jpg"/>
         <canvas class="answerCanvas invisible" id="answerTemplCanvas` + i + `"></canvas>`)
         .appendTo('#usedForChecking');
     }
@@ -668,12 +668,12 @@ function answerByCircleStatus(stats){
 function statusOfCircle(canvas){
     var black = countBlackPixels(canvas);
     console.log(black);
-    if(black < blackanswerTemplateBlacks[0]) return 0;
-    // var diff0 = Math.abs(black-blackanswerTemplateBlacks[0]);
+    var diff0 = Math.abs(black-blackanswerTemplateBlacks[0]);
     var diff1 = Math.abs(black-blackanswerTemplateBlacks[1]);
     var diff2 = Math.abs(black-blackanswerTemplateBlacks[2]);
-    if(diff2 < diff1) return 2;
-    return 1;
+    if(black<blackanswerTemplateBlacks[1]-10) return 0;
+    if(diff1 < diff2) return 1;
+    return 2;
 }
 function scaleTo(canvas, size){
     var cw = canvas.width, ch = canvas.height, cxt = canvas.getContext("2d", { willReadFrequently: true });
@@ -884,7 +884,7 @@ function initStage2(){
         }
     });
 
-    $(document).on('click', '#cutPage', function(){
+    $(document).on('touchstart click', '#cutPage', function(){
         var $this = $(this);
         var steps = $('.progressStepsHeader').find('.step');
         steps.eq(0).attr("class","step finishedStep");
@@ -1018,6 +1018,7 @@ function uploadAnswersAsPdf(){
 
     function cutPDFPage(canvas, pageId, edges){
         console.log(edges);
+        // return;
         var width = canvas.width;
         var height = canvas.height;
         var img = document.getElementById('imageImg');
