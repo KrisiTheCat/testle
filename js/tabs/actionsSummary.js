@@ -15,6 +15,8 @@ function initNotifCircles(){
     var [noPhoto, handCheckAll, handCheckToDo] = findNoPhotos();
     handCheckAll*=students;
 
+    console.log(handCheckToDo);
+    console.log($('#handcheckLink').parent().find('.notifCircle'));
     setDataInNotif($('#attendeesLink').parent().find('.notifCircle'), noPhoto);
     setDataInNotif($('#handcheckLink').parent().find('.notifCircle'), handCheckToDo);
 
@@ -43,7 +45,8 @@ function initFormCircle(){
 
 function setDataInNotif(notif, data){
     if(data > 100) data = '99+';
-    else if(data != 0){
+    
+    if(data != 0){
         notif.html(data);
         notif.show();
     }
