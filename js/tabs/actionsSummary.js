@@ -75,12 +75,12 @@ function initSummary(){
     }
 
     $('#noPhotoTask').find('.additionalData').html(`${sumInfo.students -sumInfo.noPhoto} | ${sumInfo.students}`);
-    if(sumInfo.noPhoto != 0 || sumInfo.students != 0){
+    if(sumInfo.noPhoto != 0 ){
         $('#noPhotoTask').find('.progress-bar').css('width', Math.round(((sumInfo.students - sumInfo.noPhoto)/sumInfo.students)*100) + '%');
     }else{$('#noPhotoTask').find('.progress').hide();}
 
     $('#handCheckTask').find('.additionalData').html(`${sumInfo.handCheckAll-sumInfo.handCheckToDo} | ${sumInfo.handCheckAll}`);
-    if(sumInfo.handCheckToDo != 0 || sumInfo.students != 0){
+    if(sumInfo.handCheckToDo != 0){
         $('#handCheckTask').find('.progress-bar').css('width', Math.round(((sumInfo.handCheckAll-sumInfo.handCheckToDo)/sumInfo.handCheckAll)*100) + '%');
     }
     else{

@@ -1,5 +1,6 @@
 var $ = jQuery;
 var allToCheckQuestions = {};
+var keyUsed = false;
 
 function initHandCheck(){
     allToCheckQuestions = {};
@@ -68,11 +69,13 @@ function initButtonForQuestion(code){
 }
 
 function updatePercentage(code){
+    console.log(code);
     var attCount = Object.keys(window.responsesKrisi).length-1;
     var count = 0;
     for(var arr of allToCheckQuestions[code]){
         if(arr[1] === ATTENDEE_STATUS.FINISHED) count++;
     }
+    console.log(count);
     $('#handCheckQuestionDiv' + code).find('.handCheckQuestionDivOverlay').css('width', parseInt((count)*100/attCount) + '%');
     $('#handCheckQuestionDiv' + code).find('.handCheckQuestionInfoCheckedDiv').find('h4').html((count) + '|' + attCount)
 }
@@ -88,7 +91,6 @@ function startDescrCheckForAttendee(){
     var pageId = currChecking.questionF['page'];
     
     var resp = getQuestion(window.responsesKrisi[currChecking.attendeeID], currChecking.code);
-    console.log(resp.subq);
     for(var i = 0; i < currChecking.checkStatus.length; i++){
         if(resp['subq'][i].status == STATUS.CORRECT){
             $('#handCheckDescrCheck'+i).prop("checked", true);
@@ -197,8 +199,6 @@ function startOpenCheckForAttendee(){
                     var width = image.naturalWidth;
                     var height = image.naturalHeight;
                     var questionCanvas = document.getElementById('handCheckOpenAttCanvas');
-                    console.log(questionCanvas);
-                    console.log(krisi);
                     questionCanvas.width = krisi.width*width;
                     questionCanvas.height = krisi.height*height;
                     var questionCanvasCxt = questionCanvas.getContext("2d");
@@ -433,7 +433,10 @@ function handleBasketDrop(basketId) {
             success: function(data) {
                 window.responsesKrisi = JSON.parse(data['responses']);
                 currChecking.seshResults[newStatus]++;
+                
                 console.log(`${window.usersKrisi[attendeeID]['name']}'s answer to ${currChecking.moduleID}.${encodeIds(currChecking.indArr)} is ` + Object.keys(STATUS).find(key => STATUS[key] === newStatus));
+                allToCheckQuestions[currChecking.code][currChecking.attInArrId][1] = ATTENDEE_STATUS.FINISHED;
+                updatePercentage(currChecking.code);
                 continueNextAtt();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -533,25 +536,39 @@ function addToCheckForAttendee(all, arr, attID){
 }
 
 $(document).on('keydown',function(e) {
-    if(currChecking.type == 'Opened'){
-        if(e.which == 87) { // btn W
-            handleBasketDrop('basket0');
+    // console.log(keyUsed);
+    if(!keyUsed){
+        if(currChecking.type == 'Opened'){
+            if(e.which == 87) { // btn W
+                keyUsed = true;
+                handleBasketDrop('basket0');
+            }
+            if(e.which == 67) { // btn C
+                keyUsed = true;
+                handleBasketDrop('basket1');
+            }
+            if(e.which == 69) { // btn E
+                keyUsed = true;
+                handleBasketDrop('basket2');
+            }
         }
-        if(e.which == 67) { // btn C
-            handleBasketDrop('basket1');
-        }
-        if(e.which == 69) { // btn E
-            handleBasketDrop('basket2');
+        if(currChecking.type == 'Opened' || currChecking.type == 'Descriptive'){
+            if(e.which == 37) { // <-
+                keyUsed = true;
+                continuePrevAtt();
+            }
+            if(e.which == 39) { // ->
+                // console.log(keyUsed);
+                keyUsed = true;
+                continueNextAtt();
+            }
         }
     }
-    if(currChecking.type == 'Opened' || currChecking.type == 'Descriptive'){
-        if(e.which == 37) { // <-
-            $('.handCheckArrow').first().click();
-        }
-        if(e.which == 39) { // ->
-            $('.handCheckArrow').last().click();
-        }
-    }
+});
+
+$(document).on('keyup',function(e) {
+    keyUsed = false;
+    // console.log(keyUsed+" keyup");
 });
 
 function doBounce(element, times, distance, speed) {
