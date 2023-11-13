@@ -64,11 +64,11 @@ function amountToBeChecked(response, content){
 
 function calcPoints(response, content){
     if(!response) return 0;
-    if('status' in response){
+    if('status' in response && response.status != null){
         if(response['status'] == 1) return content['points'];
         return 0;
     }
-    if(!('subq' in response && form.subq != null)){
+    if(!('subq' in response && response.subq != null)){
         var ans = 0;
         for(var module in response){
             if(module == Number(module)){

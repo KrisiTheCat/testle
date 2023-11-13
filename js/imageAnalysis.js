@@ -151,9 +151,9 @@ function find4Edges3(canvas){
     var w5 = Math.round(cw/5);
     var h5 = Math.round(ch/5);
     findRects(0, w5, 0, h5, rects);
-    findRects(0, w5, h5*4, ch, rects);//!
-    findRects(w5*4, cw, 0, h5, rects);
-    findRects(w5*4, cw, h5*4, ch, rects);
+    findRects(0, w5, h5*3, ch, rects);//!
+    findRects(w5*3, cw, 0, h5, rects);
+    findRects(w5*3, cw, h5*3, ch, rects);
     var tl = 0, tr = 0, bl = 0, br = 0;
     for(i = 0; i < rects.length;i++){
         if(dist(rects[i].x,rects[i].y,0,0) < 
@@ -462,10 +462,14 @@ function countWhite(data, checked, x, y, cw, ch){
     if(checked[x][y] == true) return 0;
     if(getRGBsum(x, y, data,cw) < 600) return 0;
     checked[x][y] = true;
-    return countWhite(data, checked, x+1, y, cw, ch) + 
+    return countWhite(data, checked, x+1, y, cw, ch) +
             countWhite(data, checked, x-1, y, cw, ch) +
             countWhite(data, checked, x, y+1, cw, ch) +
-            countWhite(data, checked, x, y-1, cw, ch) + 1;
+            countWhite(data, checked, x, y-1, cw, ch) + 1 +
+            countWhite(data, checked, x-1, y-1, cw, ch) +
+            countWhite(data, checked, x+1, y-1, cw, ch) +
+            countWhite(data, checked, x-1, y+1, cw, ch) +
+            countWhite(data, checked, x+1, y+1, cw, ch);
 }
 
 function countBlackPixels(ctx){
@@ -476,9 +480,11 @@ function countBlackPixels(ctx){
     var checked = Array(cw).fill().map(() => Array(ch));
     var ans = 0, curr;
     //console.log('----------------------------------------------------------------');
-    var xMin = cw/5, xMax = 4*cw/5, yMin = ch/5, yMax = 4*ch/5;
-    for (var i = 2*cw/5; i <= 3*cw/5; i++) {
-        for (var j = 2*ch/5; j <= 3*ch/5; j++) {
+    var w5 = Math.round(cw/5);
+    var h5 = Math.round(ch/5);
+    var xMin = w5, xMax = 4*w5, yMin = h5, yMax = 4*h5;
+    for (var i = 2*w5; i <= 3*w5; i++) {
+        for (var j = 2*h5; j <= 3*h5; j++) {
             if(i == 16 && j == 16) curr = countBlack(data, checked, i, j, xMin, xMax, yMin, yMax,cw,true);
             else curr = countBlack(data, checked, i, j, xMin, xMax, yMin, yMax,cw,false);
             if(ans < curr){
@@ -500,7 +506,11 @@ function countBlack(data, checked, x, y, xMin, xMax, yMin, yMax,cw,fl){
     return countBlack(data, checked, x+1, y, xMin, xMax, yMin, yMax,cw,fl) + 
             countBlack(data, checked, x-1, y, xMin, xMax, yMin, yMax,cw,fl) +
             countBlack(data, checked, x, y+1, xMin, xMax, yMin, yMax,cw,fl) +
-            countBlack(data, checked, x, y-1, xMin, xMax, yMin, yMax,cw,fl) + 1;
+            countBlack(data, checked, x, y-1, xMin, xMax, yMin, yMax,cw,fl) +
+            countBlack(data, checked, x-1, y-1, xMin, xMax, yMin, yMax,cw,fl) +
+            countBlack(data, checked, x-1, y+1, xMin, xMax, yMin, yMax,cw,fl) +
+            countBlack(data, checked, x+1, y-1, xMin, xMax, yMin, yMax,cw,fl) +
+            countBlack(data, checked, x+1, y+1, xMin, xMax, yMin, yMax,cw,fl) + 1;
 }
 
 function drawBlackRect(data, xMin, xMax, yMin, yMax, cw, ch){

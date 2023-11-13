@@ -1,8 +1,8 @@
 var $ = jQuery;
 var tempPath;
 var attendeeID = undefined;
-var answerTemplateCanvases = Array(4);
-var blackanswerTemplateBlacks = Array(3);
+var answerTemplateCanvases = Array(5);
+var blackanswerTemplateBlacks = Array(4);
 var divStatus;
 
 var changingPageId = -1;
@@ -397,23 +397,28 @@ function generateChQuestionRow(code, answer, mypoints, points, status){
 }
 
 function answerTemplateInit(){
-    answerTemplateCanvases[3] = document.getElementById('diffrencesCanvas');
-    for(var i =0 ; i < 3; i++){
-        jQuery(`<img width=40 class="answerTemplImage invisible" data-id="` + i + `" src="` + window.srcPath + `/img/answers5/answer` + i + `.jpg"/>
-        <canvas class="answerCanvas invisible" id="answerTemplCanvas` + i + `"></canvas>`)
-        .appendTo('#usedForChecking');
+    answerTemplateCanvases[4] = document.getElementById('diffrencesCanvas');
+    for(var i =0 ; i < 4; i++){
+        answerTemplateCanvases[i] = Array(3);
+        blackanswerTemplateBlacks[i] = Array(3);
+        for(var j =0 ; j < 3; j++){
+            jQuery(`<img width=40 class="answerTemplImage invisible" data-ans="${i}" data-id="${j}" src="` + window.srcPath + `/img/answers5/answer${i}_${j}.jpg"/>
+            <canvas class="answerCanvas invisible" id="answerTemplCanvas${i}${j}"></canvas>`)
+            .appendTo('#usedForChecking');
+        }
     }
     $( ".answerTemplImage" ).on( "load", function() {
         var id = parseInt($(this).data('id'));
-        answerTemplateCanvases[id] = document.getElementById('answerTemplCanvas'+id);
-        answerTemplateCanvases[id].width = 40;
-        answerTemplateCanvases[id].height = 40;
-        var ctx = answerTemplateCanvases[id].getContext("2d", { willReadFrequently: true });
+        var ans = parseInt($(this).data('ans'));
+        answerTemplateCanvases[ans][id] = document.getElementById('answerTemplCanvas'+ans+''+id);
+        answerTemplateCanvases[ans][id].width = 40;
+        answerTemplateCanvases[ans][id].height = 40;
+        var ctx = answerTemplateCanvases[ans][id].getContext("2d", { willReadFrequently: true });
         ctx.drawImage(this, 0,0,40,40);
         // var imageData = ctx.getImageData(0,0,40,40);
         // drawBlackRect(imageData.data, 13,25,12,27,40, 40);
         // ctx.putImageData(imageData,0,0);
-        blackanswerTemplateBlacks[id] = countBlackPixels(ctx);
+        blackanswerTemplateBlacks[ans][id] = countBlackPixels(ctx);
     });
 }
 
@@ -561,6 +566,7 @@ function checkQuestion(formPageID, form, content, image, code){
                 content['subq'][qId], 
                 image,
                 code + '_' + qId);
+            // if(code + '_' + qId == '0_14') return;
             //  if(code == 0 && qId==1)return;
             answerArr = answerArr.concat(arr);
         }
@@ -607,7 +613,7 @@ function checkQuestion(formPageID, form, content, image, code){
                 // questionCanvasCxt.putImageData(imageData,0,0);
 
                 //drawSeparetingLines(questionCanvas);
-                arrStatus.push(statusOfCircle(questionCanvasCxt));
+                arrStatus.push(statusOfCircle(questionCanvasCxt, blackanswerTemplateBlacks[i]));
                 //return;
             }   
             console.log(blackanswerTemplateBlacks);
@@ -665,22 +671,22 @@ function answerByCircleStatus(stats){
     if(ones.length == 1) return ones[0];
     return -1;
 }
-function statusOfCircle(canvas){
+function statusOfCircle(canvas, templateBlacks){
     var black = countBlackPixels(canvas);
     console.log(black);
-    var diff0 = Math.abs(black-blackanswerTemplateBlacks[0]);
-    var diff1 = Math.abs(black-blackanswerTemplateBlacks[1]);
-    var diff2 = Math.abs(black-blackanswerTemplateBlacks[2]);
-    if(black<blackanswerTemplateBlacks[1]-10) return 0;
+    var diff0 = Math.abs(black-templateBlacks[0]);
+    var diff1 = Math.abs(black-templateBlacks[1]);
+    var diff2 = Math.abs(black-templateBlacks[2]);
+    if(black < templateBlacks[1]-10) return 0;
     if(diff1 < diff2) return 1;
     return 2;
 }
 function scaleTo(canvas, size){
     var cw = canvas.width, ch = canvas.height, cxt = canvas.getContext("2d", { willReadFrequently: true });
-    answerTemplateCanvases[3].getContext("2d", { willReadFrequently: true }).drawImage(canvas,0,0);
+    answerTemplateCanvases[4].getContext("2d", { willReadFrequently: true }).drawImage(canvas,0,0);
     canvas.width = size;
     canvas.height = size;
-    cxt.drawImage(answerTemplateCanvases[3],0,0,cw,ch,0,0,size,size);
+    cxt.drawImage(answerTemplateCanvases[4],0,0,cw,ch,0,0,size,size);
 }
 function averageRatio(arr){
     var ratio = {w: 0, h: 0};
@@ -728,7 +734,7 @@ $(document).on('mouseenter', '.photoFieldImg', function(){
         krisi.left*width, krisi.top*height, krisi.width*width, krisi.height*height,
         0,0, krisi.width*width, krisi.height*height);
     $('#hoverPopupPhoto').show();
-    $('#hoverPopupPhoto').css({left: this.getBoundingClientRect().x - 380,
+    $('#hoverPopupPhoto').css({left: this.getBoundingClientRect().x - 480,
                                 top: this.getBoundingClientRect().y - 30});
 });
 $(document).on('mouseleave', '.photoFieldImg', function(){
