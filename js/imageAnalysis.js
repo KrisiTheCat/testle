@@ -495,6 +495,20 @@ function countBlackPixels(ctx){
     ctx.putImageData(imageData, 0,0);
     return ans;
 }
+function getArrData(ctx){
+    var arr = [];
+    var imageData = ctx.getImageData(0, 0, 28, 28);
+    cw=imageData.width;
+    ch=imageData.height;
+	data = imageData.data;
+    for (var i = 0; i < cw; i++) {
+        for (var j = 0; j < ch; j++) {
+            if(getRGBsum(i, j, data,cw) < 600) arr.push(1);
+            else arr.push(0);
+        }
+    }
+    return arr;
+}
   
 function countBlack(data, checked, x, y, xMin, xMax, yMin, yMax,cw,fl){
     // console.log(data, checked, x, y, xMin, xMax, yMin, yMax);

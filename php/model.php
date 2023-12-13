@@ -1,0 +1,8 @@
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json");
+
+// Rest of your code to read and output the JSON file goes here
+
+echo '{"modelTopology":{"class_name":"Sequential","config":{"name":"sequential_1","layers":[{"class_name":"Dense","config":{"units":32,"activation":"relu","use_bias":true,"kernel_initializer":{"class_name":"VarianceScaling","config":{"scale":1,"mode":"fan_avg","distribution":"normal","seed":null}},"bias_initializer":{"class_name":"Zeros","config":{}},"kernel_regularizer":null,"bias_regularizer":null,"activity_regularizer":null,"kernel_constraint":null,"bias_constraint":null,"name":"dense_Dense1","trainable":true,"batch_input_shape":[null,784],"dtype":"float32"}},{"class_name":"Dense","config":{"units":3,"activation":"softmax","use_bias":true,"kernel_initializer":{"class_name":"VarianceScaling","config":{"scale":1,"mode":"fan_avg","distribution":"normal","seed":null}},"bias_initializer":{"class_name":"Zeros","config":{}},"kernel_regularizer":null,"bias_regularizer":null,"activity_regularizer":null,"kernel_constraint":null,"bias_constraint":null,"name":"dense_Dense2","trainable":true}}]},"keras_version":"tfjs-layers 4.14.0","backend":"tensor_flow.js"},"format":"layers-model","generatedBy":"TensorFlow.js tfjs-layers v4.14.0","convertedBy":null,"weightsManifest":[{"paths":["./my-model.weights.bin"],"weights":[{"name":"dense_Dense1/kernel","shape":[784,32],"dtype":"float32"},{"name":"dense_Dense1/bias","shape":[32],"dtype":"float32"},{"name":"dense_Dense2/kernel","shape":[32,3],"dtype":"float32"},{"name":"dense_Dense2/bias","shape":[3],"dtype":"float32"}]}]}';
+?>

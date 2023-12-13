@@ -7,6 +7,7 @@
 <script>
 	window.openedTab = 'check';
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
  <div id="check">
 	<div id="hoverPopupPhoto">
 		<canvas id = "hoverPopupPhotoCanvas"></canvas>

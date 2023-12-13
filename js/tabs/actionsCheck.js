@@ -5,9 +5,27 @@ var answerTemplateCanvases = Array(5);
 var blackanswerTemplateBlacks = Array(4);
 var divStatus;
 
+var testArray = [];
+
 var changingPageId = -1;
 
 var imageInCanvas = false;
+
+let model;
+
+async function init() {
+    (async () => {
+        try
+        {
+            model = await tf.loadLayersModel('http://testle/wp-content/themes/lalita-child/models/12.12.23/model.json');
+        }
+        catch(error)
+        {
+            console.error(error);
+        }
+    })();
+    return 0;
+}
 
 function initCheck(){
 
@@ -58,6 +76,10 @@ function initCheck(){
         $('#photosDiv').html('<p>No form uploaded. Fix <a href="../form">here</p>');
         $('#photosDiv').css('padding-bottom','0px');
     }
+
+    init().then(result => {
+      console.log(result);
+    });
 }
 
 function initAnswerUploadWays(){
@@ -530,6 +552,7 @@ function extractFromPage(pageId){
             m);
         queries = queries.concat(arr);
     }
+    console.log(testArray);
     if(queries.length == 0){
         toastr.info("Please set locations in form");
     }
@@ -613,10 +636,20 @@ function checkQuestion(formPageID, form, content, image, code){
                 // questionCanvasCxt.putImageData(imageData,0,0);
 
                 //drawSeparetingLines(questionCanvas);
-                arrStatus.push(statusOfCircle(questionCanvasCxt, blackanswerTemplateBlacks[i]));
+                scaleTo(questionCanvas,28);
+                var id=statusOfCircleDL(questionCanvasCxt, blackanswerTemplateBlacks[i]);
+                arrStatus.push(id);
+
+                var arr = [0,0,0];
+                arr[id] = 1;
+                testArray.push({
+                    input: JSON.stringify(getArrData(questionCanvasCxt)),
+                    output: JSON.stringify(arr)
+                });
+
                 //return;
             }   
-            console.log(blackanswerTemplateBlacks);
+            //console.log(blackanswerTemplateBlacks);
             console.log(code, arrStatus);
             var answer = answerByCircleStatus(arrStatus);
             //reportedAnswers.push({questionID: questionID, subID: subID, answer:answer});
@@ -673,12 +706,20 @@ function answerByCircleStatus(stats){
 }
 function statusOfCircle(canvas, templateBlacks){
     var black = countBlackPixels(canvas);
-    console.log(black);
+   // console.log(black);
     var diff0 = Math.abs(black-templateBlacks[0]);
     var diff1 = Math.abs(black-templateBlacks[1]);
     var diff2 = Math.abs(black-templateBlacks[2]);
     if(black < templateBlacks[1]-10) return 0;
     if(diff1 < diff2) return 1;
+    return 2;
+}
+function statusOfCircleDL(canvasCxt){
+    const tensor = model.predict(tf.tensor(getArrData(canvasCxt), [1, 784]))
+    const value = tensor.dataSync();
+    //console.log(value);
+    if(value[0]>=value[1] && value[0]>=value[2]) return 0;
+    if(value[1]>=value[2]) return 1;
     return 2;
 }
 function scaleTo(canvas, size){
