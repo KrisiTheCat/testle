@@ -34,7 +34,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="attendeesTable">
+	<div class="attendeesTable sortableTable">
 		<table class="data-table">
 			<thead>
 				<tr>

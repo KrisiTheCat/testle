@@ -95,5 +95,19 @@
 				<p>18 of 20 correct</p>
 			</div>
 		</div>
+		<div id="allQuestionsStats" class="lightBox statsBox">
+			<p>Details about each question</p>
+			<table class="data-table sortableTable">
+				<thead>
+					<tr>
+						<th><button id="code">Question</button></th>
+						<th><button id="right">Correct</button></th>
+						<th><button id="wrong">Wrong</button></th>
+						<th><button id="empty">Not filled</button></th>
+					</tr>
+				</thead>
+				<tbody id="questions-table-content"></tbody>
+			</table>
+		</div>
 	</div>
 </div>

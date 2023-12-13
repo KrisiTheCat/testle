@@ -36,6 +36,7 @@ function initStatsWithTarget(atts, modules){
   initWCNchart(statusC);
   bestWorstQuestion(statusT);
   initRankings(results, modules);
+  importToQuestionsTable(convertQuestionInfoForTable(data, modules));
 
   $('.statsSummaryBox').first().find('p').first().html(atts.length);
   $('.statsSummaryBox').first().find('p').eq(1).html(`of ${Object.keys(window.responsesKrisi).length-1}`);
@@ -242,6 +243,8 @@ function initWCNchart(data){
   };
   $('.questionGeneral').find('div').first().html('<canvas></canvas>')
   new Chart(document.getElementsByClassName('questionGeneral')[0].getElementsByTagName('canvas')[0], graficData);
+  
+  //$('.questionGeneral').find('canvas').eq(0).style('height', '197px');
 }
 
 function bestWorstQuestion(dataG){
@@ -301,6 +304,131 @@ function bestWorstQuestionEinzel(dataG, index, label, color, div){
   new Chart(div.getElementsByTagName('canvas')[0], questionData);
   $(div).find('p').first().html(codeToString(dataG.code));
   $(div).find('p').last().html(`${dataG.times[index]} of ${dataG.sum} ${label.toLowerCase()}`);
+}
+
+function convertQuestionInfoForTable(data, modules){
+  var arr = [];
+  for(modID of modules){
+    for(quesID in window.contentKrisi[modID].subq){
+      if(window.contentKrisi[modID].subq[quesID].subq != null){
+        for( subID in window.contentKrisi[modID].subq[quesID].subq){
+          arr.push({
+            code:codeToString(modID+'_'+quesID+'_'+subID),
+            right:data[modID][quesID][subID][1],
+            wrong:data[modID][quesID][subID][0],
+            empty:data[modID][quesID][subID][2],
+            all:data[modID][quesID][subID][1]+data[modID][quesID][subID][0]+data[modID][quesID][subID][2]
+          });
+        }
+      }
+      else 
+        arr.push({
+          code:codeToString(modID+'_'+quesID),
+          right:data[modID][quesID][1],
+          wrong:data[modID][quesID][0],
+          empty:data[modID][quesID][2],
+          all:data[modID][quesID][1]+data[modID][quesID][0]+data[modID][quesID][2]
+        });
+    }
+  }
+  return arr;
+}
+
+function questionInfoDivEinzel(data){
+  return `<tr>
+      <td>${data.code}</td>
+      <td>${Math.round((data.right/data.all)*100)}%</td>
+      <td>${Math.round((data.wrong/data.all)*100)}%</td>
+      <td>${Math.round((data.empty/data.all)*100)}%</td>
+    </tr>`;
+}
+
+function importToQuestionsTable(data){
+  const tableContent = $("#questions-table-content");
+  const tableButtons = document.querySelectorAll("th button");
+  tableContent.html('');
+   
+  function getTableContent(data){
+    console.log(data);
+    tableContent.html('');
+    for(question of data){
+      tableContent.append(questionInfoDivEinzel(question));
+    }
+  }
+
+   
+  setTimeout(() => {
+    const names = [];
+    Object.values(window.usersKrisi).forEach((user) => {
+      if(user.roles.includes('student') && !(user.id in window.responsesKrisi)){
+        names.push(user.name);
+      }
+    });
+    console.log($("#newAttendeeInput"));
+    $("#newAttendeeInput").unbind().autocomplete({
+      minLength: 0,
+      source: names,
+      select:function(event,ui){
+        $("#newAttendeeInput").val(ui.item.label); 
+        return false;
+      },
+      change: function(event, ui) {
+        if (ui.item == null) {
+          this.setCustomValidity("You must select an attendee");
+        }
+      }});
+  },1000);
+   
+  const sortData = (data, param, direction = "asc") => {
+    tableContent.innerHTML = '';
+    const sortedData =
+      direction == "asc"
+        ? [...data].sort(function (a, b) {
+            if (a[param] < b[param]) {
+              return -1;
+            }
+            if (a[param] > b[param]) {
+              return 1;
+            }
+            return 0;
+          })
+        : [...data].sort(function (a, b) {
+            if (b[param] < a[param]) {
+              return -1;
+            }
+            if (b[param] > a[param]) {
+              return 1;
+            }
+            return 0;
+          });
+  
+    getTableContent(sortedData);
+  };
+   
+  const resetButtons = (event) => {
+    [...tableButtons].map((button) => {
+      if (button !== event.target) {
+        button.removeAttribute("data-dir");
+      }
+    });
+  };
+   
+  getTableContent(data);
+
+  [...tableButtons].map((button) => {
+    button.addEventListener("click", (e) => {
+      resetButtons(e);
+      if(e.target.id!='actions')
+      if (e.target.getAttribute("data-dir") == "desc") {
+        sortData(data, e.target.id, "desc");
+        e.target.setAttribute("data-dir", "asc");
+      } else {
+        sortData(data, e.target.id, "asc");
+        e.target.setAttribute("data-dir", "desc");
+      }
+    });
+  });
+   
 }
 
 function getDataForTargetGroup(atts, modules){

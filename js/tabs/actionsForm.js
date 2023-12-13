@@ -180,6 +180,7 @@ function initForm(){
                         let image = cv.imread(document.getElementById('pdf-canvas-' + page));
                         cv.imshow('imageCanvas', image);
                         image.delete();
+                        console.log(document.getElementById('pdf-canvas-' + page).toDataURL("image/png"));
                         dataURLs.push({imgURL:document.getElementById('pdf-canvas-' + page).toDataURL("image/png"),
                                         edges: find4Edges3(document.getElementById("imageCanvas"))});
                     }
