@@ -335,11 +335,21 @@ function convertQuestionInfoForTable(data, modules){
 }
 
 function questionInfoDivEinzel(data){
+  var r = Math.round((data.right/data.all)*100);
+  var w = Math.round((data.wrong/data.all)*100);
+  var e = 100-r-w;
   return `<tr>
       <td>${data.code}</td>
-      <td>${Math.round((data.right/data.all)*100)}%</td>
-      <td>${Math.round((data.wrong/data.all)*100)}%</td>
-      <td>${Math.round((data.empty/data.all)*100)}%</td>
+      <td>
+      <div class="progress" style="flex:1">
+        <div class="progress-bar correctAnswers" role="progressbar" style="width: ${r}%" aria-valuenow="${r}" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar wrongAnswers" role="progressbar" style="width: ${w}%" aria-valuenow="${w}" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar notfilledAnswers" role="progressbar" style="width: ${e}%" aria-valuenow="${e}" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      </td>
+      <td>${r}%</td>
+      <td>${w}%</td>
+      <td>${e}%</td>
     </tr>`;
 }
 
@@ -364,7 +374,6 @@ function importToQuestionsTable(data){
         names.push(user.name);
       }
     });
-    console.log($("#newAttendeeInput"));
     $("#newAttendeeInput").unbind().autocomplete({
       minLength: 0,
       source: names,
@@ -418,7 +427,7 @@ function importToQuestionsTable(data){
   [...tableButtons].map((button) => {
     button.addEventListener("click", (e) => {
       resetButtons(e);
-      if(e.target.id!='actions')
+      if(e.target.id!='stats')
       if (e.target.getAttribute("data-dir") == "desc") {
         sortData(data, e.target.id, "desc");
         e.target.setAttribute("data-dir", "asc");

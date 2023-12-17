@@ -61,7 +61,7 @@
 	</div>
 	
 	<div class="lightBox statsBox specialQuestions">
-		<div class="lightBox questionGeneral statsBox">
+		<div class="lightBox questionGeneral statsBox" style="    height: 256px;">
 			<p>From all given answers:</p>
 			<div></div>
 		</div>
@@ -100,10 +100,11 @@
 			<table class="data-table sortableTable">
 				<thead>
 					<tr>
-						<th><button id="code">Question</button></th>
-						<th><button id="right">Correct</button></th>
-						<th><button id="wrong">Wrong</button></th>
-						<th><button id="empty">Not filled</button></th>
+						<th width="110px"><button id="code">Question</button></th>
+						<th style="flex:1"><button id="stats">Stats</button></th>
+						<th width="110px"><button id="right">Correct</button></th>
+						<th width="110px"><button id="wrong">Wrong</button></th>
+						<th width="110px"><button id="empty">Not filled</button></th>
 					</tr>
 				</thead>
 				<tbody id="questions-table-content"></tbody>

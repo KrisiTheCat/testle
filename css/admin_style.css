@@ -138,8 +138,23 @@ p, h4{
   gap: 16px;
 }
 
-.allQuestionsStats{
-  width: 100%;
+#allQuestionsStats{
+  min-width: 100%;
+  flex: 10;
+  padding-top: 52px;
+}
+#allQuestionsStats td, #allQuestionsStats button{
+  text-align: center;
+}
+#allQuestionsStats .progress{
+  height: 12px;
+  width: -webkit-fill-available;
+  flex-direction: row;
+  padding: 0px;
+}
+
+#allQuestionsStats .progress-bar{
+  padding: 0px;
 }
 
 .taskDiv{
@@ -545,7 +560,7 @@ p, h4{
   width: 100%;
 }
 
-.sortableTable td:last-child{
+.attendeesTable td:last-child{
   display: flex;
   justify-content: right;
   gap: 10px
