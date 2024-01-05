@@ -5,7 +5,7 @@ var answerTemplateCanvases = Array(5);
 var blackanswerTemplateBlacks = Array(4);
 var divStatus;
 
-var testArrayStr = "";
+var testArray = {};
 
 var changingPageId = -1;
 
@@ -17,8 +17,7 @@ async function init() {
     (async () => {
         try
         {
-            model = await tf.loadLayersModel('http://testle/wp-content/themes/lalita-child/models/15.12.23/model.json');
-            // model = await tf.loadLayersModel('http://testle/wp-content/themes/lalita-child/models/15.12.23/model.json');
+            model = await tf.loadLayersModel('http://testle/wp-content/themes/lalita-child/models/22.12.23/model.json');
         }
         catch(error)
         {
@@ -110,7 +109,22 @@ function initAnswerUploadWays(){
     $(document).on('click','.radioCh',function(e){
         var $this = $(this);
         var code = decodeIds($this.closest('.radioAnswersCh').data('code'));
+        var codeStr = encodeIds(code);
         var answer = $this.data('answer');
+
+        var num = 0;
+        if(answer == 'A') num = 0;
+        if(answer == 'B') num = 1;
+        if(answer == 'C') num = 2;
+        if(answer == 'D') num = 3;
+        console.log(codeStr, testArray);
+        for(var i = 0; i < 4; i++){
+            testArray[codeStr][i].output[0] = 1;
+            testArray[codeStr][i].output[1] = 0;
+            testArray[codeStr][i].output[2] = 0;
+        }
+        testArray[codeStr][num].output[0] = 0;
+        testArray[codeStr][num].output[1] = 1;
         $.ajax({
             url: '',
             type: 'post',
@@ -553,15 +567,6 @@ function extractFromPage(pageId){
             m);
         queries = queries.concat(arr);
     }
-
-    /* TESTING */
-    // const link = document.createElement("a");
-    // const content = testArrayStr;
-    // const file = new Blob([content], { type: 'text/plain' });
-    // link.href = URL.createObjectURL(file);
-    // link.download = "sample.txt";
-    // link.click();
-    // URL.revokeObjectURL(link.href);
          
 
     if(queries.length == 0){
@@ -633,6 +638,7 @@ function checkQuestion(formPageID, form, content, image, code){
             console.log(arrScaling);
             var ratio = averageRatio(arrScaling);
             var arrStatus = [];
+            testArray[code] = [];
             for(var i = 0; i < 4; i++){
                 var questionCanvas = document.getElementById('canvasCutQuest'+i);
                 var questionCanvasCxt = questionCanvas.getContext("2d", { willReadFrequently: true });
@@ -651,19 +657,20 @@ function checkQuestion(formPageID, form, content, image, code){
                 var id=statusOfCircleDL(questionCanvasCxt, blackanswerTemplateBlacks[i]);
                 arrStatus.push(id);
 
-                var arr = [0,0,0];
-                arr[id] = 1;
-                testArrayStr+=`
-{
-    input:${JSON.stringify(getArrData(questionCanvasCxt))},
-    output:${JSON.stringify(arr)}
-},//${code}`;
+                testArray[code][i]={
+                    input:JSON.stringify(getArrData(questionCanvasCxt)),
+                    output:[1,0,0],
+                }
 
                 //return;
             }   
             //console.log(blackanswerTemplateBlacks);
             console.log(code, arrStatus);
             var answer = answerByCircleStatus(arrStatus);
+            if(answer!=-1){
+                testArray[code][answer].output[0] = 0;
+                testArray[code][answer].output[1] = 1;
+            }
             //reportedAnswers.push({questionID: questionID, subID: subID, answer:answer});
             if(answer!=-1)answer = String.fromCharCode(answer + 65);
             else answer = '';
@@ -780,14 +787,14 @@ $(document).on('mouseenter', '.photoFieldImg', function(){
     var krisi = findRectByGuideEdges(parseRectFromString(formQuestion),window.pageInfo[formQuestion['page']]['edges']);
     var canvas = document.getElementById('hoverPopupPhotoCanvas');
     var width = attendeePageImg.naturalWidth, height = attendeePageImg.naturalHeight;
-    canvas.width = krisi.width*width;
-    canvas.height = krisi.height*height;
+    canvas.width = 200;
+    canvas.height = Math.round(krisi.height*height*(200/(krisi.width*width)));
     var canvasCxt = canvas.getContext("2d", { willReadFrequently: true });
     canvasCxt.drawImage(attendeePageImg, 
         krisi.left*width, krisi.top*height, krisi.width*width, krisi.height*height,
-        0,0, krisi.width*width, krisi.height*height);
+        0,0, canvas.width, canvas.height);
     $('#hoverPopupPhoto').show();
-    $('#hoverPopupPhoto').css({left: this.getBoundingClientRect().x - 480,
+    $('#hoverPopupPhoto').css({left: this.getBoundingClientRect().x - 210,
                                 top: this.getBoundingClientRect().y - 30});
 });
 $(document).on('mouseleave', '.photoFieldImg', function(){
@@ -898,7 +905,7 @@ function initStage2(){
         console.log($(this).width());
         maxX = uploadImageImgWidth - canvasPadding;
         maxY = uploadImageImgHeight - canvasPadding;
-        edges = find4Edges3(canvasAn);
+        edges = find4Edges3(canvas);
         ableToMoveCrosses = true;
         console.log(uploadImageImgWidth,uploadImageImgHeight);
         drawEdgesOnPageCheck(edges,uploadImageImgWidth, uploadImageImgHeight);
@@ -1102,3 +1109,31 @@ function uploadAnswersAsPdf(){
         };
     }
 }
+
+/*
+<button id="exportForNeuralNetwork">Give me what i need</button>
+
+
+$(document).on('click','#exportForNeuralNetwork',function(){
+
+    var testArrayStr='';
+    for(code in testArray){
+        for(var i = 0; i < 4; i++){
+        testArrayStr+=`
+{
+    input:${testArray[code][i].input},
+    output:${JSON.stringify(testArray[code][i].output)}
+},//${code},${i}`;
+        }
+        
+    }
+    
+    const link = document.createElement("a");
+    const content = testArrayStr;
+    const file = new Blob([content], { type: 'text/plain' });
+    link.href = URL.createObjectURL(file);
+    link.download = "sample.txt";
+    link.click();
+    URL.revokeObjectURL(link.href);
+});
+*/
