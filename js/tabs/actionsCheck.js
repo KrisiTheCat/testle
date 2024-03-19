@@ -696,24 +696,6 @@ function checkQuestion(formPageID, form, content, image, code){
     return answerArr;
 }
 
-function saveImageToMedia(canvas, edges, pageId){
-    var imgURL = {imgURL:canvas.toDataURL("image/png"),
-                    edges: edges};
-    //console.log(attendeeID);
-    $.ajax({
-        url: '',
-        type: 'post',
-        data: { "callResponseEditFunction": "uploadAttendeeImage", 
-                "postID" : window.postID,
-                "attendeeID" : attendeeID,
-                "imgBase64": imgURL,
-                "imageID": pageId},
-        success: function(data) { 
-            displayPage(pageId, data.url, true);
-        }
-    });
-}
-
 //reading answers from status of circles
 function answerByCircleStatus(stats){
     var ones = [];
@@ -1040,73 +1022,20 @@ function uploadAnswersAsPdf(){
         pageRendering.promise.then(function(){
             var targetCanvas = document.getElementById('imageCanvas2');
             var targetCtx = targetCanvas.getContext("2d");
-            // $('#photoUploadStage1').hide();
-            // $('#photoUploadStage2').show();
-            // $('#imageUploadPopupDiv').modal('show');
-            // console.log('here');
-            // var img = document.getElementById('uploadImageImg');
-            // console.log('here');
-            // img.src = canvas.toDataURL('image/png');
-            // console.log('here');
-            // imageInCanvas = true;
-            // initStage2();
 
             console.log(canvas.width, canvas.height);
             targetCanvas.height = canvas.height;
             targetCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-            cutPDFPage(canvas, currPage, find4Edges3(targetCanvas));
+            cutPDFPage(canvas, currPage, find4Edges3(targetCanvas), attendeeID);
             
             currPage++;
             if ( thePDF !== null && currPage <= numPages ){
                 thePDF.getPage( currPage ).then( handlePDFPages );
             }
             if(currPage == numPages+1){  
-                //hideLoader();  
                 console.log("ready");
-                // $.ajax({
-                //     url: '',
-                //     type: 'post',
-                //     data: { "callResponseEditFunction": "uploadAttendeeImages", 
-                //             "postID" : window.postID,
-                //             "attendeeID" : attendeeID,
-                //             "queries": dataURLs,},
-                //     success: function(data) { 
-                //         console.log(data);
-                //         console.log(JSON.parse(data));
-                //     },
-                //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-                //         toastr.error("Unable to save images");
-                //     }
-                // });
             }
         });
-    }
-
-    function cutPDFPage(canvas, pageId, edges){
-        console.log(edges);
-        // return;
-        var width = canvas.width;
-        var height = canvas.height;
-        var img = document.getElementById('imageImg');
-        img.src = canvas.toDataURL('image/png');//TODO
-        img.onload = function() {
-            let src = cv.imread('imageImg');
-            let dst = new cv.Mat();
-            let dsize = new cv.Size(src.cols, src.rows);
-            let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
-                edges[0].x*width, edges[0].y*height, 
-                edges[1].x*width, edges[1].y*height, 
-                edges[2].x*width, edges[2].y*height, 
-                edges[3].x*width, edges[3].y*height]);
-            let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, width, 0, 0, height,  width, height]);
-            let M = cv.getPerspectiveTransform(srcTri, dstTri);
-            cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
-            var canvas = document.getElementById('imageCanvas2');
-            clearCanvas(canvas);
-            cv.imshow('imageCanvas2', dst);
-            src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
-            saveImageToMedia(canvas, edges, pageId-1);
-        };
     }
 }
 

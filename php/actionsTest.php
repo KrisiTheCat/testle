@@ -49,6 +49,7 @@ function dublicateTest($postID, $dublPostID){
   $response_array['responses'] = json_encode($responsesNew);
 
   $pageInfo = get_post_meta($dublPostID, 'pageInfo', true);
+  $pageInfo[0]['dublicated'] = true;
   update_post_meta($postID, 'pageInfo', $pageInfo);
   $response_array['pageInfo'] = json_encode($pageInfo);
 
@@ -56,7 +57,6 @@ function dublicateTest($postID, $dublPostID){
   $form = get_post_meta($dublPostID, 'form', true);
   update_post_meta($postID, 'form', $form);
   $response_array['form'] = json_encode($form);
-
 
   header('Content-type: application/json');
   echo json_encode($response_array);

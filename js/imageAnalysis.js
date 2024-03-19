@@ -136,7 +136,7 @@ function find4Edges3(canvas){
         var rC = rects.length;
         while(pos.valid){
             var bb=findBoundary(pos,data);
-             console.log("Found target at "+bb.x+"/"+bb.y+", size: "+bb.width+"/"+bb.height);     
+            //console.log("Found target at "+bb.x+"/"+bb.y+", size: "+bb.width+"/"+bb.height);     
             if(bb.height>=MIN_HEIGHT && bb.width>=MIN_WIDTH) rects.push(bb);       
             ctx.fillStyle=bkFillColor;
             ctx.fillRect(bb.x-2,bb.y-2,bb.width+4,bb.height+4);

@@ -116,8 +116,10 @@ function deleteFormImages(){
   update_post_meta( $postID, 'form', $form );
 
   $pageInfo = get_post_meta( $postID, 'pageInfo', true );
-  foreach( $pageInfo as $attach ) {
-    wp_delete_attachment( intval($attach['attID']), true );
+  if(!isset($pageInfo[0]['dublicated'])){
+    foreach( $pageInfo as $attach ) {
+      wp_delete_attachment( intval($attach['attID']), true );
+    }
   }
   update_post_meta( $postID, 'pageInfo', array() );
 

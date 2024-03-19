@@ -160,7 +160,7 @@ p, h4{
 .taskDiv{
   font-size: small;
   flex: 1;
-  min-width: 360px;
+  min-width: 30%;
 }
 
 .taskDiv>div:first-child{
@@ -243,6 +243,7 @@ p, h4{
 
 .impossibleTask{
   opacity: 0.3;
+  min-width: 90%;
 }
 
 #results>div{

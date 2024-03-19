@@ -68,5 +68,7 @@
 			</div>
 		</div>
 	</div>     
+	<button id="uploadAllAttBtn" class="elegantBtn">Upload PDF for <b>all</b></button>
+	<input type="file" class="invisible" accept="application/pdf" id="uploadAllAttInput"/>
 	<button id="exportAttBtn" class="elegantBtn"  download="file.xml"><b>Export</b></button>
 </div>

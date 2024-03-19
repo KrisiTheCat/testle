@@ -187,6 +187,50 @@ function codeToLongText(code){
     }
 }
 
+function saveImageToMedia(canvas, edges, pageId, attendeeID){
+    var imgURL = {imgURL:canvas.toDataURL("image/png"),
+                    edges: edges};
+    //console.log(attendeeID);
+    $.ajax({
+        url: '',
+        type: 'post',
+        data: { "callResponseEditFunction": "uploadAttendeeImage", 
+                "postID" : window.postID,
+                "attendeeID" : attendeeID,
+                "imgBase64": imgURL,
+                "imageID": pageId},
+        success: function(data) { 
+            displayPage(pageId, data.url, true);
+        }
+    });
+}
+function cutPDFPage(canvas, pageId, edges, attendeeID){
+    console.log(edges);
+    // return;
+    var width = canvas.width;
+    var height = canvas.height;
+    var img = document.getElementById('imageImg');
+    img.src = canvas.toDataURL('image/png');//TODO
+    img.onload = function() {
+        let src = cv.imread('imageImg');
+        let dst = new cv.Mat();
+        let dsize = new cv.Size(src.cols, src.rows);
+        let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
+            edges[0].x*width, edges[0].y*height, 
+            edges[1].x*width, edges[1].y*height, 
+            edges[2].x*width, edges[2].y*height, 
+            edges[3].x*width, edges[3].y*height]);
+        let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, width, 0, 0, height,  width, height]);
+        let M = cv.getPerspectiveTransform(srcTri, dstTri);
+        cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
+        var canvas = document.getElementById('imageCanvas2');
+        clearCanvas(canvas);
+        cv.imshow('imageCanvas2', dst);
+        src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
+        saveImageToMedia(canvas, edges, pageId-1, attendeeID);
+    };
+}
+
 const DEFAULT_CONDITION = 'Condition';
 const STATUS = {
     WRONG: 0,

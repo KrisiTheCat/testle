@@ -5,6 +5,7 @@ function initAttendees(){
 
     refreshAttendees();
     initTableActions();
+    uploadPdfForAll();
     
 }
 
@@ -242,4 +243,63 @@ function initTableActions(){
       }
     }
   });
+}
+
+
+function uploadPdfForAll(){
+
+  var thePDF, numPages, pdf_url, dataURLs;
+
+  $(document).on('click', '#uploadAllAttBtn', function(){
+    $('#uploadAllAttInput').click();
+  });
+
+  $(document).on('change', '#uploadAllAttInput', function(){
+    if(['application/pdf'].indexOf($("#uploadAllAttInput").get(0).files[0].type) == -1) {
+        toastr.error("Not a PDF");
+        return;
+    }
+    if($("#uploadAllAttInput")[0].files.length != 1) {
+        toastr.error("Too many files");
+        return;
+    }
+    pdf_url = URL.createObjectURL($("#uploadAllAttInput").get(0).files[0]);
+    PDFJS.getDocument(pdf_url).then(function(pdf) {
+        thePDF = pdf;
+        numPages = pdf.numPages;
+        console.log(numPages);
+        if(numPages != Object.keys(window.responsesKrisi).length-1) {
+            toastr.error("Not correct number of pages!");
+            return;
+        }
+        currPage = 1;
+        dataURLs = [];
+        thePDF.getPage(currPage).then( handlePDFforAllPages );
+        //showLoader();
+    }).catch(function(error) {
+        alert(error.message);
+    });
+  });
+
+  function handlePDFforAllPages(page){
+    var canvas = $('#imageCanvas').get(0);
+    var pageRendering = drawPageInCanvas(page,canvas, false);
+    console.log('here');
+    pageRendering.promise.then(function(){
+        var targetCanvas = document.getElementById('imageCanvas2');
+        var targetCtx = targetCanvas.getContext("2d");
+
+        targetCanvas.height = canvas.height;
+        targetCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+        cutPDFPage(canvas, 1, find4Edges3(targetCanvas), Object.keys(window.responsesKrisi)[currPage]);
+        
+        currPage++;
+        if ( thePDF !== null && currPage <= numPages ){
+            thePDF.getPage( currPage ).then( handlePDFforAllPages );
+        }
+        if(currPage == numPages+1){  
+            console.log("ready");
+        }
+    });
+  }
 }

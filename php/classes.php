@@ -236,7 +236,8 @@ class QuestionForm extends Question{
   
   public function resetAll(){
     foreach($this->subq as $id=>$sub){
-      if(key_exists('page', $sub)){
+      //if($sub==null) continue;
+      if(is_null($sub->subq)){
         $this->subq[$id] =  new QuestionForm('Single');
       }
       else {
