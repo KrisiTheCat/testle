@@ -75,10 +75,6 @@ function find4Edges(canvas){
         if(dist(rects[i].x+rects[i].width,rects[i].y+rects[i].height,cw,ch) < 
             dist(rects[br].x+rects[br].width,rects[br].y+rects[br].height,cw,ch)) br = i;
     }
-    console.log(rects[tl]);
-    console.log(rects[tr]);
-    console.log(rects[bl]);
-    console.log(rects[br]);
     var obj =  [convertRectToPercent(rects[tl],cw,ch), 
                 convertRectToPercent(rects[tr],cw,ch),
                 convertRectToPercent(rects[bl],cw,ch),
@@ -156,7 +152,7 @@ function find4Edges3(canvas){
     findRects(0, w5, 0, h5, rects);
     findRects(0, w5, h5*3, ch, rects);//!
     findRects(w5*3, cw, 0, h5, rects);
-    findRects(w5*3, cw, h5*3, ch, rects);
+    //findRects(w5*3, cw, h5*3, ch, rects);
     var tl = 0, tr = 0, bl = 0, br = 0;
     for(i = 0; i < rects.length;i++){
         if(dist(rects[i].x,rects[i].y,0,0) < 
@@ -165,18 +161,15 @@ function find4Edges3(canvas){
             dist(rects[tr].x+rects[tr].width,rects[tr].y,cw,0)) tr = i;
         if(dist(rects[i].x,rects[i].y+rects[i].height,0,ch) < 
             dist(rects[bl].x,rects[bl].y+rects[bl].height,0,ch)) bl = i;
-        if(dist(rects[i].x+rects[i].width,rects[i].y+rects[i].height,cw,ch) < 
-            dist(rects[br].x+rects[br].width,rects[br].y+rects[br].height,cw,ch)) br = i;
+        // if(dist(rects[i].x+rects[i].width,rects[i].y+rects[i].height,cw,ch) < 
+        //     dist(rects[br].x+rects[br].width,rects[br].y+rects[br].height,cw,ch)) br = i;
     }
-    console.log(rects[tl]);
-    console.log(rects[tr]);
-    console.log(rects[bl]);
-    console.log(rects[br]);
     var obj =  [convertRectToPercent(rects[tl],cw,ch), 
                 convertRectToPercent(rects[tr],cw,ch),
                 convertRectToPercent(rects[bl],cw,ch),
-                convertRectToPercent(rects[br],cw,ch)];
-                console.log(obj);
+                {x:0,y:0}];
+    obj[3].x = obj[1].x - obj[0].x + obj[2].x;
+    obj[3].y = obj[1].y - obj[0].y + obj[2].y;
     return obj;
 }
 
@@ -281,9 +274,7 @@ function find4Edges2(canvas){
         return Math.abs(c-a)+Math.abs(d-b);
     }
 
-    console.log(ctx.getContextAttributes());
     var rects = findRects();
-    console.log(rects);
     var obj =  [convertRectToPercent(rects[0],cw,ch), 
                 convertRectToPercent(rects[1],cw,ch),
                 convertRectToPercent(rects[2],cw,ch),

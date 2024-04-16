@@ -71,7 +71,9 @@ jQuery(function($) { //jQuery passed in as first param, so you can use $ inside
                 $this.attr('src', tempPath + '/arrowDown.png');
             }
         });
-        
+        initModel().then(result => {
+            console.log(result);
+        });
     });
 
     $(document).on('click','#nullBtn',function(){

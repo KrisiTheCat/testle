@@ -19,6 +19,7 @@ $current_fp = get_query_var('fpage'); ?>
 		
 			<header class="entry-header">
 				<h1 class="entry-title"><?php the_title(); ?></h1>
+				<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 			</header><!-- .entry-header -->
 			<div id="usedForChecking" class="invisible">
 				<canvas id="imageCanvas" width="1000"></canvas>
@@ -37,6 +38,7 @@ $current_fp = get_query_var('fpage'); ?>
 					<h2>Please enter your profile to see this page!</h2>
 					<?php
 				} else {
+
 					$content = get_post_meta( get_the_ID(), 'content', true );
 					$responses = get_post_meta( get_the_ID(), 'responses', true );
 					$form = get_post_meta( get_the_ID(), 'form', true );

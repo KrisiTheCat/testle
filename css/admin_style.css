@@ -160,7 +160,7 @@ p, h4{
 .taskDiv{
   font-size: small;
   flex: 1;
-  min-width: 30%;
+  min-width: max(30%, 330px);
 }
 
 .taskDiv>div:first-child{
@@ -701,6 +701,10 @@ p, h4{
   margin-top: 13px;
 }
 
+#popupBatchUpload{
+  position: absolute;
+}
+
 #popupFormUsers input[type="submit"]{
   background-color: var(--colorComposite);
   color: white;
@@ -1190,6 +1194,10 @@ input[type=text].type{
 #popupFormUsers .check_box:checked + label{
   background:url('../img/checkbox_checked.png') no-repeat;
   background-size: contain;
+}
+
+#batchCurrentTask{
+  font-size:small;
 }
 
 .check_box + label{

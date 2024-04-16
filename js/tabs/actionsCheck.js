@@ -13,7 +13,7 @@ var imageInCanvas = false;
 
 let model;
 
-async function init() {
+async function initModel() {
     (async () => {
         try
         {
@@ -47,7 +47,6 @@ function initCheck(){
     tempPath = tempPath.substring(0,tempPath.lastIndexOf('/'));
 
     var text = $('#summaryDiv').html();
-    console.log( window.contentKrisi.length);
     for(let i = 0; i < window.contentKrisi.length; i++){
         text += `<div class="moduleSummery">
         <label><b>Module</b> #${i+1}</label>
@@ -76,10 +75,6 @@ function initCheck(){
         $('#photosDiv').html('<p>No form uploaded. Fix <a href="../form">here</p>');
         $('#photosDiv').css('padding-bottom','0px');
     }
-
-    init().then(result => {
-      console.log(result);
-    });
 }
 
 function initAnswerUploadWays(){
@@ -117,14 +112,14 @@ function initAnswerUploadWays(){
         if(answer == 'B') num = 1;
         if(answer == 'C') num = 2;
         if(answer == 'D') num = 3;
-        console.log(codeStr, testArray);
+        /*console.log(testArray);
         for(var i = 0; i < 4; i++){
             testArray[codeStr][i].output[0] = 1;
             testArray[codeStr][i].output[1] = 0;
             testArray[codeStr][i].output[2] = 0;
         }
         testArray[codeStr][num].output[0] = 0;
-        testArray[codeStr][num].output[1] = 1;
+        testArray[codeStr][num].output[1] = 1;*/
         $.ajax({
             url: '',
             type: 'post',
@@ -457,6 +452,7 @@ function answerTemplateInit(){
         // ctx.putImageData(imageData,0,0);
         blackanswerTemplateBlacks[ans][id] = countBlackPixels(ctx);
     });
+    
 }
 
 function displayPage(pageId, url, justChanged){
@@ -465,8 +461,8 @@ function displayPage(pageId, url, justChanged){
     if(justChanged){
         $('#attendeePageDiv' + pageId).find('.emptyPageOverlay').hide();
         $('#attendeePageDiv' + pageId).find('img').first().load(function(){
-            console.log("HERE");
-            extractFromPage(pageId);
+            var image = document.getElementById('attendeePageImg' + pageId);
+            extractFromPage(attendeeID, image, pageId, true);
         });
     }
 }
@@ -502,7 +498,8 @@ function displayAllPages(justChanged){
                     $('#attendeePageDiv' + data.pageId).find('img').first().attr('src',data.url);
                     if(justChanged == data.pageId){
                         $('#attendeePageDiv' + data.pageId).find('img').first().load(function(){
-                            extractFromPage(justChanged);
+                            var image = document.getElementById('attendeePageImg' + pageId);
+                            extractFromPage(attendeeID, image, pageId, true);
                         });
                     }
                     
@@ -552,47 +549,9 @@ $(document).on('click', '.attendeeChangeBtn', function(){
 
 $(document).on('click', '.attendeeReextractBtn', function(){
     var pageId = $(this).parent().parent().data('id');
-    extractFromPage(pageId);
-});
-
-function extractFromPage(pageId){
     var image = document.getElementById('attendeePageImg' + pageId);
-    var queries = [];
-    for (var m in window.formKrisi) {
-        var arr = checkQuestion(
-            pageId, 
-            window.formKrisi[m],
-            window.contentKrisi[m], 
-            image, 
-            m);
-        queries = queries.concat(arr);
-    }
-         
-
-    if(queries.length == 0){
-        toastr.info("Please set locations in form");
-    }
-    else{
-        $.ajax({
-            url: '',
-            type: 'post',
-            data: { "callResponseEditFunction": "changeAnswerChArr", 
-            "postID" : window.postID,
-            "attendeeID" : attendeeID,
-            "queries" : queries},
-            success: function(data) {
-                var ans = JSON.parse(data['ansStatus']);
-                toastr.success('</br>' + ans[1] + ' right answers</br>' + ans[0] + ' wrong answers</br>' + ans[2] + ' not filled questions</br>' + ans[3] + ' questions to check', 
-                                queries.length + ' answers extracted');
-                window.responsesKrisi = JSON.parse(data['responses']);
-                refreshResponseTable();  
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                toastr.error("Unable to upload result");
-            }
-        });
-    }
-}
+    extractFromPage(attendeeID, image, pageId, true);
+});
 
 function checkQuestion(formPageID, form, content, image, code){
     var answerArr = [];
@@ -635,7 +594,6 @@ function checkQuestion(formPageID, form, content, image, code){
                 questionCanvasCxt.putImageData(newImageData,0,0);
                 arrScaling.push(croppedImageWhitespaceRect(questionCanvas));
             }   
-            console.log(arrScaling);
             var ratio = averageRatio(arrScaling);
             var arrStatus = [];
             testArray[code] = [];
@@ -665,7 +623,7 @@ function checkQuestion(formPageID, form, content, image, code){
                 //return;
             }   
             //console.log(blackanswerTemplateBlacks);
-            console.log(code, arrStatus);
+            // console.log(code, arrStatus);
             var answer = answerByCircleStatus(arrStatus);
             if(answer!=-1){
                 testArray[code][answer].output[0] = 0;
@@ -764,7 +722,7 @@ $(document).on('mouseenter', '.photoFieldImg', function(){
     var $this = $(this);
     var code = $this.data('id');
     var formQuestion = getQuestion(window.formKrisi,code);
-    if(formQuestion == -1){ console.log('Form question = -1'); return; }
+    if(formQuestion == -1){ return; }
     var attendeePageImg = document.getElementById('attendeePageImg' + formQuestion['page']);
     var krisi = findRectByGuideEdges(parseRectFromString(formQuestion),window.pageInfo[formQuestion['page']]['edges']);
     var canvas = document.getElementById('hoverPopupPhotoCanvas');
@@ -814,8 +772,8 @@ function initStage1(){
         }
         else{
             const file = files[0];
-            console.log("File name:", file.name);
-            console.log("File size:", file.size, "bytes");
+            // console.log("File name:", file.name);
+            // console.log("File size:", file.size, "bytes");
             if (file.type.startsWith("image/")) {
                 const img = document.getElementById("uploadImageImg");
                 img.src = URL.createObjectURL(file);
@@ -883,13 +841,10 @@ function initStage2(){
         uploadImageImgHeight = this.height;
         // uploadImageImgWidth = 332;
         // uploadImageImgHeight = 430;
-        console.log(this);
-        console.log($(this).width());
         maxX = uploadImageImgWidth - canvasPadding;
         maxY = uploadImageImgHeight - canvasPadding;
         edges = find4Edges3(canvas);
         ableToMoveCrosses = true;
-        console.log(uploadImageImgWidth,uploadImageImgHeight);
         drawEdgesOnPageCheck(edges,uploadImageImgWidth, uploadImageImgHeight);
     }, {once : true});
 
@@ -953,7 +908,7 @@ function initStage2(){
         clearCanvas(canvas);
         cv.imshow('imageCanvas', dst);
         src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
-        saveImageToMedia(canvas, edges, changingPageId);
+        saveImageToMedia(canvas, edges, changingPageId, attendeeID);
         $('#imageUploadPopupDiv').modal('hide');
     });
 
@@ -997,11 +952,9 @@ function uploadAnswersAsPdf(){
             return;
         }
         pdf_url = URL.createObjectURL($("#uploadImagesPDFInput").get(0).files[0]);
-        console.log(pdf_url);
         PDFJS.getDocument(pdf_url).then(function(pdf) {
             thePDF = pdf;
             numPages = pdf.numPages;
-            console.log(numPages);
             if(numPages != window.pageInfo.length) {
                 toastr.error("Not correct number of pages!");
                 return;
@@ -1018,12 +971,10 @@ function uploadAnswersAsPdf(){
     function handlePDFPages(page){
         var canvas = $('#imageCanvas').get(0);
         var pageRendering = drawPageInCanvas(page,canvas, false);
-        console.log('here');
         pageRendering.promise.then(function(){
             var targetCanvas = document.getElementById('imageCanvas2');
             var targetCtx = targetCanvas.getContext("2d");
 
-            console.log(canvas.width, canvas.height);
             targetCanvas.height = canvas.height;
             targetCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
             cutPDFPage(canvas, currPage, find4Edges3(targetCanvas), attendeeID);
@@ -1039,8 +990,8 @@ function uploadAnswersAsPdf(){
     }
 }
 
-/*
-<button id="exportForNeuralNetwork">Give me what i need</button>
+
+//<button id="exportForNeuralNetwork">Give me what i need</button>
 
 
 $(document).on('click','#exportForNeuralNetwork',function(){
@@ -1065,4 +1016,3 @@ $(document).on('click','#exportForNeuralNetwork',function(){
     link.click();
     URL.revokeObjectURL(link.href);
 });
-*/

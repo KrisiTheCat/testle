@@ -34,7 +34,6 @@ if (isset($_POST['callTestEditFunction'])) {
       break;
   }
 }
-
 function dublicateTest($postID, $dublPostID){
   $response_array = array();
 
@@ -43,8 +42,10 @@ function dublicateTest($postID, $dublPostID){
   $response_array['content'] = json_encode($content);
 
   $responses = get_post_meta($dublPostID, 'responses', true);
-  $responsesNew = array();
-  $responsesNew[0] = $responses[0];
+  $responsesNew = array($responses[0]);
+  foreach($responses as $key => $field){
+    $responsesNew[$key] = unserialize(serialize($responses[0]));
+  }
   update_post_meta($postID, 'responses', $responsesNew);
   $response_array['responses'] = json_encode($responsesNew);
 
@@ -52,7 +53,6 @@ function dublicateTest($postID, $dublPostID){
   $pageInfo[0]['dublicated'] = true;
   update_post_meta($postID, 'pageInfo', $pageInfo);
   $response_array['pageInfo'] = json_encode($pageInfo);
-
 
   $form = get_post_meta($dublPostID, 'form', true);
   update_post_meta($postID, 'form', $form);

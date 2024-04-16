@@ -34,6 +34,26 @@
 			</div>
 		</div>
 	</div>
+
+	<div id="popupBatchUpload" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document" style="margin: 3rem auto;">
+			<div class="modal-content">
+				<div class="modal-header border-0">
+					<p>Batch upload</p>
+					<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/iconStatus0.png" class="closeButton"></img>
+				</div>
+				<div class="modal-body" style="padding-top: 0px !important;">
+					<div id="batchProgress" style="display: flex; gap: 10px; align-items: center;">
+						<div class="progress" style="flex:1">
+							<div class="progress-bar toBeChecked" role="progressbar" style="width: 0%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+						</div>
+						<p id="batchProgressNumber">0%</p>
+					</div>
+					<p id="batchCurrentTask">Currently:doushcf</p>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="attendeesTable sortableTable">
 		<table class="data-table">
 			<thead>

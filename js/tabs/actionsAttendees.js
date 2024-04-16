@@ -6,19 +6,28 @@ function initAttendees(){
     refreshAttendees();
     initTableActions();
     uploadPdfForAll();
-    
+    answerTemplateInit();
 }
 
 function refreshAttendees(){
     sortAttInGroups();
-    console.log(attendeesFormated);
     if(attendeesFormated.length == 0){
       $('#attendees').find('.noSuchText').show();
     }
     else {
       $('#attendees').find('.noSuchText').hide();
     }
-      importToTable();
+    [...attendeesFormated].sort(function (a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    })
+    console.log(attendeesFormated);
+    importToTable();
 }
 
 function sortAttInGroups(){
@@ -34,6 +43,16 @@ function sortAttInGroups(){
                 "actions": attID
             });
         }
+    }
+    var temp;
+    for(var i = 0; i < attendeesFormated.length; i ++){
+      for(var j = i+1; j < attendeesFormated.length; j ++){
+        if((window.usersKrisi[attendeesFormated[i].id].name).localeCompare((window.usersKrisi[attendeesFormated[j].id].name))>0){
+          temp = attendeesFormated[i];
+          attendeesFormated[i] = attendeesFormated[j];
+          attendeesFormated[j] = temp;
+        }
+      }
     }
 }
 
@@ -126,7 +145,6 @@ function importToTable(){
           names.push(user.name);
         }
       });
-      console.log($("#newAttendeeInput"));
       $("#newAttendeeInput").unbind().autocomplete({
         minLength: 0,
         source: names,
@@ -267,38 +285,52 @@ function uploadPdfForAll(){
     PDFJS.getDocument(pdf_url).then(function(pdf) {
         thePDF = pdf;
         numPages = pdf.numPages;
-        console.log(numPages);
-        if(numPages != Object.keys(window.responsesKrisi).length-1) {
+        if(numPages != (Object.keys(window.responsesKrisi).length-1)*window.pageInfo.length) {
             toastr.error("Not correct number of pages!");
             return;
         }
         currPage = 1;
         dataURLs = [];
         thePDF.getPage(currPage).then( handlePDFforAllPages );
+        $('#popupBatchUpload').modal('show');
         //showLoader();
     }).catch(function(error) {
         alert(error.message);
     });
   });
 
+  var batchTasksDone = 0, percent;
+  function batchUploadTaskDone(){
+    batchTasksDone++;
+    percent = Math.ceil(batchTasksDone/(numPages*2)*100);
+    $('#batchProgressNumber').html(percent+"%");
+    $('#popupBatchUpload').find('.progress-bar').width(percent+"%");
+  }
+
   function handlePDFforAllPages(page){
     var canvas = $('#imageCanvas').get(0);
     var pageRendering = drawPageInCanvas(page,canvas, false);
-    console.log('here');
     pageRendering.promise.then(function(){
         var targetCanvas = document.getElementById('imageCanvas2');
         var targetCtx = targetCanvas.getContext("2d");
 
         targetCanvas.height = canvas.height;
         targetCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-        cutPDFPage(canvas, 1, find4Edges3(targetCanvas), Object.keys(window.responsesKrisi)[currPage]);
+        var attendeeID = attendeesFormated[(currPage-1)/window.pageInfo.length].id;
+        $('#batchCurrentTask').html('Currently: uploading PDF for '+window.usersKrisi[attendeeID].name);
+        batchUploadTaskDone();
+        cutPDFPage(canvas, 1, find4Edges3(targetCanvas), attendeeID, (image)=>{
+          batchUploadTaskDone();
+          $('#batchCurrentTask').html('Currently: checking '+window.usersKrisi[attendeeID].name + '\'s work');
+          extractFromPage(attendeeID,image, (currPage-1)%window.pageInfo.length, false);
+        });
         
         currPage++;
         if ( thePDF !== null && currPage <= numPages ){
             thePDF.getPage( currPage ).then( handlePDFforAllPages );
         }
         if(currPage == numPages+1){  
-            console.log("ready");
+           // location.reload();
         }
     });
   }

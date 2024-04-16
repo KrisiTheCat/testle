@@ -190,7 +190,6 @@ function codeToLongText(code){
 function saveImageToMedia(canvas, edges, pageId, attendeeID){
     var imgURL = {imgURL:canvas.toDataURL("image/png"),
                     edges: edges};
-    //console.log(attendeeID);
     $.ajax({
         url: '',
         type: 'post',
@@ -204,8 +203,7 @@ function saveImageToMedia(canvas, edges, pageId, attendeeID){
         }
     });
 }
-function cutPDFPage(canvas, pageId, edges, attendeeID){
-    console.log(edges);
+function cutPDFPage(canvas, pageId, edges, attendeeID, callFunc){
     // return;
     var width = canvas.width;
     var height = canvas.height;
@@ -228,8 +226,57 @@ function cutPDFPage(canvas, pageId, edges, attendeeID){
         cv.imshow('imageCanvas2', dst);
         src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
         saveImageToMedia(canvas, edges, pageId-1, attendeeID);
+        if(callFunc){
+            img.src = canvas.toDataURL("image/png");
+            img.onload = function() {
+            callFunc(img);
+            };
+        }
     };
 }
+
+
+function extractFromPage(attendeeID, image, pageId, refresh){
+    console.log(attendeeID);
+    var queries = [];
+    for (var m in window.formKrisi) {
+        var arr = checkQuestion(
+            pageId, 
+            window.formKrisi[m],
+            window.contentKrisi[m], 
+            image, 
+            m);
+        queries = queries.concat(arr);
+    }
+         
+
+    if(queries.length == 0){
+        toastr.info("Please set locations in form");
+    }
+    else{
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: { "callResponseEditFunction": "changeAnswerChArr", 
+            "postID" : window.postID,
+            "attendeeID" : attendeeID,
+            "queries" : queries},
+            success: function(data) {
+                var ans = JSON.parse(data['ansStatus']);
+                if(refresh){
+                    toastr.success('</br>' + ans[1] + ' right answers</br>' + ans[0] + ' wrong answers</br>' + ans[2] + ' not filled questions</br>' + ans[3] + ' questions to check', 
+                                    queries.length + ' answers extracted');
+                    refreshResponseTable();
+                window.responsesKrisi = JSON.parse(data['responses']);
+                }  
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                toastr.error("Unable to upload result");
+            }
+        });
+    }
+}
+
 
 const DEFAULT_CONDITION = 'Condition';
 const STATUS = {

@@ -7,7 +7,6 @@ function initForm(){
     form = window.formKrisi;
     initQuestionTabs();
 
-    console.log(window.pageInfo);
     if(window.pageInfo.length == 0){
         $('#noPDFselected').show();
         $('#formViewRibbon').hide();
@@ -51,24 +50,39 @@ function initForm(){
         var text = '<div>' + $('#formPagesDiv').children().first().html() + '</div>';
         visiblePageId = 0;
         for(i = 0; i < window.pageInfo.length; i++){
-            text += `<div data-id=` + i + ` id="formPage` + i + `" class="formPage" style="display:none; position:relative">
-                        <img id="formPageImg` + i + `" class="formPageElement" src="` + window.pageInfo[i]['url'] + `" width="600"/>
-                        <canvas id="formPageCanvas` + i + `" class="formPageElement formPageCanvas" width="600" height="1000"></canvas>
-                    </div>`;
+            $.ajax({
+                url: '',
+                type: 'post',
+                data: { "getImageURL": window.pageInfo[i]['attID'], 
+                "pageId": i},
+                success: function(data) { 
+                    data = JSON.parse(data);
+                    text += `<div data-id=` + data.pageId + ` id="formPage` + data.pageId + `" class="formPage" style="display:none; position:relative">
+                                <img id="formPageImg` + data.pageId + `" class="formPageElement" src="` + data.url + `" width="600"/>
+                                <canvas id="formPageCanvas` + data.pageId + `" class="formPageElement formPageCanvas" width="600" height="1000"></canvas>
+                            </div>`;
+                    if(parseInt(data.pageId) == window.pageInfo.length-1){
+                        $('#formPagesDiv').html(text);
+                        $('#formPagesDiv').show();
+                        $('#formPage' + visiblePageId).show();
+                        document.getElementById('formPageImg' + visiblePageId).onload = function() {
+                            canvasWidth = this.width;
+                            canvasHeight = this.height;
+                            for(j = 0; j < window.pageInfo.length; j++){
+                                $('#formPageCanvas' + j).attr('width', this.width);
+                                $('#formPageCanvas' + j).attr('height', this.height);
+                            }
+                            drawRectsOnPage();
+                        }
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error("Unable to retrieve photo");
+                }
+            });
         }
         
-        $('#formPagesDiv').html(text);
-        $('#formPagesDiv').show();
-        $('#formPage' + visiblePageId).show();
-        document.getElementById('formPageImg' + visiblePageId).onload = function() {
-            canvasWidth = this.width;
-            canvasHeight = this.height;
-            for(i = 0; i < window.pageInfo.length; i++){
-                $('#formPageCanvas' + i).attr('width', this.width);
-                $('#formPageCanvas' + i).attr('height', this.height);
-            }
-            drawRectsOnPage();
-        }
+        
 
         $(document).on('click', '#formPagesLeft', function(){
             $('#formPage' + visiblePageId).hide();
@@ -180,9 +194,9 @@ function initForm(){
                         let image = cv.imread(document.getElementById('pdf-canvas-' + page));
                         cv.imshow('imageCanvas', image);
                         image.delete();
-                        console.log(document.getElementById('pdf-canvas-' + page).toDataURL("image/png"));
+                        var edg = find4Edges3(document.getElementById("imageCanvas"));
                         dataURLs.push({imgURL:document.getElementById('pdf-canvas-' + page).toDataURL("image/png"),
-                                        edges: find4Edges3(document.getElementById("imageCanvas"))});
+                                        edges: edg});
                     }
                     $('#pdf-main-container').modal('hide');
                     $('#analysingLoader').hide();
@@ -217,8 +231,6 @@ function initForm(){
                 }
             } 
             else {
-                console.log(JSON.stringify(selectedFormId));
-                console.log(JSON.stringify(decodeIds($(this).data('code'))));
                 if(JSON.stringify(selectedFormId) == JSON.stringify(decodeIds($(this).data('code')))){
                     $.ajax({
                         url: '',
@@ -282,7 +294,8 @@ function recheckQuestion(formQ, contentQ, code){
                     "attArr": Object.keys(window.responsesKrisi),
                     "pageID": formQ.page},
             success: function(data) { 
-                checkQuestionRecursive(data, 0, formQ, contentQ, code, []);
+                if(data.length !=0)
+                    checkQuestionRecursive(data, 0, formQ, contentQ, code, []);
             }
         });
     }
@@ -308,7 +321,6 @@ function checkQuestionRecursive(resps, ind, formQ, contentQ, code, ans){
     var image = document.getElementById('imageImg');
     image.onload = function() {
         var currAns = checkQuestion(formQ.page, formQ, contentQ, image, code);
-        console.log(resps[ind].attID);
         ans.push({attID: resps[ind].attID, ans: currAns[0].answer});
         checkQuestionRecursive(resps, ind+1, formQ, contentQ, code, ans);
     }
@@ -399,7 +411,8 @@ function initCanvasActions(){
         }
     });
 
-    $(".formPageCanvas").on("mousemove", function(e) {
+    $(document).on('mousemove', '.formPageCanvas', function(e){
+        console.log(selectedFormId, draggingEdge);
         if (typeof draggingEdge !== 'undefined') {  
             x = e.clientX - lastX;
             y = e.clientY - lastY;
@@ -444,7 +457,7 @@ function initCanvasActions(){
         }
     });
 
-    $(".formPageCanvas").on("mouseup", function(e) {
+    $(document).on('mouseup', '.formPageCanvas', function(e){
         if(visiblePageId!=-1 && selectedFormId!=undefined){
             console.log(getValueQuestionRectCoords(form[selectedFormId[0]], selectedFormId[1]));
             $.ajax({
