@@ -7,6 +7,7 @@ function initAttendees(){
     initTableActions();
     uploadPdfForAll();
     answerTemplateInit();
+    batchImport();
 }
 
 function refreshAttendees(){
@@ -260,6 +261,38 @@ function initTableActions(){
         });
       }
     }
+  });
+}
+
+
+function batchImport(){
+
+  $(document).on('click', '#batchImportBtn', function(){
+    var names = $('#batchImportInput').val().split('\n');
+    console.log(names);
+    for(var name of names){
+      var attendeeIDa = -1;
+      for(var userID in window.usersKrisi){
+        if(window.usersKrisi[userID].name == name){
+          attendeeIDa = window.usersKrisi[userID].id;
+          break;
+        }
+      }
+      console.log(attendeeIDa);
+        $.ajax({
+          url: '',
+          type: 'post',
+          data: {"callResponseEditFunction": "addAttendee", 
+                  "postID" : window.postID,
+                  "attendeeID" : attendeeIDa},
+          success: function(data) {
+              window.responsesKrisi = JSON.parse(data['responses']);
+              //refreshAttendees();
+            }
+          });
+        }
+        console.log(window.responsesKrisi);
+        refreshAttendees();
   });
 }
 

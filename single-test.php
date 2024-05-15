@@ -64,7 +64,7 @@ $current_fp = get_query_var('fpage'); ?>
 							$user_id = $user->ID;
 							$helper = array(
 								"id"=>$user_id,
-								"name"=>$user->display_name,
+								"name"=>$user->first_name.' '.$user->last_name,
 								"groups"=>explode(",", do_shortcode("[profilegrid_user_all_groups uid=" . $user_id . "]")),
 								"roles"=>get_userdata($user_id)->roles);
 							$usersInfo[$user_id] = $helper;

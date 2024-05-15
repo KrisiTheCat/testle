@@ -88,6 +88,8 @@
 			</div>
 		</div>
 	</div>     
+	<textarea class="invisible" type="file" accept="application/txt" id="batchImportInput"></textarea>
+	<button class="invisible" id="batchImportBtn" class="elegantBtn">Batch <b>import</b></button>
 	<button id="uploadAllAttBtn" class="elegantBtn">Upload PDF for <b>all</b></button>
 	<input type="file" class="invisible" accept="application/pdf" id="uploadAllAttInput"/>
 	<button id="exportAttBtn" class="elegantBtn"  download="file.xml"><b>Export</b></button>

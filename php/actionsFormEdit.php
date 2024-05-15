@@ -180,12 +180,12 @@ function upload_user_file( $file = array() ) {
 }
 
 if( ! empty( $_FILES ) ) {
-  var_dump($_POST);
+  /*var_dump($_POST);
   var_dump(time());
   if(isset($_POST['updatePDFTime']) && time()-intval($_POST['updatePDFTime'])<=2){
     $attachment_id = upload_user_file( $_FILES['file-upload'] );
     return;
-  }
+  }*/
 }
   
 
